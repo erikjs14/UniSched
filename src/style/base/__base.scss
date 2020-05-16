@@ -1,0 +1,16 @@
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%; // =1rem; to allow the user to change the font size and react to this setting */
+  scroll-behavior: smooth;
+}
+
+body {
+  box-sizing: border-box;
+}
