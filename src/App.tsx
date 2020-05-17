@@ -10,6 +10,7 @@ import Schedule from './container/schedule/Schdule';
 import Settings from './container/settings/Settings';
 import Exams from './container/exams/Exams';
 import Auth from './container/auth/Auth';
+import './firebase/firebase';
 
 function App() {
 
