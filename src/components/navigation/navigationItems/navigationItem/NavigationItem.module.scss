@@ -6,6 +6,7 @@
     position: relative;
     border-radius: 5rem;
     overflow: hidden;
+    text-align: center;
 
     &:not(:last-child) {
         margin-bottom: 10%;
@@ -64,6 +65,20 @@
 
         &.active {
             color: $col-secondary-dark
+        }
+    }
+}
+
+@media (max-width: $mobile-split) {
+    .navItem {
+
+        &::before,
+        &::after {
+            content: none;
+        }
+
+        &:not(:last-child) {
+            margin-bottom: 2.5%;
         }
     }
 }

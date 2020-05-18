@@ -1,0 +1,59 @@
+@import '../../../../style/abstract/_variables';
+
+.toggle {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $col-primary-light;
+    box-shadow: inset 0 0 10px rgba(#000, .5);
+    overflow: hidden;
+    cursor: pointer;
+
+    $h: 2px;
+    $offset: 38%;
+    span {
+        position: absolute;
+        left: 50%;
+        border-radius: 5px;
+        transform: translateX(-50%);
+        height: $h;
+        width: 65%;
+        background-color: $col-primary-light-text;
+
+        transition: all .2s;
+
+        &:nth-child(1) {
+            top: calc(#{$offset} - #{$h});
+        }
+        &:nth-child(2) {
+            top: calc(50% - #{$h});
+        }
+        &:nth-child(3) {
+            bottom: $offset;
+        }
+    }
+
+    &:hover span {
+        &:nth-child(1) {
+            top: calc(#{.95 * $offset} - #{$h});
+        }
+        &:nth-child(3) {
+            bottom: calc(.95* #{$offset});
+        }
+    }
+
+    &.toggled span {
+        &:nth-child(1) {
+            top: calc(50% - #{$h});
+            transform: translateX(-50%) rotate(225deg);
+        }
+        &:nth-child(2) {
+            opacity: 0;
+        }
+        &:nth-child(3) {
+            top: calc(50% - #{$h});
+            transform: translateX(-50%) rotate(-225deg);
+        }
+    }
+}

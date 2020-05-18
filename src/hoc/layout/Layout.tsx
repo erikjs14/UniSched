@@ -9,8 +9,10 @@ import { RootState } from '../../index';
 
 import CSS from './Layout.module.scss';
 import { toCss } from './../../util/util';
+import SideDrawer from '../../components/navigation/sidedrawer/SideDrawer';
 const {
-    nav: s_nav,
+    navDesktop: s_navDesktop,
+    navMobile: s_navMobile,
     main: s_main,
 } = CSS;
 
@@ -23,13 +25,22 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     return (
         <Fragment>
-            <nav className={toCss(s_nav)}>
+            <nav className={toCss(s_navDesktop, 'util-desktop-only')}>
                 <Sidebar 
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
                     imgUrl={imgUrl ? imgUrl : 'img/cute_dog.jpg'}
                 />
+            </nav>
+
+            <nav className={toCss(s_navMobile, 'util-mobile-only')}>
+                <SideDrawer
+                    navItems={navConfig}
+                    onLogout={() => logout(dispatch)}
+                    displayName={displayName}
+                    imgUrl={imgUrl ? imgUrl : 'img/cute_dog.jpg'}
+                />  
             </nav>
 
             <main className={toCss(s_main)}>

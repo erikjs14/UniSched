@@ -1,0 +1,85 @@
+@import '../../../style/abstract/_variables';
+
+.drawer {
+
+    .toggle {
+        position: fixed;
+        top: $drawer-toggle-offset;
+        right: $drawer-toggle-offset;
+        width: $drawer-toggle-width;
+        height: $drawer-toggle-width;
+        z-index: 1000;
+    }
+
+    .menu {
+        position: fixed;
+        top: #{$drawer-toggle-offset + $drawer-toggle-width * .5};
+        right: #{$drawer-toggle-offset + $drawer-toggle-width * .5};
+        background-color: $col-secondary-light;
+        color: $col-secondary-light-text;
+        width: 70%;
+        padding: 4rem 1rem 1rem;
+        border-radius: 1rem;
+        opacity: 0;
+        transform-origin: top right;
+        transform: scale(.01);
+        z-index: 500;
+
+        transition: all .3s;
+
+        .userArea {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 50%;
+            margin: auto auto 2.5rem;
+    
+            .userImg {
+                width: 25%;
+                border-radius: 50%;
+            }
+    
+            .username {
+    
+            }
+        }
+    }
+
+    .logoutArea {
+        margin-top: 3rem;
+        text-align: right;
+
+        button {
+            font-size: 1rem;
+        }
+    }
+
+    .backdrop {
+        position: fixed;
+        top: #{$drawer-toggle-offset + $drawer-toggle-width * .5};
+        right: #{$drawer-toggle-offset + $drawer-toggle-width * .5};
+        width: 100vw;
+        height: 100vh;
+        background-color: $col-backdrop;
+        transform-origin: top right;
+        transform: translate(0, 0) scale(.01);
+        opacity: 0;
+        z-index: 400;
+
+        transition: all .2s;
+    }
+
+    &.toggled {
+
+        .menu {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .backdrop {
+            opacity: 1;
+            transform: translate(50vw, -50vh) scale(5);
+        }
+    }
+}

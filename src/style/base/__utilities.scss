@@ -1,12 +1,33 @@
 @import '../abstract/_variables';
 
-.util-card {
-    background-color: #fff;
-    border-radius: 3rem;
-    padding: 4rem;
-    box-shadow: 0 0 4rem rgba(#000, .08);
+.util {
+    
+    &-card {
+        background-color: #fff;
+        border-radius: 3rem;
+        padding: 4rem;
+        box-shadow: 0 0 4rem rgba(#000, .08);
+    }
+
+    &-bg-light {
+        background-color: lighten($color: $col-primary-light, $amount: 75);
+    }
 }
 
-.util-bg-light {
-    background-color: lighten($color: $col-primary-light, $amount: 75);
+@media (min-width: #{$mobile-split + 1}) {
+    .util {
+
+        &-mobile-only {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: $mobile-split) {
+    .util {
+
+        &-desktop-only {
+            display: none;
+        }
+    }
 }
