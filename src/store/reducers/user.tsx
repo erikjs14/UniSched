@@ -6,6 +6,7 @@ import { SetSignedOutAC, SignOutFailAC } from './../actions/user.d';
 
 const initialState: UserState = {
     username: null,
+    userImgUrl: null,
     globalLoading: true
 };
 
@@ -22,6 +23,7 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
 const setSignedIn = (state: UserState, action: SetSignedInAC): UserState => {
     return updateObject(state, {
         username: action.user.displayName,
+        userImgUrl: action.user.photoURL,
         globalLoading: false,
     });
 };

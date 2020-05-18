@@ -4,14 +4,31 @@ import { SidebarProps } from './Sidebar.d';
 import CSS from './Sidebar.module.scss';
 import { toCss } from './../../../util/util';
 import Button from '../../ui/button/Button';
+import { ReactComponent as BlankUserIcon } from '../../../assets/user_blank.svg';
+import NavigationItems from '../navigationItems/NavigationItems';
 const {
     sidebar: s_sidebar,
+    userArea: s_userArea,
+    userImg: s_userImg,
+    username: s_username,
+    navArea: s_navArea,
     logoutArea: s_logoutArea,
 } = CSS;
 
 export default function(props: SidebarProps): JSX.Element {
     return (
         <div className={toCss(s_sidebar)}>
+            <div className={toCss(s_userArea)}>
+                {props.imgUrl
+                    ? <img src={props.imgUrl} alt='User icon' className={toCss(s_userImg)} />
+                    : <BlankUserIcon className={toCss(s_userImg)} />
+                }
+                <span className={toCss(s_username)}>{props.displayName}</span>
+            </div>
+
+            <div className={toCss(s_navArea)}>
+                <NavigationItems items={props.navItems} />
+            </div>
 
             <div className={toCss(s_logoutArea)}>
                 <Button>Sign out</Button>
