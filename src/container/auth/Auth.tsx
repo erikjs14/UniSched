@@ -36,7 +36,7 @@ export default function() {
         loading 
             ? <Loader />
             : isAuthenticated
-                ? <Button onClick={logoutHandler}>Sign out</Button>
+                ? <Button onClick={logoutHandler} fontSize='2.5rem'>Sign out</Button>
                 : (
                     <Fragment>
                         <h1 className={toCss(s_authHeader)}>Sign in or Register</h1>
