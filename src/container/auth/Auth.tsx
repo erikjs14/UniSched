@@ -1,24 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import Input from '../../components/ui/input/Input';
-import Button from '../../components/ui/button/Button';
-import { authUI, showAuthUI } from '../../firebase/firebase';
+import React, { useEffect, useState, Fragment } from 'react';
+import { showAuthUI } from '../../firebase/firebase';
 import firebase from 'firebase';
+import { toCss } from './../../util/util';
+import { RootState } from '../../index';
+import Button from '../../components/ui/button/Button';
+import Loader from '../../components/ui/loader/Loader';
+
+import CSS from './Auth.module.scss';
+import { useSelector } from 'react-redux';
+const {
+    wrapper: s_wrapper,
+    authUI: s_authUI,
+    authDescr: s_authDescr,
+    authHeader: s_authHeader,
+} = CSS;  
 
 export default function() {
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => showAuthUI('#firebase-auth-container'), [])
+    const isAuthenticated: boolean = useSelector((state: RootState) => state.user.username !== null);
+
+    useEffect((): void => {
+        if (!isAuthenticated) showAuthUI('#firebase-auth-container');
+    }, [isAuthenticated])
+
+    const logoutHandler = () => {
+        setLoading(true);
+        firebase.auth().signOut()
+            .then(() => setLoading(false))
+            .catch(() => setLoading(false));
+    }
+
+    const authUI = (
+        loading 
+            ? <Loader />
+            : isAuthenticated
+                ? <Button onClick={logoutHandler}>Sign out</Button>
+                : (
+                    <Fragment>
+                        <h1 className={toCss(s_authHeader)}>Sign in or Register</h1>
+                        <div className={toCss('util-card', 'util-bg-light')} >
+                            <p className={s_authDescr}>Choose one of the following providers:</p>
+                            <div id="firebase-auth-container" className={s_authUI}></div>
+                        </div>
+                    </Fragment>
+                )
+    );
 
     return (
-        <div>
-            <div id="firebase-auth-container"></div>
-            <button onClick={() => firebase.auth().signOut()}>Sign out</button>
-            {/* <Input label='username' elementType='input' elementConfig={{type: 'text'}} value={username} onChange={(event) => setUsername(event.target.value)} />
-            <Input label='password' elementType='input' elementConfig={{type: 'password'}} value={password} onChange={event => setPassword(event.target.value)} />
-            <Button elementConfig={{onClick: signinHandler}} label='Sign In' />
-            <Button elementConfig={{onClick: signupHandler}} label='Sign Up' /> */}
+        <div className={toCss(s_wrapper)}>
+            {authUI}
         </div>
     );
 }

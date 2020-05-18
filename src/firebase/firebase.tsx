@@ -9,15 +9,13 @@ firebase.initializeApp(firebaseConfig);
 export const authUI: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(firebase.auth());
 
 export const showAuthUI = (identifier: string | Element): void => {
-    if (authUI.isPendingRedirect()){
-        authUI.start(identifier, {
-            signInSuccessUrl: '/todos',
-            signInOptions: [
-                firebase.auth.EmailAuthProvider.PROVIDER_ID,
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-            ],
-            tosUrl: '/tos',
-            privacyPolicyUrl: '/privacyPolicy',
-        });
-    }
+    authUI.start(identifier, {
+        signInSuccessUrl: '/todos',
+        signInOptions: [
+            firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        ],
+        tosUrl: '/tos',
+        privacyPolicyUrl: '/privacyPolicy',
+    });
 }
