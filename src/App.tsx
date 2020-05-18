@@ -15,7 +15,7 @@ import Exams from './container/exams/Exams';
 import Auth from './container/auth/Auth';
 import * as actions from './store/actions';
 import { RootState } from '.';
-import Layout from './components/ui/layout/Layout';
+import Layout from './hoc/layout/Layout';
 
 function App() {
 

@@ -1,4 +1,6 @@
 export {
     setSignedIn,
-    setSignedOut
+    setSignedOut,
+    startSignOut,
+    signOutFail,
 } from './user';

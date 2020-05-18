@@ -9,6 +9,7 @@ import createSagaMiddleware from 'redux-saga';
 import { Provider } from 'react-redux';
 
 import userReducer from './store/reducers/user';
+import { userWatcher } from './store/sagas';
 
 declare global {
     interface Window {
@@ -29,6 +30,8 @@ const sagaMiddleware = createSagaMiddleware();
 const store = createStore(rootReducer, composeEnhancer(
     applyMiddleware(sagaMiddleware)
 ));
+
+sagaMiddleware.run(userWatcher);
 
 ReactDOM.render(
     <React.StrictMode>

@@ -13,3 +13,15 @@ export const setSignedOut = (): SetSignedOutAC => {
         type: actionTypes.USER_SET_SIGNED_OUT,
     };
 };
+
+export const startSignOut = () => {
+    return {
+        type: actionTypes.USER_START_SIGN_OUT,
+    };
+};
+
+export const signOutFail = () => {
+    return {
+        type: actionTypes.USER_SIGN_OUT_FAIL,
+    };
+};

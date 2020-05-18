@@ -1,13 +1,13 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { showAuthUI } from '../../firebase/firebase';
-import firebase from 'firebase';
 import { toCss } from './../../util/util';
 import { RootState } from '../../index';
 import Button from '../../components/ui/button/Button';
 import Loader from '../../components/ui/loader/Loader';
+import { logout } from '../../store/actions/dispatcher';
 
 import CSS from './Auth.module.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 const {
     wrapper: s_wrapper,
     authUI: s_authUI,
@@ -17,26 +17,20 @@ const {
 
 export default function() {
 
-    const [loading, setLoading] = useState(false);
-
-    const isAuthenticated: boolean = useSelector((state: RootState) => state.user.username !== null);
+    const loading = useSelector((state: RootState) => state.user.globalLoading);
+    const isAuthenticated = useSelector((state: RootState) => state.user.username !== null);
 
     useEffect((): void => {
         if (!isAuthenticated) showAuthUI('#firebase-auth-container');
     }, [isAuthenticated])
 
-    const logoutHandler = () => {
-        setLoading(true);
-        firebase.auth().signOut()
-            .then(() => setLoading(false))
-            .catch(() => setLoading(false));
-    }
+    const dispatch = useDispatch();
 
     const authUI = (
         loading 
             ? <Loader />
             : isAuthenticated
-                ? <Button onClick={logoutHandler} fontSize='2.5rem'>Sign out</Button>
+                ? <Button onClick={() => logout(dispatch)} fontSize='2.5rem'>Sign out</Button>
                 : (
                     <Fragment>
                         <h1 className={toCss(s_authHeader)}>Sign in or Register</h1>

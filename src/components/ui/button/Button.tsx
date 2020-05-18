@@ -1,10 +1,7 @@
 import React from 'react';
 import CSS from './Button.module.scss';
 import { removeKey } from './../../../util/util';
-
-export interface ButtonProps extends React.ComponentProps<'button'> {
-    fontSize?: string;
-}
+import { ButtonProps } from './Button.d';
 
 export default function(props: ButtonProps): JSX.Element {
     const inlineStyle = {
