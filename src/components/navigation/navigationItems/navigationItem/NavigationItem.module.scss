@@ -1,6 +1,46 @@
-.navItem {
+@import '../../../../style/abstract/_variables';
 
-    .active {
-        
+.navItem {
+    list-style: none;
+    padding: 1rem 0;
+    position: relative;
+    border-radius: 5rem;
+    overflow: hidden;
+
+    &:not(:last-child) {
+        margin-bottom: 10%;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        width: .1px;
+        height: .1px;
+        opacity: 0;
+        pointer-events: none;
+        background-color: rgba($col-primary-dark, .8);
+
+        transition: all .3s;
+    }
+
+    &:hover::before {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(2000);
+    }
+    
+    a {
+        position: relative;
+        text-decoration: none;
+        color: inherit;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        z-index: 100;
+
+        &.active {
+            color: $col-secondary-dark
+        }
     }
 }

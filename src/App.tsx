@@ -25,7 +25,6 @@ function App() {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
-                console.log(user.photoURL)
                 dispatch(actions.setSignedIn(user))
             } else {
                 dispatch(actions.setSignedOut());

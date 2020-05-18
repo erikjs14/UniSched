@@ -5,7 +5,7 @@ import { NavigationItemsProps } from './NavigationItems.d';
 import { toCss } from './../../../util/util';
 import NavigationItem from './navigationItem/NavigationItem';
 const {
-    navItem: s_navItems,
+    navItems: s_navItems,
 } = CSS;
 
 export default function(props: NavigationItemsProps): JSX.Element {

@@ -1,10 +1,12 @@
-$col-primary-dark:      #45046a;
+// COLORS
+
+$col-primary-dark:      #222831;
 $col-primary-dark-text: #fff;
-$col-primary-light:     #5c2a9d;
+$col-primary-light:     #30475e;
 $col-primary-light-text: #fff;
-$col-secondary-dark:    #b5076b;
+$col-secondary-dark:    #c1a57b;
 $col-secondary-dark-text: #fff;
-$col-secondary-light:   #f1ebbb;
+$col-secondary-light:   #ececec;
 $col-secondary-light-text: #000;
 
 $col-turquoise:     #1abc9c;
@@ -27,3 +29,9 @@ $col-clouds:        #ecf0f1;
 $col-silver:        #bdc3c7;
 $col-soncrete:      #95a5a6;
 $col-asbestos:      #7f8c8d;
+
+/********* LAYOUT ***********/
+
+$sidebar-default-width:     20%;
+$sidebar-min-width:         20rem;
+$sidebar-max-width:         25rem;

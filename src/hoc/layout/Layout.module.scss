@@ -1,0 +1,23 @@
+@import '../../style/abstract/_variables';
+
+.nav {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    top: 0;
+    width: $sidebar-default-width;
+    min-width: $sidebar-min-width;
+    max-width: $sidebar-max-width;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.main {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: block;
+    width: calc(100% - #{$sidebar-default-width});
+    min-width: calc(100% - #{$sidebar-max-width});
+    max-width: calc(100% - #{$sidebar-min-width});
+}

@@ -7,6 +7,13 @@ import { logout } from '../../store/actions/dispatcher';
 import navConfig from '../../config/nav';
 import { RootState } from '../../index';
 
+import CSS from './Layout.module.scss';
+import { toCss } from './../../util/util';
+const {
+    nav: s_nav,
+    main: s_main,
+} = CSS;
+
 export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     const dispatch = useDispatch();
@@ -16,16 +23,16 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     return (
         <Fragment>
-            <nav>
+            <nav className={toCss(s_nav)}>
                 <Sidebar 
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : undefined}
+                    imgUrl={imgUrl ? imgUrl : 'img/cute_dog.jpg'}
                 />
             </nav>
 
-            <main>
+            <main className={toCss(s_main)}>
                 {props.children}
             </main>
         </Fragment>
