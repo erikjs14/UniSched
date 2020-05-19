@@ -13,21 +13,3 @@
         background-color: lighten($color: $col-primary-light, $amount: 75);
     }
 }
-
-@media (min-width: #{$mobile-split + 1}) {
-    .util {
-
-        &-mobile-only {
-            display: none;
-        }
-    }
-}
-
-@media (max-width: $mobile-split) {
-    .util {
-
-        &-desktop-only {
-            display: none;
-        }
-    }
-}

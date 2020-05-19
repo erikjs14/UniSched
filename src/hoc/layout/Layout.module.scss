@@ -1,4 +1,5 @@
 @import '../../style/abstract/_variables';
+@import '../../style/abstract/mixins';
 
 .navDesktop {
     position: absolute;
@@ -20,18 +21,11 @@
     width: calc(100% - #{$sidebar-default-width});
     min-width: calc(100% - #{$sidebar-max-width});
     max-width: calc(100% - #{$sidebar-min-width});
-}
 
-@media (max-width: $mobile-split) {
-
-    .main {
+    @include respond(tab-port) {
         position: relative;
         width: auto;
         min-width: unset;
         max-width: unset;
-    }
-
-    .navMobile {
-        
     }
 }

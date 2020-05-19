@@ -1,4 +1,5 @@
 @import '../../style/abstract/_variables';
+@import '../../style/abstract/mixins';
 
 .wrapper {
     display: flex;
@@ -22,6 +23,10 @@
         color: transparent;
         background-clip: text;
         -webkit-background-clip: text;
+
+        @include respond(phone) {
+            font-size: 3rem;
+        }
     }
 
     .authDescr {
@@ -32,11 +37,5 @@
 
     .authUI {
         
-    }
-}
-
-@media (max-width: 520px) {
-    .wrapper .authHeader {
-        font-size: 3rem;
     }
 }

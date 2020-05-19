@@ -1,6 +1,12 @@
 @import '../../../style/abstract/_variables';
+@import '../../../style/abstract/mixins';
 
 .drawer {
+    display: none;
+
+    @include respond(tab-port) {
+        display: block;
+    }
 
     .toggle {
         position: fixed;

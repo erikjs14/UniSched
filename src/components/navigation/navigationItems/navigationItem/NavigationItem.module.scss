@@ -1,4 +1,5 @@
 @import '../../../../style/abstract/_variables';
+@import '../../../../style/abstract/mixins';
 
 .navItem {
     list-style: none;
@@ -67,11 +68,8 @@
             color: $col-secondary-dark
         }
     }
-}
 
-@media (max-width: $mobile-split) {
-    .navItem {
-
+    @include respond(tab-port) {
         &::before,
         &::after {
             content: none;
