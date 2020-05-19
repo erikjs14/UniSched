@@ -1,26 +1,10 @@
 import React from 'react';
 
-import Collapsible from '../../components/ui/collapsible/Collapsible';
-
-export default function() {
+export default function(): JSX.Element {
 
     return (
         <div>
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
-            <Collapsible />
+
         </div>
     )
 
