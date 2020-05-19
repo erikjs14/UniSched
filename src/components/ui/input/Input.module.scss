@@ -1,13 +1,57 @@
+@import '../../../style/abstract/variables';
+
 .wrapper {
-    display: block;
-    width: 90%;
+    display: inline-block;
+    position: relative;
 
     .input {
-        display: block;
+        background: none;
+        border: none;
+        border-bottom: 1px solid $col-primary-light;
+        line-height: 2em;
 
+        color: #fff; // change to set programatically!!!
+
+        &.transparent {
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2em;
+
+            &:not(:placeholder-shown) {
+                cursor: pointer;
+            }
+        }
     }
 
     .label {
-        
+        color: rgba(#fff, .4); // set programatically!!!
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 2em;
+        line-height: .8em;
+        opacity: 1;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+
+        transition: all .2s ease-out;
+    }
+
+    .input.transparent + label {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .input:not(.transparent):not(:placeholder-shown) + label {
+        transform: translate(-1rem, -100%);
+        font-size: 1.3rem;
+        color: $col-primary-dark;
+    }
+
+    .input.transparent:not(:placeholder-shown) + label {
+        opacity: 0;
     }
 }

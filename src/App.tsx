@@ -15,6 +15,7 @@ import Exams from './container/exams/Exams';
 import Auth from './container/auth/Auth';
 import * as actions from './store/actions';
 import { RootState } from '.';
+import SubjectSettings from "./container/settings/subjectSettings/SubjectSettings";
 import Layout from './hoc/layout/Layout';
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
             <ProtectedRoute exact path='/schedule' render={() => <Layout><Schedule/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/exams' render={() => <Layout><Exams/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/settings' render={() => <Layout><Settings/></Layout>} orElse='/auth' />
+            <ProtectedRoute path='/settings/:id' render={(props) => <Layout><SubjectSettings subjectId={props.match.params.id}/></Layout>} orElse='/auth' />
 
             <Redirect to='/' />
         </Switch>
