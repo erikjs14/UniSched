@@ -11,10 +11,6 @@
     background-color: $col-primary-light;
     color: $col-primary-light-text;
 
-    @include respond(tab-port) {
-        display: none;
-    }
-
     .userArea {
         display: flex;
         flex-direction: column;

@@ -25,7 +25,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     return (
         <Fragment>
-            <nav className={toCss(s_navDesktop, 'util-desktop-only')}>
+            <nav className={toCss(s_navDesktop)}>
                 <Sidebar 
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
@@ -34,7 +34,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                 />
             </nav>
 
-            <nav className={toCss(s_navMobile, 'util-mobile-only')}>
+            <nav className={toCss(s_navMobile)}>
                 <SideDrawer
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)}
