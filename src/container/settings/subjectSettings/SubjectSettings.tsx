@@ -7,14 +7,13 @@ import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
 import { toCss } from './../../../util/util';
 import Input from '../../../components/ui/input/Input';
-import colorChoices, { findColorConfig } from '../../../config/colorChoices';
+import { findColorConfig } from '../../../config/colorChoices';
+import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 const {
     wrapper: s_wrapper,
     settingsCard: s_settingsCard,
     header: s_header,
     trashIcon: s_trashIcon,
-    colorRow: s_colorRow,
-    colorPicker: s_colorPicker,
 } = CSS;
 
 export default function(props: SubjectSettingsProps): JSX.Element {
@@ -79,29 +78,12 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                                 </div>
                             </div>
 
-                            <div
-                                className={toCss(s_colorRow)}
-                            >
-                                {colorChoices.map(obj => (
-                                    <label 
-                                        key={obj.name}
-                                        className={toCss(s_colorPicker)}
-                                    >
-                                        <input 
-                                            type='radio'
-                                            value={obj.name}
-                                            onChange={event => changeColor(event.target.value)}
-                                            checked={obj.name === colorConfig.newColor.name}
-                                            name={'color'}
-                                        />
-                                        <span style={{backgroundColor: obj.value}}></span>
-                                        <svg viewBox="0 0 120 120" version="1.1"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="60" cy="60" r="50"/>
-                                        </svg>
-                                    </label>
-                                ))}
-                            </div>
+                            <ColorPicker
+                                style={{zIndex: 100}}
+                                onSelectedColorChanged={changeColor}
+                                selectedColorName={colorConfig.newColor.name}
+                            />
+                            
                         </div>
                     </div>
 
