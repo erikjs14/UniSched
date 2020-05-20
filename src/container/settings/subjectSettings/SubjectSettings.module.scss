@@ -42,4 +42,50 @@
         }
     }
 
+    .settingsArea {
+        margin-top: 4rem;
+        position: relative;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: auto;
+        grid-template-areas: 
+            "events tasks exams";
+        column-gap: 2rem;
+        row-gap: 2rem;
+
+        @include respond(tab-land) {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-areas: 
+                "events exams"
+                "tasks tasks";
+        }
+
+        @include respond(phone) {
+            grid-template-columns: 100%;
+            grid-template-areas: 
+                "events"
+                "exams"
+                "tasks";
+        }
+
+        .eventsArea {
+            background-color: red;
+
+            grid-area: events;
+        }
+
+        .tasksArea {
+            background-color: yellow;
+
+            grid-area: tasks;
+        }
+
+        .examsArea {
+            background-color: green;
+
+            grid-area: exams;
+        }
+    }
+
 }

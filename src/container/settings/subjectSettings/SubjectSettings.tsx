@@ -13,7 +13,11 @@ const {
     wrapper: s_wrapper,
     settingsCard: s_settingsCard,
     header: s_header,
+    settingsArea: s_settingsArea,
     trashIcon: s_trashIcon,
+    eventsArea: s_eventsArea,
+    tasksArea: s_tasksArea,
+    examsArea: s_examsArea,
 } = CSS;
 
 export default function(props: SubjectSettingsProps): JSX.Element {
@@ -84,8 +88,25 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                                 onSelectedColorChanged={changeColor}
                                 selectedColorName={colorConfig.newColor.name}
                             />
+
+                            <div className={toCss(s_settingsArea)}>
+                            
+                                <div className={toCss(s_eventsArea)}>
+                                    EVENTS
+                                </div>
+
+                                <div className={toCss(s_tasksArea)}>
+                                    TASKS
+                                </div>
+
+                                <div className={toCss(s_examsArea)}>
+                                    EXAMS
+                                </div>
+
+                            </div>
                             
                         </div>
+
                     </div>
 
                 );
