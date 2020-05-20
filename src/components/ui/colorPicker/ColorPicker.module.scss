@@ -71,7 +71,7 @@
                 transform: scale(25);
             }
 
-            input:checked ~ span::before {
+            input:active ~ span::before {
                 z-index: 50;
                 transform: scale(60);
             }
