@@ -72,6 +72,7 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                                     value={title}
                                     onChange={setTitle}
                                     label='Title'
+                                    labelColor={colorConfig.newColor.textColor}
                                 />
                                 <div className={toCss(s_trashIcon)}>
                                     <FontAwesomeIcon icon={faTrash} />

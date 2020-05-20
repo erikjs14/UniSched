@@ -10,8 +10,6 @@
         border-bottom: 1px solid $col-primary-light;
         line-height: 2em;
 
-        color: #fff; // change to set programatically!!!
-
         &.transparent {
             border: none;
             text-transform: uppercase;
@@ -25,7 +23,6 @@
     }
 
     .label {
-        color: rgba(#fff, .4); // set programatically!!!
         text-transform: uppercase;
         letter-spacing: 2px;
         font-size: 2em;

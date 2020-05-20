@@ -1,6 +1,6 @@
 import React from 'react';
 import CSS from './Input.module.scss';
-import { toCss } from '../../../util/util';
+import { toCss, hex2rgba } from '../../../util/util';
 
 const {
     wrapper: s_wrapper,
@@ -16,6 +16,7 @@ export interface InputProps<T> {
     label: string;
     elementConfig?: object;
     width?: number;
+    labelColor?: string;
 }
 
 export default function(props: InputProps<string>): JSX.Element| null {
@@ -34,8 +35,19 @@ export default function(props: InputProps<string>): JSX.Element| null {
         case 'input-transparent':
             return (
                 <div style={style} className={toCss(s_wrapper)}>
-                    <input {...props.elementConfig} placeholder='' value={props.value} onChange={event => props.onChange(event.target.value)} className={toCss(s_input, s_transparent)} />
-                    <label className={toCss(s_label)} >{props.label}</label>
+                    <input 
+                        {...props.elementConfig} 
+                        value={props.value} 
+                        onChange={event => props.onChange(event.target.value)} 
+                        className={toCss(s_input, s_transparent)}
+                        placeholder=''
+                    />
+                    <label 
+                        style={{color: hex2rgba(props.labelColor ? props.labelColor : '#000', .4)}} 
+                        className={toCss(s_label)} 
+                    >
+                        {props.label}
+                    </label>
                 </div>
             );
         default:
