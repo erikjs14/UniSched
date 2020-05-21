@@ -1,5 +1,6 @@
 import firebase from 'firebase/app';
 import { db } from './firebase';
+import * as models from './model';
 import * as fields from './fields';
 
 const users_ref = db.collection(fields.USER_COL);
@@ -14,40 +15,143 @@ const tasks_ref = (subjectId: string) => subject_ref(subjectId).collection(field
 const task_ref = (subjectId: string, taskId: string) => tasks_ref(subjectId).doc(taskId);
 
 type QSnapPromise = Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>>;
+type QSnap = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 type DocSnapPromise = Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>>;
+type DocSnap = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
 
-export const fetchUser = (): DocSnapPromise => {
-    return user_ref().get();
+/********** FETCHING DATA ***************/
+
+type DocData = firebase.firestore.DocumentData;
+type DocDataWithId = {data: DocData | undefined, id: string};
+type ColRef = firebase.firestore.CollectionReference<DocData>;
+const fetchCollection = async (col_ref: ColRef): Promise<DocDataWithId[]> => {
+    const qSnap: QSnap  = await col_ref.get();
+    const elements: DocDataWithId[] = [];
+    qSnap.forEach(docSnap => {
+        elements.push({
+            data: docSnap.data(),
+            id: docSnap.id,
+        });
+    });
+
+    return elements;
 }
 
-export const fetchSubjectsShallow = (): QSnapPromise => {
-    return subjects_ref().get();
+type DocRef = firebase.firestore.DocumentReference<DocData>;
+const fetchDocument = async (doc_ref: DocRef): Promise<DocDataWithId> => {
+    const docSnap: DocSnap = await doc_ref.get();
+    if (docSnap.exists) {
+        return {
+            id: docSnap.id,
+            data: docSnap.data(),
+        };
+    } else {
+        throw new Error('Document does not exist!');
+    }
 }
 
-export const fetchSubject = (subjectId: string): DocSnapPromise => {
-    return subject_ref(subjectId).get();
+export const fetchUser = async (): Promise<models.UserModel> => {
+    const docWithId: DocDataWithId = await fetchDocument(user_ref());
+    return {
+        id: docWithId.id,
+    };
 }
 
-export const fetchExams = (subjectId: string): QSnapPromise => {
-    return exams_ref(subjectId).get();
+export const fetchSubjectsShallow = async (): Promise<models.SubjectModel[]> => {
+    const data: DocDataWithId[] = await fetchCollection(subjects_ref());
+    const subjects: models.SubjectModel[] = [];
+
+    data.forEach(dataWithId => subjects.push({
+        id: dataWithId.id,
+        color: dataWithId.data?.color,
+        name: dataWithId.data?.name,
+    }));
+
+    return subjects;
 }
 
-export const fetchExam = (subjectId: string, examId: string): DocSnapPromise => {
-    return exam_ref(subjectId, examId).get();
+export const fetchSubject = async (subjectId: string): Promise<models.SubjectModel> => {
+    const docWithId: DocDataWithId = await fetchDocument(subject_ref(subjectId));
+    return {
+        id: docWithId.id,
+        color: docWithId.data?.color,
+        name: docWithId.data?.name,
+    };
 }
 
-export const fetchEvents = (subjectId: string): QSnapPromise => {
-    return events_ref(subjectId).get();
+export const fetchExams = async (subjectId: string): Promise<models.ExamModel[]> => {
+    const data: DocDataWithId[] = await fetchCollection(exams_ref(subjectId));
+    const exams: models.ExamModel[] = [];
+
+    data.forEach(dataWithId => exams.push({
+        id: dataWithId.id,
+        start: dataWithId.data?.start,
+        type: dataWithId.data?.type,
+    }));
+
+    return exams;
 }
 
-export const fetchEvent = (subjectId: string, eventId: string): DocSnapPromise => {
-    return event_ref(subjectId, eventId).get();
+export const fetchExam = async (subjectId: string, examId: string): Promise<models.ExamModel> => {
+    const docWithId: DocDataWithId = await fetchDocument(exam_ref(subjectId, examId));
+    return {
+        id: docWithId.id,
+        start: docWithId.data?.start,
+        type: docWithId.data?.type,
+    };
 }
 
-export const fetchTasks = (subjectId: string): QSnapPromise => {
-    return tasks_ref(subjectId).get();
+export const fetchEvents = async (subjectId: string): Promise<models.EventModel[]> => {
+    const data: DocDataWithId[] = await fetchCollection(events_ref(subjectId));
+    const events: models.EventModel[] = [];
+
+    data.forEach(dataWithId => events.push({
+        id: dataWithId.id,
+        firstStart: dataWithId.data?.firstStart,
+        firstEnd: dataWithId.data?.firstEnd,
+        endAt: dataWithId.data?.endAt,
+        interval: dataWithId.data?.interval,
+        type: dataWithId.data?.type,
+    }));
+
+    return events;
 }
 
-export const fetchTask = (subjectId: string, taskId: string): DocSnapPromise => {
-    return task_ref(subjectId, taskId).get();
+export const fetchEvent = async (subjectId: string, eventId: string): Promise<models.EventModel> => {
+    const docWithId: DocDataWithId = await fetchDocument(event_ref(subjectId, eventId));
+    return {
+        id: docWithId.id,
+        firstStart: docWithId.data?.firstStart,
+        firstEnd: docWithId.data?.firstEnd,
+        endAt: docWithId.data?.endAt,
+        interval: docWithId.data?.interval,
+        type: docWithId.data?.type,
+    };
 }
+
+export const fetchTasks = async (subjectId: string): Promise<models.TaskModel[]> => {
+    const data: DocDataWithId[] = await fetchCollection(tasks_ref(subjectId));
+    const tasks: models.TaskModel[] = [];
+
+    data.forEach(dataWithId => tasks.push({
+        id: dataWithId.id,
+        timestamps: dataWithId.data?.timestamps,
+        timestampsDone: dataWithId.data?.timestampsDone,
+        type: dataWithId.data?.type,
+    }));
+
+    return tasks;
+}
+
+export const fetchTask = async (subjectId: string, taskId: string): Promise<models.TaskModel> => {
+    const docWithId: DocDataWithId = await fetchDocument(task_ref(subjectId, taskId));
+    return {
+        id: docWithId.id,
+        timestamps: docWithId.data?.timestamps,
+        timestampsDone: docWithId.data?.timestampsDone,
+        type: docWithId.data?.type,
+    };
+}
+
+/************ WRITING DATA *****************/
+

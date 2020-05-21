@@ -1,5 +1,6 @@
 export const USER_COL = 'user';
 export const SUBJECTS_COL = 'subjects';
+
 export const EVENTS_COL = 'events';
 export const EXAMS_COL = 'exams';
 export const TASKS_COL = 'tasks';
