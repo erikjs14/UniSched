@@ -20,3 +20,7 @@ export const showAuthUI = (identifier: string | Element): void => {
         privacyPolicyUrl: '/privacyPolicy',
     });
 }
+
+export const signOut = () => {
+    firebase.auth().signOut();
+}
