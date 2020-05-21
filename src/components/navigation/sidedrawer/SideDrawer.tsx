@@ -7,6 +7,8 @@ import Button from '../../ui/button/Button';
 import CSS from './SideDrawer.module.scss';
 import { toCss } from './../../../util/util';
 import NavigationItems from '../navigationItems/NavigationItems';
+import { useDispatch } from 'react-redux';
+import { logout } from './../../../store/actions/dispatcher';
 const {
     drawer: s_drawer,
     toggled: s_toggled,
@@ -20,6 +22,8 @@ const {
 } = CSS;
 
 export default function(props: SideDrawerProps): JSX.Element {
+
+    const dispatch = useDispatch();
 
     const [toggled, setToggled] = useState(false);
 
@@ -48,7 +52,7 @@ export default function(props: SideDrawerProps): JSX.Element {
                 <NavigationItems items={props.navItems} />
 
                 <div className={toCss(s_logoutArea)}>
-                    <Button>Sign out</Button>
+                    <Button onClick={() => logout(dispatch)}>Sign out</Button>
                 </div>
             </div>
         </div>

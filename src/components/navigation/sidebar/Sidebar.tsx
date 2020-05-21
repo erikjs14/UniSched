@@ -6,6 +6,8 @@ import { toCss } from './../../../util/util';
 import Button from '../../ui/button/Button';
 import { ReactComponent as BlankUserIcon } from '../../../assets/user_blank.svg';
 import NavigationItems from '../navigationItems/NavigationItems';
+import { logout } from '../../../store/actions/dispatcher';
+import { useDispatch } from 'react-redux';
 const {
     sidebar: s_sidebar,
     userArea: s_userArea,
@@ -16,6 +18,9 @@ const {
 } = CSS;
 
 export default function(props: SidebarProps): JSX.Element {
+
+    const dispatch = useDispatch();
+
     return (
         <div className={toCss(s_sidebar)}>
             <div className={toCss(s_userArea)}>
@@ -31,7 +36,7 @@ export default function(props: SidebarProps): JSX.Element {
             </div>
 
             <div className={toCss(s_logoutArea)}>
-                <Button>Sign out</Button>
+                <Button onClick={() => logout(dispatch)}>Sign out</Button>
             </div>
         </div>
     )
