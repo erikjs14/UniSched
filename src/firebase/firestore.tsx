@@ -14,16 +14,15 @@ const event_ref = (subjectId: string, eventId: string) => events_ref(subjectId).
 const tasks_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.TASKS_COL);
 const task_ref = (subjectId: string, taskId: string) => tasks_ref(subjectId).doc(taskId);
 
-type QSnapPromise = Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>>;
 type QSnap = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
-type DocSnapPromise = Promise<firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>>;
 type DocSnap = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
+type DocRef = firebase.firestore.DocumentReference<DocData>;
+type ColRef = firebase.firestore.CollectionReference<DocData>;
+type DocData = firebase.firestore.DocumentData;
+type DocDataWithId = {data: DocData | undefined, id: string};
 
 /********** FETCHING DATA ***************/
 
-type DocData = firebase.firestore.DocumentData;
-type DocDataWithId = {data: DocData | undefined, id: string};
-type ColRef = firebase.firestore.CollectionReference<DocData>;
 const fetchCollection = async (col_ref: ColRef): Promise<DocDataWithId[]> => {
     const qSnap: QSnap  = await col_ref.get();
     const elements: DocDataWithId[] = [];
@@ -37,7 +36,6 @@ const fetchCollection = async (col_ref: ColRef): Promise<DocDataWithId[]> => {
     return elements;
 }
 
-type DocRef = firebase.firestore.DocumentReference<DocData>;
 const fetchDocument = async (doc_ref: DocRef): Promise<DocDataWithId> => {
     const docSnap: DocSnap = await doc_ref.get();
     if (docSnap.exists) {

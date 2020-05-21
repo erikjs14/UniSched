@@ -5,6 +5,7 @@ export interface WithId {
 }
 
 export interface BaseModel {}
+export interface Timestamp {seconds: number, nanoseconds: number}
 
 export interface UserModel extends BaseModel {
 
@@ -18,23 +19,23 @@ export interface SubjectModel extends BaseModel {
 export interface SubjectModelWithId extends SubjectModel, WithId {}
 
 export interface EventModel extends BaseModel {
-    firstStart: number | undefined;
-    firstEnd: number | undefined;
-    endAt: number | undefined;
+    firstStart: Timestamp | undefined;
+    firstEnd: Timestamp | undefined;
+    endAt: Timestamp | undefined;
     interval: 'weekly' | 'biweekly' | 'daily' | undefined;
     type: string | undefined;
 }
 export interface EventModelWithId extends EventModel, WithId {}
 
 export interface ExamModel extends BaseModel {
-    start: number | undefined;
+    start: Timestamp | undefined;
     type: string | undefined;
 }
 export interface ExamModelWithId extends ExamModel, WithId {}
 
 export interface TaskModel extends BaseModel {
-    timestamps: number[] | undefined;
-    timestampsDone: number[] | undefined;
+    timestamps: Timestamp[] | undefined;
+    timestampsDone: Timestamp[] | undefined;
     type: string | undefined;
 }
 export interface TaskModelWithId extends TaskModel, WithId {}
