@@ -2,9 +2,10 @@ import firebaseConfig from './firebaseConfig.json';
 import firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 firebase.initializeApp(firebaseConfig);
-
+export const db = firebase.firestore();
 
 export const authUI: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(firebase.auth());
 
