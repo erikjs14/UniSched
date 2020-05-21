@@ -200,23 +200,23 @@ export const addExam = async (subjectId: string, exam: models.ExamModel): Promis
 
 /************ UPDATING DATA ****************/
 
-const updateDoc = async <T extends models.BaseModel>(docRef: DocRef, data: T): Promise<void> => {
+const updateDoc = async <T extends models.BaseModel, D extends keyof T>(docRef: DocRef, data: Pick<T, D>): Promise<void> => {
     await docRef.update(data);
 }
 
-export const updateSubject = async (subjectId: string, subject: models.SubjectModel): Promise<void> => {
+export const updateSubject = async <D extends keyof models.SubjectModel>(subjectId: string, subject: Pick<models.SubjectModel, D>): Promise<void> => {
     await updateDoc(subject_ref(subjectId), subject);
 }
 
-export const updateExam = async (subjectId: string, id: string, exam: models.ExamModel): Promise<void> => {
+export const updateExam = async <D extends keyof models.ExamModel>(subjectId: string, id: string, exam: Pick<models.ExamModel, D>): Promise<void> => {
     await updateDoc(exam_ref(subjectId, id), exam);
 }
 
-export const updateEvent = async (subjectId: string, id: string, event: models.EventModel): Promise<void> => {
+export const updateEvent = async <D extends keyof models.EventModel>(subjectId: string, id: string, event: Pick<models.EventModel, D>): Promise<void> => {
     await updateDoc(event_ref(subjectId, id), event);
 }
 
-export const updateTask = async (subjectId: string, id: string, task: models.TaskModel): Promise<void> => {
+export const updateTask = async <D extends keyof models.TaskModel>(subjectId: string, id: string, task: Pick<models.TaskModel, D>): Promise<void> => {
     await updateDoc(task_ref(subjectId, id), task);
 }
 
