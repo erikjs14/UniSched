@@ -16,6 +16,7 @@ import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
 const {
     wrapper: s_wrapper,
+    titleInput: s_titleInput,
     settingsCard: s_settingsCard,
     header: s_header,
     settingsArea: s_settingsArea,
@@ -139,6 +140,7 @@ export default function(props: SubjectSettingsProps): JSX.Element {
 
                             <div className={toCss(s_header)}>
                                 <Input 
+                                    addClass={s_titleInput}
                                     elementType='input-transparent'
                                     value={state.subject?.name || ''}
                                     onChange={updateTitle}

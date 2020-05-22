@@ -17,6 +17,7 @@ export interface InputProps<T> {
     elementConfig?: object;
     width?: number;
     labelColor?: string;
+    addClass?: string;
 }
 
 export default function(props: InputProps<string>): JSX.Element| null {
@@ -27,14 +28,14 @@ export default function(props: InputProps<string>): JSX.Element| null {
     switch (props.elementType) {
         case 'input': 
             return (
-                <div style={style} className={toCss(s_wrapper)}>
+                <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
                     <input {...props.elementConfig} placeholder='' value={props.value} onChange={event => props.onChange(event.target.value)} className={toCss(s_input)} />
                     <label className={toCss(s_label)} >{props.label}</label>
                 </div>
             );
         case 'input-transparent':
             return (
-                <div style={style} className={toCss(s_wrapper)}>
+                <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
                     <input 
                         {...props.elementConfig} 
                         value={props.value} 
