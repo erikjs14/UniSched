@@ -15,6 +15,7 @@ export default function(props: NavigationItemProps): JSX.Element {
             <NavLink
                 exact to={props.link}
                 activeClassName={s_active}
+                onClick={() => props.onClick()}
             >
                 {props.children}
             </NavLink>

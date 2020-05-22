@@ -5,4 +5,5 @@ export interface NavigationItemConfig {
 
 export interface NavigationItemsProps {
     items: Array<NavigationItemConfig>;
+    onItemClicked?: Function;
 }

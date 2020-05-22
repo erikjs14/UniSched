@@ -32,7 +32,9 @@ export default function(props: SidebarProps): JSX.Element {
             </div>
 
             <div className={toCss(s_navArea)}>
-                <NavigationItems items={props.navItems} />
+                <NavigationItems 
+                    items={props.navItems}   
+                />
             </div>
 
             <div className={toCss(s_logoutArea)}>

@@ -16,6 +16,11 @@ export default function(props: NavigationItemsProps): JSX.Element {
                 <NavigationItem 
                     key={config.link}
                     link={config.link}
+                    onClick={() => {
+                        if (props.onItemClicked) {
+                            props.onItemClicked();
+                        }
+                    }}
                 >
                     {config.label}
                 </NavigationItem>

@@ -49,7 +49,10 @@ export default function(props: SideDrawerProps): JSX.Element {
                     <span className={toCss(s_username)}>{props.displayName}</span>
                 </div>
 
-                <NavigationItems items={props.navItems} />
+                <NavigationItems 
+                    items={props.navItems} 
+                    onItemClicked={() => setToggled(prevToggled => !prevToggled)}    
+                />
 
                 <div className={toCss(s_logoutArea)}>
                     <Button onClick={() => logout(dispatch)}>Sign out</Button>
