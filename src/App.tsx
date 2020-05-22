@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LandingPage from './container/landingPage/LandingPage';
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
 import ToDos from './container/todos/ToDos';
-import Schedule from './container/schedule/Schdule';
+import Schedule from './container/schedule/Schedule';
 import Settings from './container/settings/Settings';
 import Exams from './container/exams/Exams';
 import Auth from './container/auth/Auth';

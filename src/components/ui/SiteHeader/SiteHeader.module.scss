@@ -1,0 +1,18 @@
+@import '../../../style/abstract/variables';
+
+.header {
+    color: rgba($col-primary-dark, .4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ 
+    .icon {
+        font-size: 2em;
+        position: absolute;
+        left: 2.5rem;
+    }
+
+    .title {
+        font-size: 4em;
+    }
+}
