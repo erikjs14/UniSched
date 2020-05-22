@@ -1,4 +1,10 @@
+@import '../../style/abstract/mixins';
+
 .subjects {
     width: 80%;
     margin: 5rem auto;
+
+    @include respond(phone) {
+        width: 90%;
+    }
 }
