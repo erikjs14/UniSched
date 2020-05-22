@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
+import { useHistory } from 'react-router-dom';
 import Loader from '../../components/ui/loader/Loader';
 import { fetchSubjectsShallow } from '../../firebase/firestore';
 import { SubjectModelWithId } from './../../firebase/model';
@@ -8,11 +9,19 @@ import SimpleSettingsRow from '../../components/ui/SimpleSettingsRow/SimpleSetti
 import { SETTINGS_ALT } from './../../util/globalTypes.d';
 import CSS from './Settings.module.scss';
 import { toCss } from './../../util/util';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const {
+    container: s_container,
     subjects: s_subjects,
+    wrapper: s_wrapper,
+    noElementsText: s_noElementsText,
 } = CSS;
 
 export default function(): JSX.Element {
+
+    const history = useHistory();
 
     const [subjects, setSubjects] = useState<SubjectModelWithId[]>([]);
     const [loading, setLoading] = useState(true);
@@ -37,6 +46,18 @@ export default function(): JSX.Element {
         content = <Loader />;
     } else if (error) { 
         content = 'ERROR. Refresh Page.'; // ToDo: nsert something more meaningful
+    } else if (subjects.length === 0) { 
+        
+        content = (
+            <div className={toCss(s_wrapper)}>
+                <span className={toCss(s_noElementsText)}>
+                    It looks as if you haven't saved any subjects yet. <br />
+                    Do it now!
+                </span>
+                <FloatingButton onClick={() => history.push('/settings/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
+            </div>
+        );
+
     } else {
         const elements = subjects.map(subject => (
             <SimpleSettingsRow 
@@ -50,12 +71,13 @@ export default function(): JSX.Element {
         content = (
             <div className={toCss(s_subjects)}>
                 {elements}
+                <FloatingButton onClick={() => history.push('/settings/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
             </div>
         )
     }
 
     return (
-        <div>
+        <div className={toCss(s_container)}>
             
             <SiteHeader type='settings' title='Settings' />
 

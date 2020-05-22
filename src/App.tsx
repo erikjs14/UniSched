@@ -48,6 +48,7 @@ function App() {
             <ProtectedRoute exact path='/schedule' render={() => <Layout><Schedule/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/exams' render={() => <Layout><Exams/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/settings' render={() => <Layout><Settings/></Layout>} orElse='/auth' />
+            <ProtectedRoute exact path='/settings/new' render={() => <Layout><SubjectSettings new /></Layout>} orElse='/auth' />
             <ProtectedRoute path='/settings/:id' render={(props) => <Layout><SubjectSettings subjectId={props.match.params.id}/></Layout>} orElse='/auth' />
 
             <Redirect to='/' />
