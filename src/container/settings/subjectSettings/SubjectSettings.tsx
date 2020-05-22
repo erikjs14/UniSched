@@ -2,7 +2,7 @@ import React, { useReducer, useState, useEffect } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Button } from 'evergreen-ui';
+import { Button, Dialog } from 'evergreen-ui';
 
 import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
@@ -10,7 +10,7 @@ import { toCss } from './../../../util/util';
 import Input from '../../../components/ui/input/Input';
 import { defaultColor } from '../../../config/colorChoices';
 import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
-import { fetchSubject, updateSubject, addSubject } from './../../../firebase/firestore';
+import { fetchSubject, updateSubject, addSubject, deleteSubject } from './../../../firebase/firestore';
 import { useLocation, useHistory } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
@@ -35,6 +35,9 @@ export default function(props: SubjectSettingsProps): JSX.Element {
     const [state, dispatch] = props.new
         ? useReducer(reducer, initialStateNew)
         : useReducer(reducer, initialState);
+
+    const [wantDelete, setWantDelete] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         // fetch subject data only if changing existing subject
@@ -142,7 +145,10 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                                     label='Title'
                                     labelColor={state.subject?.color.newColor.textColor}
                                 />
-                                <div className={toCss(s_trashIcon)}>
+                                <div 
+                                    className={toCss(s_trashIcon)}
+                                    onClick={() => setWantDelete(true)}    
+                                >
                                     <FontAwesomeIcon icon={faTrash} />
                                 </div>
                             </div>
@@ -183,6 +189,39 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                             </div>
                             
                         </div>
+
+                        <Dialog
+                            isShown={wantDelete}
+                            isConfirmLoading={deleting}
+                            title={`Delete subject ${state.subject?.name}`}
+                            confirmLabel='Confirm'
+                            onCancel={close => {
+                                setWantDelete(false);
+                                close();
+                            }}
+                            onConfirm={close => {
+                                if (!state.subject) {
+                                    dispatch(setError('Unexpected error.'));
+                                } else {
+                                    setDeleting(true);
+                                    deleteSubject(state.subject.id)
+                                        .then(() => {
+                                            close();
+                                            history.push('/settings');
+                                        })
+                                        .catch(error => {
+                                            dispatch(setError(error.message));
+                                            setDeleting(false);
+                                            setWantDelete(false);
+                                        })
+                                }
+                            }}
+                            onCloseComplete={() => { //closed in another way
+                                setWantDelete(false);
+                            }}
+                        >
+                            Are you sure you want to delete this subject including all of the exams, events and tasks?
+                        </Dialog>
 
                     </div>
 
