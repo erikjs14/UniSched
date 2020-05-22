@@ -18,6 +18,15 @@ export interface SubjectModel extends BaseModel {
 }
 export interface SubjectModelWithId extends SubjectModel, WithId {}
 
+export interface DeepSubjectModel {
+    id: string,
+    color: string,
+    name: string,
+    tasks: TaskModelWithId[],
+    exams: ExamModelWithId[],
+    events: EventModelWithId[],
+}
+
 export interface EventModel extends BaseModel {
     firstStart: Timestamp;
     firstEnd: Timestamp;

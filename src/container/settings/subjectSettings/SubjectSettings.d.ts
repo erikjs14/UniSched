@@ -1,8 +1,4 @@
-interface existingProps  {
-    subjectId: string;
+export type SubjectSettingsProps = {
+    subjectId?: string;
+    new?: boolean;
 }
-interface newProps {
-    new: boolean;
-}
-
-export type SubjectSettingsProps = existingProps | newProps;

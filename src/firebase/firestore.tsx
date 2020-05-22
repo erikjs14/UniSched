@@ -77,14 +77,7 @@ export const fetchSubject = async (subjectId: string): Promise<models.SubjectMod
     };
 }
 
-export const fetchSubjectDeep = async (subjectId: string): Promise<{
-    id: string,
-    color: string | undefined,
-    name: string | undefined,
-    tasks: models.TaskModelWithId[],
-    exams: models.ExamModelWithId[],
-    events: models.EventModelWithId[],
-}> => {
+export const fetchSubjectDeep = async (subjectId: string): Promise<models.DeepSubjectModel> => {
     const [ subject, tasks, exams, events ] = 
         await Promise.all([
             fetchSubject(subjectId),
