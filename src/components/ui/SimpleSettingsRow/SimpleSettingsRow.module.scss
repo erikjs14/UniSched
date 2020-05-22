@@ -1,0 +1,55 @@
+@import '../../../style/abstract/variables';
+
+.row {
+    position: relative;
+    padding: 1rem 3rem;
+    font-size: 1.5em;
+    border-radius: $default-border-radius;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transform: scale(1);
+    transition: all .3s ease-out;
+    box-shadow: 1px 2px 4px rgba(#000, .5);
+
+    &:not(:last-child) {
+        margin-bottom: 2rem;
+    }
+
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: .5px 1px 6px rgba(#000, .3);
+    }
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+        border-radius: $default-border-radius;
+        transform: scale(1);
+        // filter: blur(1px);
+
+        transition: all .3s ease-out;
+    }
+
+    &:hover::before {
+        filter: blur(2px);
+    }
+
+    .icon {
+        position: absolute;
+        right: 2rem;
+    }
+
+    .title {
+        font-size: 1.2em;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        font-weight: bold;
+    }
+}

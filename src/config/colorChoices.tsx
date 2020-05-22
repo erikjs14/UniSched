@@ -12,7 +12,7 @@ const choices: Color[] = [
     { name: 'wetAsphalt', value: '#34495e', textColor: '#fff' },
     { name: 'midnightBlue', value: '#2c3e50', textColor: '#fff' },
     { name: 'sunFlower', value: '#f1c40f', textColor: '#000' },
-    { name: 'orange', value: '#f39c12', textColor: '#000' },
+    { name: 'orange', value: '#f39c12', textColor: '#fff' },
     { name: 'carrot', value: '#e67e22', textColor: '#000' },
     { name: 'pumpkin', value: '#d35400', textColor: '#000' },
     { name: 'alizarin', value: '#e74c3c', textColor: '#000' },
