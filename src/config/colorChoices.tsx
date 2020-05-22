@@ -37,3 +37,7 @@ export const findColorConfig = (name: string): Color => {
 export const defaultColor = () => {
     return choices[0].name;
 }
+
+export const defaultColorConfig = () => {
+    return choices[0];
+}

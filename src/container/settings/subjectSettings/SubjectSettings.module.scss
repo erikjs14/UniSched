@@ -1,4 +1,5 @@
 @import '../../../style/abstract/mixins';
+@import '../../../style/abstract/variables';
 
 .wrapper {
     width: 100%;
@@ -11,8 +12,9 @@
     margin: 2rem;
     min-height: 90vh;
     border-radius: 3rem;
-    padding: 3rem 7%;
+    padding: 3rem 7% 5rem;
     overflow: hidden;
+    position: relative;
     
     z-index: 10;
 
@@ -85,6 +87,33 @@
             background-color: green;
 
             grid-area: exams;
+        }
+    
+    }
+
+    .footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 5rem;
+        text-align: right;
+        padding: 0 4rem;
+
+        .saveBtn {
+            background-image: linear-gradient(to bottom, $col-primary-light, $col-primary-dark);
+
+            &:hover {
+                background-image: linear-gradient(
+                    to bottom, 
+                    darken($col-primary-light, 5%), 
+                    darken($col-primary-dark, 5%)
+                );
+            }
+
+            &:disabled {
+                opacity: 1;
+            }
         }
     }
 

@@ -2,6 +2,7 @@ import React, { useReducer, useState, useEffect } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Button } from 'evergreen-ui';
 
 import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
@@ -9,10 +10,10 @@ import { toCss } from './../../../util/util';
 import Input from '../../../components/ui/input/Input';
 import { defaultColor } from '../../../config/colorChoices';
 import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
-import { fetchSubject } from './../../../firebase/firestore';
-import { useLocation } from 'react-router-dom';
+import { fetchSubject, updateSubject, addSubject } from './../../../firebase/firestore';
+import { useLocation, useHistory } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
-import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor } from './state';
+import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
 const {
     wrapper: s_wrapper,
     settingsCard: s_settingsCard,
@@ -22,13 +23,18 @@ const {
     eventsArea: s_eventsArea,
     tasksArea: s_tasksArea,
     examsArea: s_examsArea,
+    footer: s_footerArea,
+    saveBtn: s_saveBtn,
 } = CSS;
 
 export default function(props: SubjectSettingsProps): JSX.Element {
 
     const location = useLocation();
+    const history = useHistory();
     
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [state, dispatch] = props.new
+        ? useReducer(reducer, initialStateNew)
+        : useReducer(reducer, initialState);
 
     useEffect(() => {
         // fetch subject data only if changing existing subject
@@ -44,7 +50,7 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                     dispatch(setLoading(false));
                 })
         }
-    }, [props.new, location.pathname]);
+    }, [props.new, location.pathname, dispatch]);
 
     // logic for animating and changing color
     const [animateColorChange, startAnimateColorChange] = useState(false);
@@ -62,6 +68,37 @@ export default function(props: SubjectSettingsProps): JSX.Element {
 
     const updateTitle = (newTitle: string): void => {
         dispatch(changeName(newTitle))
+    }
+
+    const saveHandler = () => {
+        dispatch(startSaving());
+        if (state.subject?.changed) {
+            if (props.new) {
+                addSubject({
+                    name: state.subject.name,
+                    color: state.subject.color.newColor.name,
+                }).then(id => {
+                    history.replace(`/settings/${id}`);
+                    dispatch(setSaved());
+                }).catch(error => {
+                    dispatch(setError(error.message));
+                })
+
+            } else {
+                updateSubject(
+                    state.subject.id,
+                    {
+                        name: state.subject.name,
+                        color: state.subject.color.newColor.name,
+                    }
+                ).then(() => {
+                    console.log('Saved Subject');
+                    dispatch(setSaved());
+                }).catch(error => {
+                    dispatch(setError(error.message));
+                })
+            }
+        }
     }
 
     const defaultStyle = {
@@ -130,6 +167,19 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                                     EXAMS
                                 </div>
 
+                            </div>
+
+                            <div className={toCss(s_footerArea)}>
+                                <Button 
+                                    appearance='primary' 
+                                    className={toCss(s_saveBtn)}
+                                    iconBefore='floppy-disk'
+                                    isLoading={state.saving}
+                                    disabled={!state.subject?.changed}
+                                    onClick={saveHandler}
+                                >
+                                    Save
+                                </Button>
                             </div>
                             
                         </div>

@@ -1,5 +1,5 @@
 import { SubjectModelWithId } from './../../../firebase/model';
-import { Color, findColorConfig } from './../../../config/colorChoices';
+import { Color, findColorConfig, defaultColorConfig } from './../../../config/colorChoices';
 
 interface ColorConfig {
     newColor: Color;
@@ -96,6 +96,20 @@ export const initialState: StateModel = {
     error: null,
     saving: false,
 };
+export const initialStateNew: StateModel = {
+    subject: {
+        name: '',
+        color: {
+            newColor: defaultColorConfig(),
+            oldColor: defaultColorConfig(),
+        },
+        changed: false,
+        id: '',
+    },
+    error: null,
+    loading: false,
+    saving: false,
+}
 
 export const reducer = (state: StateModel, action: ActionModel & any): StateModel => {
     switch (action.type) {
