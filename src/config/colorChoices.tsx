@@ -1,4 +1,4 @@
-interface Color {name: string, value: string, textColor: string}
+export interface Color {name: string, value: string, textColor: string}
 
 const choices: Color[] = [
     { name: 'turquoise', value: '#1abc9c', textColor: '#fff' },
@@ -32,4 +32,8 @@ export const findColorConfig = (name: string): Color => {
     });
     if (val) return val;
     else return choices[0];
+}
+
+export const defaultColor = () => {
+    return choices[0].name;
 }

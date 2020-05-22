@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -7,11 +7,12 @@ import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
 import { toCss } from './../../../util/util';
 import Input from '../../../components/ui/input/Input';
-import { findColorConfig } from '../../../config/colorChoices';
+import { defaultColor } from '../../../config/colorChoices';
 import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 import { fetchSubject } from './../../../firebase/firestore';
 import { useLocation } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
+import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor } from './state';
 const {
     wrapper: s_wrapper,
     settingsCard: s_settingsCard,
@@ -26,72 +27,52 @@ const {
 export default function(props: SubjectSettingsProps): JSX.Element {
 
     const location = useLocation();
-    const [subjectId, setSubjectId] = useState(extractIdFromUrl(location.pathname));
-
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
-
-    const [title, setTitle] = useState('');
-    const [colorConfig, setColorConfig] = useState({
-        newColor: { name: 'turquoise', value: '#1abc9c', textColor: '#fff' },
-        oldColor: { name: 'turquoise', value: '#1abc9c', textColor: '#fff' },
-    });
-
-    const [subjectPropChanged, setSubjectPropChanged] = useState(false);
+    
+    const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
         // fetch subject data only if changing existing subject
         if (!props.new) {
-            fetchSubject(subjectId)
+            fetchSubject(extractIdFromUrl(location.pathname))
                 .then(subject => {
-                    setTitle(subject.name);
-                    const colorConfig = findColorConfig(subject.color);
-                    setColorConfig({
-                        newColor: colorConfig,
-                        oldColor: colorConfig,
-                    });
+                    dispatch(setSubject(subject));
                 })
                 .catch(error => {
-                    setError(error);
+                    dispatch(setError(error));
                 })
                 .finally(() => {
-                    setLoading(false);
+                    dispatch(setLoading(false));
                 })
         }
-    }, [props, subjectId]);
+    }, [props.new, location.pathname]);
 
     // logic for animating and changing color
     const [animateColorChange, startAnimateColorChange] = useState(false);
 
-    if (loading) {
+    if (state.loading) {
         return <Loader />;
-    } else if (error) {
+    } else if (state.error) {
         return <span>An Error has occurred. Try refreshing the page.</span>;
     }
 
-    const changeColor = (colorName: string): void => {
-        setSubjectPropChanged(true);
-        setColorConfig(prev => ({
-            newColor: findColorConfig(colorName),
-            oldColor: prev.newColor,
-        }));
+    const updateColor = (colorName: string): void => {
+        dispatch(changeColor(colorName));
         startAnimateColorChange(true);
     }
 
     const updateTitle = (newTitle: string): void => {
-        setSubjectPropChanged(true);
-        setTitle(newTitle);
+        dispatch(changeName(newTitle))
     }
 
     const defaultStyle = {
         transition: 'background-color .3s ease-in-out',
-        backgroundColor: colorConfig.newColor.value,
-        color: colorConfig.newColor.textColor,
+        backgroundColor: state.subject?.color.newColor.value,
+        color: state.subject?.color.newColor.textColor,
     };
     const colorStyles =  {
         unmounted: {},
-        entering: { backgroundColor: colorConfig.oldColor.value },
-        entered: { backgroundColor: colorConfig.newColor.value },
+        entering: { backgroundColor: state.subject?.color.oldColor.value },
+        entered: { backgroundColor: state.subject?.color.newColor.value },
         exiting: {},
         exited: {},
     }
@@ -102,7 +83,7 @@ export default function(props: SubjectSettingsProps): JSX.Element {
             timeout={300}
             exit={false}
         >
-            {state => {
+            {transitionState => {
 
                 return (
                     <div
@@ -111,7 +92,7 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                         <div
                             style={{
                                 ...defaultStyle,
-                                ...colorStyles[state],
+                                ...colorStyles[transitionState],
                             }} 
                             className={toCss(s_settingsCard)}
                         >
@@ -119,10 +100,10 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                             <div className={toCss(s_header)}>
                                 <Input 
                                     elementType='input-transparent'
-                                    value={title}
+                                    value={state.subject?.name || ''}
                                     onChange={updateTitle}
                                     label='Title'
-                                    labelColor={colorConfig.newColor.textColor}
+                                    labelColor={state.subject?.color.newColor.textColor}
                                 />
                                 <div className={toCss(s_trashIcon)}>
                                     <FontAwesomeIcon icon={faTrash} />
@@ -131,8 +112,8 @@ export default function(props: SubjectSettingsProps): JSX.Element {
 
                             <ColorPicker
                                 style={{zIndex: 100}}
-                                onSelectedColorChanged={changeColor}
-                                selectedColorName={colorConfig.newColor.name}
+                                onSelectedColorChanged={updateColor}
+                                selectedColorName={state.subject?.color.newColor.name || defaultColor()}
                             />
 
                             <div className={toCss(s_settingsArea)}>
