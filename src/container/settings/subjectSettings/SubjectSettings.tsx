@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React, { useReducer, useState, useEffect, useCallback } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,7 @@ const {
     saveBtn: s_saveBtn,
 } = CSS;
 
-export default function(props: SubjectSettingsProps): JSX.Element {
+export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
     const location = useLocation();
     const history = useHistory();
@@ -59,22 +59,16 @@ export default function(props: SubjectSettingsProps): JSX.Element {
     // logic for animating and changing color
     const [animateColorChange, startAnimateColorChange] = useState(false);
 
-    if (state.loading) {
-        return <Loader />;
-    } else if (state.error) {
-        return <span>An Error has occurred. Try refreshing the page.</span>;
-    }
-
-    const updateColor = (colorName: string): void => {
+    const updateColor = useCallback((colorName: string): void => {
         dispatch(changeColor(colorName));
         startAnimateColorChange(true);
-    }
+    }, [dispatch]);
 
-    const updateTitle = (newTitle: string): void => {
+    const updateTitle = useCallback((newTitle: string): void => {
         dispatch(changeName(newTitle))
-    }
+    }, [dispatch]);
 
-    const saveHandler = () => {
+    const saveHandler = useCallback(() => {
         dispatch(startSaving());
         if (state.subject?.changed) {
             if (props.new) {
@@ -103,6 +97,12 @@ export default function(props: SubjectSettingsProps): JSX.Element {
                 })
             }
         }
+    }, [dispatch, history, props.new, state.subject]);
+
+    if (state.loading) {
+        return <Loader />;
+    } else if (state.error) {
+        return <span>An Error has occurred. Try refreshing the page.</span>;
     }
 
     const defaultStyle = {
@@ -231,7 +231,7 @@ export default function(props: SubjectSettingsProps): JSX.Element {
             }}
         </Transition>
     );
-}
+});
 
 const extractIdFromUrl = (url: string): string => {
     const parts = url.split('/');
