@@ -14,6 +14,7 @@ import { fetchSubject, updateSubject, addSubject, deleteSubject } from './../../
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
+import EventsSettings from './subSettings/eventsSettings/EventsSettings';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -169,7 +170,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                     </div>
                                 
                                     <div className={toCss(s_eventsArea)}>
-                                        EVENTS
+                                        <EventsSettings
+
+                                        />
                                     </div>
 
                                     <div className={toCss(s_examsArea)}>
