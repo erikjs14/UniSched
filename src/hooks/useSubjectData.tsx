@@ -54,12 +54,14 @@ interface AllDataModel {
 }
 interface StateModel {
     loading:    boolean;
+    saving: boolean;
     error:      string | null;
     data: AllDataModel,
     dataChanged: boolean;
 }
 const initialState: StateModel = {
     loading: false,
+    saving: false,
     error: null,
     data: {},
     dataChanged: false,
@@ -69,7 +71,8 @@ interface ActionModel {
     type: string;
 }
 
-const ACTION_START_REQUEST = 'START_REQUEST';
+const ACTION_START_FETCH_REQUEST = 'START_FETCH_REQUEST';
+const ACTION_START_SAVE_REQUEST = 'START_SAVE_REQUEST';
 const ACTION_SET_ALL_DATA_AFTER_REQUEST = 'SET_ALL_DATA_AFTER_REQUEST';
 const ACTION_SET_DATA_AFTER_REQUEST = 'SET_DATA_AFTER_REQUEST';
 const ACTION_ADD_DATA_AFTER_REQUEST = 'ADD_DATA_AFTER_REQUEST';
@@ -148,9 +151,14 @@ const setDataProperty = <T extends SubjectDataModel>(dataId: string, key: keyof 
 
 const reducer = (state: StateModel, action: ActionModel): StateModel => {
     switch (action.type) {
-        case ACTION_START_REQUEST: return {
+        case ACTION_START_FETCH_REQUEST: return {
             ...state,
             loading: true,
+            error: null,
+        };
+        case ACTION_START_SAVE_REQUEST: return {
+            ...state,
+            saving: true,
             error: null,
         };
         case ACTION_SET_ALL_DATA_AFTER_REQUEST: return {
@@ -178,7 +186,7 @@ const reducer = (state: StateModel, action: ActionModel): StateModel => {
             data = (action as unknown as AddDataActionModel).data;
             return {
                 ...state,
-                loading: false,
+                saving: false,
                 error: null,
                 data: {
                     ...state.data,
@@ -191,12 +199,13 @@ const reducer = (state: StateModel, action: ActionModel): StateModel => {
             data: { ...state.data },
             error: (action as unknown as SetErrorActionModel).error,
             loading: false,
+            saving: false,
         };
         case ACTION_REMOVE_DATA_AFTER_REQUEST: return {
             ...state,
-            loading: false,
             error: null,
             dataChanged: false,
+            saving: false,
             data: (removeKey(
                 (action as unknown as RemoveDataActionModel).dataId,
                 state.data
@@ -335,7 +344,7 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     const fetchAllData = useCallback((): void => {
 
-        dispatch({type: ACTION_START_REQUEST});
+        dispatch({type: ACTION_START_FETCH_REQUEST});
 
         g_fetchAllData(dataTypeId, subjectId)
             .then(dataArray => {
@@ -351,7 +360,7 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     const fetchData = useCallback((dataId: string): void => {
 
-        dispatch({ type: ACTION_START_REQUEST });
+        dispatch({ type: ACTION_START_FETCH_REQUEST });
 
         g_fetchData(dataTypeId, subjectId, dataId)
             .then(datum => {
@@ -368,7 +377,7 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     const deleteData = useCallback((dataId: string): void => {
 
-        dispatch({ type: ACTION_START_REQUEST });
+        dispatch({ type: ACTION_START_SAVE_REQUEST });
 
         g_deleteData(dataTypeId, subjectId, dataId)
             .then(() => {
@@ -382,7 +391,7 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     const updateData = useCallback(<D extends keyof T>(dataId: string, data: Pick<T, D>) => {
 
-        dispatch({ type: ACTION_START_REQUEST });
+        dispatch({ type: ACTION_START_SAVE_REQUEST });
 
         g_updateData(dataTypeId, subjectId, dataId, data)
             .then(() => {
@@ -398,7 +407,7 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     const addData = useCallback((data: T): void => {
 
-        dispatch({type: ACTION_START_REQUEST});
+        dispatch({type: ACTION_START_SAVE_REQUEST});
 
         g_addData<T>(dataTypeId, subjectId, data)
             .then(newId => {
@@ -418,6 +427,7 @@ const useSubjectData = <T extends SubjectDataModel>(
         addData,
         data: {
             loading: state.loading,
+            saving: state.saving,
             error: state.error,
             changed: state.dataChanged,
             items: mapDataObjectToArray(dataTypeId, state.data),
