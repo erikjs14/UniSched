@@ -163,13 +163,13 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 />
 
                                 <div className={toCss(s_settingsArea)}>
-                                
-                                    <div className={toCss(s_eventsArea)}>
-                                        EVENTS
-                                    </div>
 
                                     <div className={toCss(s_tasksArea)}>
                                         TASKS
+                                    </div>
+                                
+                                    <div className={toCss(s_eventsArea)}>
+                                        EVENTS
                                     </div>
 
                                     <div className={toCss(s_examsArea)}>

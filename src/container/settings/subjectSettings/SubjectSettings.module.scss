@@ -56,7 +56,7 @@
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: auto;
         grid-template-areas: 
-            "events tasks exams";
+            "tasks events exams";
         column-gap: 2rem;
         row-gap: 2rem;
 
@@ -70,9 +70,9 @@
         @include respond(phone) {
             grid-template-columns: 100%;
             grid-template-areas: 
+                "tasks"
                 "events"
-                "exams"
-                "tasks";
+                "exams";
         }
 
         .eventsArea {
