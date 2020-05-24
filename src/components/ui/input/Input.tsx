@@ -16,6 +16,7 @@ export interface InputProps<T> {
     label: string;
     elementConfig?: object;
     width?: number;
+    inputColor?: string;
     labelColor?: string;
     addClass?: string;
 }
@@ -41,6 +42,7 @@ export default function(props: InputProps<string>): JSX.Element| null {
                         value={props.value} 
                         onChange={event => props.onChange(event.target.value)} 
                         className={toCss(s_input, s_transparent)}
+                        style={{color: props.inputColor ? hex2rgba(props.inputColor) : 'inherit'}}
                         placeholder=''
                     />
                     <label 
