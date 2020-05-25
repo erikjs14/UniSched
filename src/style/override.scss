@@ -24,3 +24,16 @@
 .react-datepicker__day {
     width: 2.4rem !important;
 }
+
+.react-datepicker {
+    animation: inAnim .2s;
+}
+
+@keyframes inAnim {
+    from {
+        transform: scale(.01);
+    }
+    to {
+        transform: scale(1);
+    }
+}

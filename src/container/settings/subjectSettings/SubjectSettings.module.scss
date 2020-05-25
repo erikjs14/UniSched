@@ -18,6 +18,10 @@
     
     z-index: 10;
 
+    @include respond(tab-port) {
+        font-size: 1.2em;
+    }
+
     .header {
         z-index: 100;
         display: flex;

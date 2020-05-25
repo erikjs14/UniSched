@@ -32,6 +32,12 @@ export default function(props: EventCardProps): JSX.Element {
         </div>
     );
 
+    const CustomDateInput = ({ value, onClick}: any) => (
+        <div onClick={onClick} className={toCss(s_datetimepicker)}>
+            {value}
+        </div>
+    );
+
     return (
         <SettingsCard
             header={header}
@@ -41,7 +47,9 @@ export default function(props: EventCardProps): JSX.Element {
                 <div className={toCss(s_row)}>
                     <span>First Start</span>
                     <DateTimePicker
-                        className={toCss(s_datetimepicker)}
+                        customInput={<CustomDateInput />}
+                        showWeekNumbers
+                        withPortal
                         selected={getDateFromSeconds(props.data.firstStart.seconds)}
                         onChange={date => props.onChange<Timestamp>('firstStart', getTimestampFromDate(date || new Date()))}
                         {...DATETIMEPICKER_DEFAULT_PROPS}
@@ -51,7 +59,9 @@ export default function(props: EventCardProps): JSX.Element {
                 <div className={toCss(s_row)}>
                     <span>First End</span>
                     <DateTimePicker
-                        className={toCss(s_datetimepicker)}
+                        customInput={<CustomDateInput />}
+                        showWeekNumbers
+                        withPortal
                         selected={getDateFromSeconds(props.data.firstEnd.seconds)}
                         onChange={date => props.onChange<Timestamp>('firstEnd', getTimestampFromDate(date || new Date()))}
                         {...DATETIMEPICKER_DEFAULT_PROPS}
@@ -62,7 +72,9 @@ export default function(props: EventCardProps): JSX.Element {
                 <div className={toCss(s_row)}>
                     <span>End at</span>
                     <DateTimePicker
-                        className={toCss(s_datetimepicker)}
+                        customInput={<CustomDateInput />}
+                        showWeekNumbers
+                        withPortal
                         selected={getDateFromSeconds(props.data.endAt.seconds)}
                         onChange={date => props.onChange<Timestamp>('endAt', getTimestampFromDate(date || new Date()))}
                         minDate={getDateFromSeconds(props.data.firstEnd.seconds)}
