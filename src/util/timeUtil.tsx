@@ -67,6 +67,6 @@ export const uncheckTask = (timestamp: Timestamp, task: TaskModel): TaskModel =>
     };
 }
 
-export const getSecondsFromDate = (date: Date): number => date.getTime() / 1000;
+export const getSecondsFromDate = (date: Date): number => Math.round(date.getTime() / 1000);
 export const getDateFromSeconds = (secs: number): Date => new Date(secs * 1000);
-export const getTimestampFromDate = (date: Date): Timestamp => ({seconds: date.getTime() / 1000, nanoseconds: 0});
+export const getTimestampFromDate = (date: Date): Timestamp => ({seconds: Math.round(date.getTime() / 1000), nanoseconds: 0});

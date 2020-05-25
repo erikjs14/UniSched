@@ -491,18 +491,17 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     }, [dataTypeId, subjectId]);
 
-    const deleteData = useCallback((dataId: string): void => {
+    const deleteData = useCallback(async (dataId: string): Promise<void> => {
 
         dispatch({ type: ACTION_START_SAVE_REQUEST });
 
-        g_deleteData(dataTypeId, subjectId, dataId)
-            .then(() => {
-                dispatch(removeDataAfterRequest(dataId));
-            })
-            .catch(error => {
-                dispatch(setError(error.message));
-            });
-
+        try {
+            await g_deleteData(dataTypeId, subjectId, dataId)
+            dispatch(removeDataAfterRequest(dataId));
+        } catch (error) {
+            dispatch(setError(error.message));
+            throw new Error(error);
+        }
     }, [dataTypeId, subjectId]);
 
     const updateData = useCallback(<D extends keyof T>(dataId: string, data: Pick<T, D>) => {

@@ -10,3 +10,11 @@ export const DATETIMEPICKER_DEFAULT_PROPS = {
     timeCaption: 'time',
     showTimeSelect: true,
 }
+
+export const EVENTS_START_STATE = {
+    firstStart: {seconds: Math.round(new Date().getTime() / 1000), nanoseconds: 0},
+    firstEnd: {seconds: Math.round(new Date().getTime() / 1000 + 60 * 90), nanoseconds: 0},
+    endAt: {seconds : Math.round(new Date().getTime() / 1000 + 60 * 60 * 24 * 7), nanoseconds: 0},
+    interval: 'weekly',
+    type: '',
+};

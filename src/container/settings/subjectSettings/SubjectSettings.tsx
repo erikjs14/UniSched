@@ -198,6 +198,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                                 setEventsSaveState(newState);
                                                 if (newState) setEventsDataChanged(false);
                                             }}
+                                            onError={error => dispatch(setError(error))}
                                         />
                                     </div>
 
@@ -263,7 +264,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 }}
             </Transition>
             <Prompt
-                when={state.subject?.changed && !deleting && !(props.new && state.saving)}
+                when={(state.subject?.changed || eventsDataChanged) && !deleting && !(props.new && state.saving)}
                 message='You have unsaved changes. Proceed?'
             />
         </Fragment>

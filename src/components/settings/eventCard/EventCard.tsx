@@ -8,6 +8,7 @@ import Input from '../../ui/input/Input';
 import { Timestamp, IntervalType, IntervalOptions } from '../../../firebase/model';
 import { getDateFromSeconds, getTimestampFromDate } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/settingsConfig';
+import Button from '../../../components/ui/button/Button';
 // const {
     
 // } = CSS;
@@ -60,6 +61,14 @@ export default function(props: EventCardProps): JSX.Element {
                 onChange={newInterval => props.onChange<IntervalType>('interval', newInterval as IntervalType)}
                 options={IntervalOptions}
             />
+
+            <Button
+                danger
+                fontSize='.8em'
+                onClick={() => props.onRemove()}
+            >
+                Remove
+            </Button>
 
         </SettingsCard>
     );

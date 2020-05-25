@@ -5,4 +5,5 @@ export interface EventsSettingsProps {
     initialData?: EventModelWithId[];
     onDataChanged: Function;
     onSaveStateChanged(newSaveState: boolean): void;
+    onError(error: string): void;
 }

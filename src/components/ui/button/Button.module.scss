@@ -19,6 +19,11 @@
         box-shadow: 2px 4px 1em rgba(#000, .3);
         display: inline-block;
 
+        &.danger {
+            background-color: $col-danger;
+            color: $col-danger-text;
+        }
+
         transition: all .2s;
     }
 

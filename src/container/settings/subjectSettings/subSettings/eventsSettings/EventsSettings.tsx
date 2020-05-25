@@ -1,4 +1,4 @@
-import React, { useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
+import React, { useEffect, forwardRef, useImperativeHandle, useCallback, Fragment, useState } from 'react';
 import Loader from '../../../../../components/ui/loader/Loader';
 
 // import CSS from './EventsSettings.module.scss';
@@ -8,6 +8,8 @@ import useSubjectData from './../../../../../hooks/useSubjectData';
 import { EventModelWithId, EventModel, Timestamp } from './../../../../../firebase/model';
 import SettingsCards from '../../../../../components/settings/SettingsCards';
 import EventCard from '../../../../../components/settings/eventCard/EventCard';
+import { EVENTS_START_STATE } from '../../../../../config/settingsConfig';
+import { Dialog } from 'evergreen-ui';
 // const {
 //     wrapper: s_wrapper,
 // } = CSS;
@@ -18,10 +20,13 @@ export default React.memo(forwardRef(function(props: EventsSettingsProps, ref): 
         fetchAllData,
         addNewDatum,
         updateValue,
-        // remove,
+        deleteData,
         saveChanges,
         data
     } = useSubjectData<EventModel>('event', props.subjectId, props.initialData || null);
+
+    const [wantDelete, setWantDelete] = useState<string|null>(null);
+    const [deleting, setDeleting] = useState(false);
 
     // fetch data after mount if not provided by initialData
     useEffect(() => {
@@ -45,14 +50,9 @@ export default React.memo(forwardRef(function(props: EventsSettingsProps, ref): 
     );
 
     const addNewEventHandler = useCallback(() => {
-        addNewDatum({
-            firstStart: {seconds: new Date().getTime(), nanoseconds: 0},
-            firstEnd: {seconds: new Date().getTime() + 60 * 60, nanoseconds: 0},
-            endAt: {seconds : new Date().getTime() + 60 * 60 * 24 * 7, nanoseconds: 0},
-            interval: 'weekly',
-            type: 'NEW',
-        });
-    }, [addNewDatum]);
+        addNewDatum(EVENTS_START_STATE);
+        props.onDataChanged();
+    }, [addNewDatum, props]);
 
     const valChangedHandler = useCallback(<K extends keyof EventModel, T extends any>(dataId: string, key: K, newVal: T | null): void => {
         if (!newVal) return;
@@ -96,16 +96,52 @@ export default React.memo(forwardRef(function(props: EventsSettingsProps, ref): 
                 key={el.id}
                 data={el as EventModelWithId}
                 onChange={(key: keyof EventModel, newVal) => valChangedHandler(el.id, key, newVal)}
+                onRemove={() => setWantDelete(el.id)}
             />
         )
     })
     
     return (
-        <SettingsCards 
-            title='EVENTS'
-            onAddNew={addNewEventHandler}
-        >
-            {events}
-        </SettingsCards>
+        <Fragment>
+            <SettingsCards 
+                title='EVENTS'
+                onAddNew={addNewEventHandler}
+            >
+                {events}
+            </SettingsCards>
+
+            <Dialog
+                isShown={wantDelete ? true : false}
+                isConfirmLoading={deleting}
+                title={`Delete event ${(data.items.find(el => el.id === wantDelete) as EventModelWithId)?.type}`}
+                confirmLabel='Confirm'
+                onCancel={close => {
+                    setWantDelete(null);
+                    close();
+                }}
+                onConfirm={close => {
+                    if (!wantDelete) {
+                        props.onError('Unexpected error.');
+                    } else {
+                        setDeleting(true);
+                        deleteData(wantDelete)
+                            .then(() => {
+                                close();
+                            })
+                            .catch(error => {
+                                props.onError(error);
+                            })
+                            .finally(() => {
+                                setWantDelete(null);
+                            })
+                    }
+                }}
+                onCloseComplete={() => { //closed in another way
+                    setWantDelete(null);
+                }}
+            >
+                Are you sure you want to delete this event?
+            </Dialog>
+        </Fragment>
     );
 }));
