@@ -56,7 +56,8 @@ export default React.memo(forwardRef(function(props: EventsSettingsProps, ref): 
     }, [addNewDatum, props]);
 
     const valChangedHandler = useCallback(<K extends keyof EventModel, T extends any>(dataId: string, key: K, newVal: T | null): void => {
-        if (!newVal) return;
+        console.log(newVal)
+        if (newVal === null) return;
         if (key === 'firstStart') {// update end if before start
             const datum = (data.items.find(datum => datum.id === dataId));
             if (datum) {
