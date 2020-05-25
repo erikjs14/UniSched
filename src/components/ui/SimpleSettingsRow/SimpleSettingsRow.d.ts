@@ -1,8 +1,8 @@
-import { iconType } from '../../../util/globalTypes';
+import { IconType } from '../../../config/globalTypes';
 
 export interface SimpleSettingsRowProps {
     title: string;
-    icon?: iconType;
+    icon?: IconType;
     bgColor: string;
     linkTo?: string;
 }

@@ -10,6 +10,7 @@ import SettingsCards from '../../../../../components/settings/SettingsCards';
 import EventCard from '../../../../../components/settings/eventCard/EventCard';
 import { EVENTS_START_STATE } from '../../../../../config/settingsConfig';
 import { Dialog } from 'evergreen-ui';
+import { ICON_SCHEDULE_TYPE } from './../../../../../config/globalTypes.d';
 // const {
 //     wrapper: s_wrapper,
 // } = CSS;
@@ -105,6 +106,7 @@ export default React.memo(forwardRef(function(props: EventsSettingsProps, ref): 
         <Fragment>
             <SettingsCards 
                 title='EVENTS'
+                icon={ICON_SCHEDULE_TYPE}
                 onAddNew={addNewEventHandler}
             >
                 {events}

@@ -11,5 +11,5 @@ export default function(props: ButtonProps): JSX.Element {
     const inlineStyle = {
         fontSize: props.fontSize,
     }
-    return <button style={inlineStyle} className={toCss(s_btn, props.danger ? s_danger : '')} {...removeKey('fontSize', props)}>{props.children}</button>;
+    return <button {...removeKey('fontSize', props)} style={inlineStyle} className={toCss(s_btn, props.danger ? s_danger : '')} >{props.children}</button>;
 }

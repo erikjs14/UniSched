@@ -1,17 +1,5 @@
-.card {
-    background-color: rgba(#fff, .1);
-    overflow: hidden;
-
-    .header {
-        cursor: pointer;
-    }
-
-    .content {
-        // max-height: 100rem;
-        // transition: all .3s;
-
-        // &.collapsed {
-        //     max-height: 0;
-        // }
+.wrapper {
+    &:not(:last-child) {
+        margin-bottom: 1rem;
     }
 }

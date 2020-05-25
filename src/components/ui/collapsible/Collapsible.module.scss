@@ -16,11 +16,22 @@
 
             transition: transform .2s ease-in-out;
         }
+        
+        .headerContent {
+            max-width: 80%;
+            margin: auto;
+
+            input:not(:placeholder-shown) {
+                cursor: text;
+            }
+        }
     }
 
     .content {
         padding: 0 1rem .5rem;
         position: relative;
+        opacity: 1;
+        transition: opacity .3s;
     }
 
     &::after {
@@ -39,14 +50,25 @@
 
     &.collapsed {
         
-        .header .arrow {
-            transform: translateY(-50%) rotate(-180deg);
+        .header {
+
+            .headerContent {
+                pointer-events: none;
+            }
+        
+            .arrow {
+                transform: translateY(-50%) rotate(-180deg);
+            }
         }
 
         &::after {
             width: 40%;
             transition: width .5s ease-out;
             transition-delay: 0;
+        }
+
+        .content {
+            opacity: 0;
         }
     }
 }

@@ -1,7 +1,7 @@
 @import '../../../style/abstract/variables';
 
 .wrapper {
-    display: inline-block;
+    display: block;
     position: relative;
 
     .input {
@@ -54,9 +54,31 @@
     }
 
     .selectVisual {
+        cursor: pointer;
 
-        input:checked ~ span {
-            color:green;
+        &:not(:last-child) {
+            margin-right: .4rem;
+        }
+
+        input {
+            position: absolute;
+            height: 0;
+            width: 0;
+            opacity: 0;
+
+            &:checked + span {
+                background-color: $col-secondary-dark;
+            }
+        }
+
+        span {
+            font-size: .85em;
+            background-color: $col-primary-light;
+            padding: .1em .4em;
+            border-radius: 50rem;
+            border: 2px solid $col-primary-light;
+
+            transition: all .1s ease-out;
         }
     }
 }

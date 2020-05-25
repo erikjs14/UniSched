@@ -12,6 +12,7 @@ const {
     content: s_content,
     collapsed: s_collapsed,
     arrow: s_arrow,
+    headerContent: s_headerContent,
 } = CSS;
 
 export default function(props: React.PropsWithChildren<CollapsibleProps>): JSX.Element {
@@ -21,18 +22,20 @@ export default function(props: React.PropsWithChildren<CollapsibleProps>): JSX.E
     return (
         <div 
             className={collapsed
-                ? toCss(s_wrapper, s_collapsed)
-                : toCss(s_wrapper)
+                ? toCss(s_wrapper, s_collapsed, (props.addCss ? props.addCss : ''))
+                : toCss(s_wrapper, (props.addCss ? props.addCss : ''))
             }
         >
 
             <div 
                 className={toCss(s_header)}
-                onClick={() => setCollapsed(prev => !prev)}
+                onClick={() => collapsed ? setCollapsed(prev => !prev) : null}
             >
-                {props.header}
+                <div className={toCss(s_headerContent)}>
+                    {props.header}
 
-                <FontAwesomeIcon icon={faAngleUp} className={toCss(s_arrow)} />
+                    <FontAwesomeIcon onClick={() => !collapsed ? setCollapsed(prev => !prev) : null} icon={faAngleUp} className={toCss(s_arrow)} />
+                </div>
             </div>
 
             <AnimateHeight

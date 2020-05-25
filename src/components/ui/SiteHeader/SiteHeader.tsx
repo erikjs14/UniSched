@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CSS from './SiteHeader.module.scss';
 import { SiteHeaderProps } from './SiteHeader.d';
 import { toCss } from './../../../util/util';
-import { mapToIcon } from '../../../util/iconUtil';
+import { mapToIcon } from '../../../config/iconConfig';
 const {
     header: s_header,
     icon: s_icon,

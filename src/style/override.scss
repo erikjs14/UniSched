@@ -1,0 +1,26 @@
+.react-datepicker {
+    z-index: 1000000;
+    font-size: 1.5rem !important;
+}
+
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+    font-size: 1.3rem !important;
+}
+
+.react-datepicker__navigation {
+    line-height: 2rem !important;
+}
+
+.react-datepicker__day-name {
+    width: 2.5rem !important;
+
+    &s {
+        margin-top: .5rem !important;
+    }
+}
+
+.react-datepicker__day {
+    width: 2.4rem !important;
+}

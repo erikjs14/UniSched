@@ -5,7 +5,7 @@ import { SimpleSettingsRowProps } from './SimpleSettingsRow.d';
 import { toCss } from './../../../util/util';
 import { findColorConfig } from '../../../config/colorChoices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { mapToIcon } from './../../../util/iconUtil';
+import { mapToIcon } from './../../../config/iconConfig';
 import { useHistory } from 'react-router-dom';
 const {
     row: s_row,
