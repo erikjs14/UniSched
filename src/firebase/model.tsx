@@ -31,11 +31,13 @@ export interface SubjectDataModel extends BaseModel {
     type: string;
 }
 
+export const IntervalOptions = ['weekly', 'biweekly', 'daily'];
+export type IntervalType = typeof IntervalOptions[number]; //'weekly' | 'biweekly' | 'daily';
 export interface EventModel extends SubjectDataModel {
     firstStart: Timestamp;
     firstEnd: Timestamp;
     endAt: Timestamp;
-    interval: 'weekly' | 'biweekly' | 'daily';
+    interval: IntervalType;
 }
 export interface EventModelWithId extends EventModel, ModelWithId {}
 

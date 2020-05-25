@@ -17,6 +17,7 @@ const {
     subjects: s_subjects,
     wrapper: s_wrapper,
     noElementsText: s_noElementsText,
+    addBtn: s_addBtn,
 } = CSS;
 
 export default function(): JSX.Element {
@@ -71,7 +72,9 @@ export default function(): JSX.Element {
         content = (
             <div className={toCss(s_subjects)}>
                 {elements}
-                <FloatingButton onClick={() => history.push('/settings/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
+                <div className={toCss(s_addBtn)}>
+                    <FloatingButton onClick={() => history.push('/settings/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
+                </div>
             </div>
         )
     }

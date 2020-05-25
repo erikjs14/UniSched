@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useCallback, Fragment } from 'react';
+import React, { useReducer, useState, useEffect, useCallback, useRef, Fragment } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,7 @@ import { toCss } from './../../../util/util';
 import Input from '../../../components/ui/input/Input';
 import { defaultColor } from '../../../config/colorChoices';
 import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
-import { fetchSubject, updateSubject, addSubject, deleteSubject } from './../../../firebase/firestore';
+import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './../../../firebase/firestore';
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
@@ -41,19 +41,35 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [wantDelete, setWantDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
+    const [eventsDataChanged, setEventsDataChanged] = useState(false);
+    const [eventsSaveState, setEventsSaveState] = useState(false);
+
+    const eventsRef = useRef<{
+        save: () => void;
+        isSaving: () => boolean;
+    }>();
+
     useEffect(() => {
         // fetch subject data only if changing existing subject
         if (!props.new) {
-            fetchSubject(extractIdFromUrl(location.pathname))
-                .then(subject => {
-                    dispatch(setSubject(subject));
+            fetchSubjectDeep(extractIdFromUrl(location.pathname))
+                .then(data => {
+                    dispatch(setSubject({
+                        id: data.id,
+                        name: data.name,
+                        color: data.color,
+                    }, {
+                        exams: data.exams,
+                        events: data.events,
+                        tasks: data.tasks
+                    }));
                 })
                 .catch(error => {
-                    dispatch(setError(error));
+                    dispatch(setError(error.message));
                 })
                 .finally(() => {
                     dispatch(setLoading(false));
-                })
+                });
         }
     }, [props.new, location.pathname, dispatch]);
 
@@ -70,8 +86,11 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     }, [dispatch]);
 
     const saveHandler = useCallback(() => {
-        dispatch(startSaving());
+
+        eventsRef.current?.save();
+
         if (state.subject?.changed) {
+            dispatch(startSaving());
             if (props.new) {
                 addSubject({
                     name: state.subject.name,
@@ -102,7 +121,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
     if (state.loading) {
         return <Loader />;
-    } else if (state.error) {
+    } else if (state.error || !state.subject) {
         return <span>An Error has occurred. Try refreshing the page.</span>;
     }
 
@@ -171,7 +190,14 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 
                                     <div className={toCss(s_eventsArea)}>
                                         <EventsSettings
-
+                                            ref={eventsRef}
+                                            subjectId={state.subject?.id || ''}
+                                            initialData={state.initialData?.events}
+                                            onDataChanged={() => setEventsDataChanged(true)}
+                                            onSaveStateChanged={newState => {
+                                                setEventsSaveState(newState);
+                                                if (newState) setEventsDataChanged(false);
+                                            }}
                                         />
                                     </div>
 
@@ -186,8 +212,10 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         appearance='primary' 
                                         className={toCss(s_saveBtn)}
                                         iconBefore='floppy-disk'
-                                        isLoading={state.saving}
-                                        disabled={!state.subject?.changed}
+                                        isLoading={
+                                            state.saving || eventsSaveState
+                                        }
+                                        disabled={!eventsDataChanged && !state.subject?.changed}
                                         onClick={saveHandler}
                                     >
                                         Save
@@ -235,7 +263,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 }}
             </Transition>
             <Prompt
-                when={state.subject?.changed}
+                when={state.subject?.changed && !deleting && !(props.new && state.saving)}
                 message='You have unsaved changes. Proceed?'
             />
         </Fragment>

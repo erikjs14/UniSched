@@ -7,10 +7,11 @@ const {
     input: s_input,
     label: s_label,
     transparent: s_transparent,
+    selectVisual: s_selectVisual,
 } = CSS;
 
 export interface InputProps<T> {
-    elementType: string;
+    elementType: 'input' |'input-transparent' | 'select-visual';
     value: T;
     onChange(val: T): void;
     label: string;
@@ -19,6 +20,7 @@ export interface InputProps<T> {
     inputColor?: string;
     labelColor?: string;
     addClass?: string;
+    options?: string[];
 }
 
 export default function(props: InputProps<string>): JSX.Element| null {
@@ -51,6 +53,26 @@ export default function(props: InputProps<string>): JSX.Element| null {
                     >
                         {props.label}
                     </label>
+                </div>
+            );
+        case 'select-visual':
+            return (
+                <div className={toCss(s_wrapper, props.addClass || '')}>
+                    {props.options?.map(option => (
+                        <label
+                            key={option}
+                            className={toCss(s_selectVisual)}
+                        >
+                            <input
+                                type='checkbox'
+                                value={option}
+                                onChange={event => props.onChange(event.target.value)}
+                                checked={option === props.value}
+                                name={props.label}
+                            />
+                            <span>{option}</span>
+                        </label>
+                    ))}
                 </div>
             );
         default:

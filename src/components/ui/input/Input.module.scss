@@ -52,4 +52,11 @@
     .input.transparent:not(:placeholder-shown) + label {
         opacity: 0;
     }
+
+    .selectVisual {
+
+        input:checked ~ span {
+            color:green;
+        }
+    }
 }

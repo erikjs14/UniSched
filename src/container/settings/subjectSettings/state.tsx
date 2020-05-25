@@ -1,9 +1,14 @@
-import { SubjectModelWithId } from './../../../firebase/model';
+import { SubjectModelWithId, EventModelWithId, ExamModelWithId, TaskModelWithId } from './../../../firebase/model';
 import { Color, findColorConfig, defaultColorConfig } from './../../../config/colorChoices';
 
 interface ColorConfig {
     newColor: Color;
     oldColor: Color;
+}
+interface DataModel {
+    events: EventModelWithId[];
+    exams: ExamModelWithId[];
+    tasks: TaskModelWithId[];
 }
 interface StateModel {
     subject: {
@@ -12,6 +17,7 @@ interface StateModel {
         color: ColorConfig;
         changed: boolean;
     } | null;
+    initialData: DataModel | null;
     loading: boolean;
     error: string | null;
     saving: boolean;
@@ -23,12 +29,14 @@ interface ActionModel {
 
 interface SetSubjectActionModel extends ActionModel {
     subject: SubjectModelWithId;
+    initialData: DataModel;
 }
 const ACTION_SET_SUBJECT = 'SET_SUBJECT';
-export const setSubject = (subject: SubjectModelWithId): SetSubjectActionModel => {
+export const setSubject = (subject: SubjectModelWithId, initialData: DataModel): SetSubjectActionModel => {
     return {
         type: ACTION_SET_SUBJECT,
         subject,
+        initialData,
     };
 }
 
@@ -92,6 +100,7 @@ export const setSaved = (): ActionModel => {
 
 export const initialState: StateModel = {
     subject: null,
+    initialData: null,
     loading: true,
     error: null,
     saving: false,
@@ -105,6 +114,11 @@ export const initialStateNew: StateModel = {
         },
         changed: false,
         id: '',
+    },
+    initialData: {
+        events: [],
+        exams: [],
+        tasks: [],
     },
     error: null,
     loading: false,
@@ -127,6 +141,7 @@ export const reducer = (state: StateModel, action: ActionModel & any): StateMode
                     },
                     changed: false,
                 },
+                initialData: action.initialData,
             }
         case ACTION_SET_ERROR: return {
             ...state,
