@@ -132,7 +132,6 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         color: state.subject.color.newColor.name,
                     }
                 ).then(() => {
-                    console.log('Saved Subject');
                     dispatch(setSaved());
                 }).catch(error => {
                     dispatch(setError(error.message));
@@ -297,16 +296,21 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         dispatch(setError('Unexpected error.'));
                                     } else {
                                         setDeleting(true);
-                                        deleteSubject(state.subject.id)
-                                            .then(() => {
-                                                close();
-                                                history.push('/settings');
-                                            })
-                                            .catch(error => {
-                                                dispatch(setError(error.message));
-                                                setDeleting(false);
-                                                setWantDelete(false);
-                                            })
+
+                                        if (props.new) {
+                                            history.push('/settings');
+                                        } else {
+                                            deleteSubject(state.subject.id)
+                                                .then(() => {
+                                                    close();
+                                                    history.push('/settings');
+                                                })
+                                                .catch(error => {
+                                                    dispatch(setError(error.message));
+                                                    setDeleting(false);
+                                                    setWantDelete(false);
+                                                })
+                                        }
                                     }
                                 }}
                                 onCloseComplete={() => { //closed in another way
