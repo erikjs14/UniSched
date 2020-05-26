@@ -1,7 +1,7 @@
 import React, { useReducer, useState, useEffect, useCallback, useRef, Fragment } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Button, Dialog } from 'evergreen-ui';
 
 import CSS from './SubjectSettings.module.scss';
@@ -33,6 +33,7 @@ const {
     examsArea: s_examsArea,
     footer: s_footerArea,
     saveBtn: s_saveBtn,
+    backArrow: s_backArrow,
 } = CSS;
 
 export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
@@ -108,6 +109,12 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
     const saveHandler = useCallback(() => {
 
+        if (!props.new) {
+            eventsRef.current?.save(undefined);
+            examsRef.current?.save(undefined);
+            tasksRef.current?.save(undefined);
+        }
+
         if (state.subject?.changed) {
             dispatch(startSaving());
             if (props.new) {
@@ -126,9 +133,6 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 })
 
             } else {
-                eventsRef.current?.save(undefined);
-                examsRef.current?.save(undefined);
-                tasksRef.current?.save(undefined);
 
                 updateSubject(
                     state.subject.id,
@@ -184,6 +188,12 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 }} 
                                 className={toCss(s_settingsCard)}
                             >
+
+                                <FontAwesomeIcon 
+                                    icon={faArrowLeft} 
+                                    className={toCss(s_backArrow)}
+                                    onClick={() => history.push('/settings')}
+                                />
 
                                 <div className={toCss(s_header)}>
                                     <Input 

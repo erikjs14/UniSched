@@ -22,6 +22,18 @@
         font-size: 1.2em;
     }
 
+    .backArrow {
+        display: none;
+
+        @include respond(tab-land) {
+            display: block;
+            position: absolute;
+            top: 2rem;
+            left: 3%;
+            cursor: pointer;
+        }
+    }
+
     .header {
         z-index: 100;
         display: flex;
@@ -57,18 +69,18 @@
         position: relative;
         width: 100%;
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: auto;
+        grid-template-columns: repeat(2, 1fr);
         grid-template-areas: 
-            "tasks events exams";
+            "tasks tasks"
+            "events exams";
+        grid-template-rows: auto;
         column-gap: 2rem;
         row-gap: 2rem;
 
-        @include respond(tab-land) {
-            grid-template-columns: repeat(2, 1fr);
+        @include respond(big-desktop) {
+            grid-template-columns: repeat(3, 1fr);
             grid-template-areas: 
-                "events exams"
-                "tasks tasks";
+                "tasks events exams";
         }
 
         @include respond(tab-port) {
