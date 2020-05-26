@@ -52,8 +52,7 @@ export default function(props: InputProps<string>): JSX.Element| null {
                     <label 
                         style={{
                             color: hex2rgba(props.labelColor ? props.labelColor : '#000', .4), 
-                            left: (props.labelLeft ? '1rem' : undefined),
-                            transform: (props.labelLeft ? 'translateY(-50%)' : undefined),
+                            textAlign: (props.labelLeft ? 'left' : undefined),
                         }} 
                         className={toCss(s_label)}
                     >

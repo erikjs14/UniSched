@@ -50,6 +50,8 @@
         left: 50%;
         transform: translate(-50%, -50%);
         opacity: 1;
+        width: 100%;
+        text-align: center;
     }
 
     .input:not(.transparent):not(:placeholder-shown) + label {
