@@ -22,6 +22,7 @@ export interface InputProps<T> {
     labelColor?: string;
     addClass?: string;
     options?: string[];
+    labelLeft?: boolean;
 }
 
 export default function(props: InputProps<string>): JSX.Element| null {
@@ -46,11 +47,15 @@ export default function(props: InputProps<string>): JSX.Element| null {
                         onChange={event => props.onChange(event.target.value)} 
                         className={toCss(s_input, s_transparent)}
                         style={{color: props.inputColor ? hex2rgba(props.inputColor) : 'inherit'}}
-                        placeholder=''
+                        placeholder='invisible'
                     />
                     <label 
-                        style={{color: hex2rgba(props.labelColor ? props.labelColor : '#000', .4)}} 
-                        className={toCss(s_label)} 
+                        style={{
+                            color: hex2rgba(props.labelColor ? props.labelColor : '#000', .4), 
+                            left: (props.labelLeft ? '1rem' : undefined),
+                            transform: (props.labelLeft ? 'translateY(-50%)' : undefined),
+                        }} 
+                        className={toCss(s_label)}
                     >
                         {props.label}
                     </label>

@@ -71,12 +71,13 @@
                 "tasks tasks";
         }
 
-        @include respond(phone) {
+        @include respond(tab-port) {
             grid-template-columns: 100%;
             grid-template-areas: 
                 "tasks"
                 "events"
                 "exams";
+            row-gap: 4rem;
         }
 
         .eventsArea {

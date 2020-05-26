@@ -189,6 +189,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         onChange={updateTitle}
                                         label='Title'
                                         labelColor={state.subject?.color.newColor.textColor}
+                                        labelLeft
                                     />
                                     <div 
                                         className={toCss(s_trashIcon)}
