@@ -57,15 +57,15 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [tasksSaveState, setTasksSaveState] = useState(false);
 
     const eventsRef = useRef<{
-        save: () => void;
+        save: (newSubjectId: string | undefined) => void;
         isSaving: () => boolean;
     }>();
     const examsRef = useRef<{
-        save: () => void;
+        save: (newSubjectId: string | undefined) => void;
         isSaving: () => Boolean;
     }>();
     const tasksRef = useRef<{
-        save: () => void;
+        save: (newSubjectId: string | undefined) => void;
         isSaving: () => Boolean;
     }>();
 
@@ -104,12 +104,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const updateTitle = useCallback((newTitle: string): void => {
         dispatch(changeName(newTitle))
     }, [dispatch]);
+ 
 
     const saveHandler = useCallback(() => {
-
-        eventsRef.current?.save();
-        examsRef.current?.save();
-        tasksRef.current?.save();
 
         if (state.subject?.changed) {
             dispatch(startSaving());
@@ -118,6 +115,10 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                     name: state.subject.name,
                     color: state.subject.color.newColor.name,
                 }).then(id => {
+                    eventsRef.current?.save(id);
+                    examsRef.current?.save(id);
+                    tasksRef.current?.save(id);
+
                     history.replace(`/settings/${id}`);
                     dispatch(setSaved());
                 }).catch(error => {
@@ -125,6 +126,10 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 })
 
             } else {
+                eventsRef.current?.save(undefined);
+                examsRef.current?.save(undefined);
+                tasksRef.current?.save(undefined);
+
                 updateSubject(
                     state.subject.id,
                     {

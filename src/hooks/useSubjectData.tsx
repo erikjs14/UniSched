@@ -549,18 +549,19 @@ const useSubjectData = <T extends SubjectDataModel>(
         dispatch(removeDatum(datumId));
     }, []);
 
-    const saveChanges = useCallback((): void => {
+    const saveChanges = useCallback((newSubjectId: string | undefined = undefined): void => {
         dispatch({ type: ACTION_START_SAVE_REQUEST });
 
         const ids = Object.keys(state.data);
+
         const allRequests = (): Promise<string|void>[] => {
             const out = [];
             for (const datumId of ids) {
                 if (state.dataChanged.has(datumId)) {
                     if (datumId.startsWith('NEW_')) {
-                        out.push(g_addData(dataTypeId, subjectId, state.data[datumId]));
+                        out.push(g_addData(dataTypeId, newSubjectId || subjectId, state.data[datumId]));
                     } else {
-                        out.push(g_updateData(dataTypeId, subjectId, datumId, state.data[datumId]));
+                        out.push(g_updateData(dataTypeId, newSubjectId || subjectId, datumId, state.data[datumId]));
                     }
                 }
             }

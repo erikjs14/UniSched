@@ -39,8 +39,8 @@ export default React.memo(
     }, [data.saving, props]);
 
     // ToDo implement batch solution for firebase
-    function save() {
-        saveChanges();
+    function save(newSubjectId: string | undefined = undefined) {
+        saveChanges(newSubjectId);
     }
     function isSaving(): boolean {
         return data.saving;
