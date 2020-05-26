@@ -195,17 +195,22 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
     return [timestampsOut, timestampsDoneOut];
 }
 
+const plusMinus = (nr: number, range: number): boolean => {
+    return -range <= nr && range >= nr;
+}
+
 export const getFilterForInterval = (startSecs: number, interval: IntervalType): (d: Date) => boolean => {
     return (d: Date): boolean => {
         const startDate = startOf(getDateFromSeconds(startSecs));
         const dateToCheck = startOf(d);
         const difference_s = Math.round((dateToCheck.getTime() - startDate.getTime()) / 1000);
 
+        // check for range plus minus one hour due to daylight savings
         switch (interval) {
-            case 'once':        return difference_s === 0;
-            case 'daily':       return difference_s % DAY_IN_SEC === 0;
-            case 'weekly':      return difference_s % WEEK_IN_SEC === 0;
-            case 'biweekly':    return difference_s % BIWEEK_IN_SEC === 0;
+            case 'once':        return plusMinus(difference_s, 3600);
+            case 'daily':       return plusMinus(difference_s % DAY_IN_SEC, 3600);
+            case 'weekly':      return plusMinus(difference_s % WEEK_IN_SEC, 3600);
+            case 'biweekly':    return plusMinus(difference_s % BIWEEK_IN_SEC, 3600);
             default: return true;
         }
     }

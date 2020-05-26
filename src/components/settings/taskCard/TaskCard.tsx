@@ -56,7 +56,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         selected={getDateFromSeconds(lastDeadline.seconds)}
                         onChange={date => date ? changeHandler({firstDeadline, lastDeadline: getTimestampFromDate(date), interval}) : null}
                         minDate={getDateFromSeconds(firstDeadline.seconds)}
-                        filterDate={getFilterForInterval(firstDeadline.seconds, interval)}
+                        filterDate={interval === 'daily' ? undefined : getFilterForInterval(firstDeadline.seconds, interval)}
                         readOnly={interval === 'once'}
                         {...DATETIMEPICKER_DEFAULT_PROPS}
                         showTimeSelect={false}
