@@ -18,3 +18,8 @@ export const EVENTS_START_STATE = {
     interval: 'weekly',
     type: '',
 };
+
+export const EXAM_START_STATE = {
+    type: '',
+    start: {seconds: Math.round(new Date().getTime() / 1000), nanoseconds: 0},
+}

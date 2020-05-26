@@ -1,4 +1,4 @@
-import { EventModelWithId } from "../../../firebase/model";
+import { EventModelWithId, EventModel } from "../../../firebase/model";
 
 export interface EventCardProps {
     data: EventModelWithId;
