@@ -8,6 +8,7 @@ const {
     label: s_label,
     transparent: s_transparent,
     selectVisual: s_selectVisual,
+    wrapperSelect: s_wrapperSelect,
 } = CSS;
 
 export interface InputProps<T> {
@@ -57,7 +58,7 @@ export default function(props: InputProps<string>): JSX.Element| null {
             );
         case 'select-visual':
             return (
-                <div className={toCss(s_wrapper, props.addClass || '')}>
+                <div className={toCss(s_wrapper, s_wrapperSelect, props.addClass || '')}>
                     {props.options?.map(option => (
                         <label
                             key={option}

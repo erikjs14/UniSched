@@ -2,7 +2,9 @@
 @import '../../../style/abstract/mixins';
 
 .wrapper {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     position: relative;
 
     .input {
@@ -54,35 +56,47 @@
         opacity: 0;
     }
 
-    .selectVisual {
-        cursor: pointer;
+    &Select {
+        margin-top: -.5rem;
 
-        &:not(:last-child) {
-            margin-right: .8rem;
+        @include respond(tab-port) {
+            margin-top: -1rem;
         }
 
-        input {
-            position: absolute;
-            height: 0;
-            width: 0;
-            opacity: 0;
-
-            &:checked + span {
-                background-color: $col-secondary-dark;
-            }
-        }
-
-        span {
-            font-size: .85em;
-            background-color: $col-primary-light;
-            padding: .1em .4em;
-            border-radius: 50rem;
-            border: 2px solid $col-primary-light;
-
-            transition: all .1s ease-out;
-
+        .selectVisual {
+            cursor: pointer;
+            margin-top: .5rem;
             @include respond(tab-port) {
-                font-size: 1.1em;
+                margin-top: 1rem;
+            }
+
+            &:not(:last-child) {
+                margin-right: .8rem;
+            }
+
+            input {
+                position: absolute;
+                height: 0;
+                width: 0;
+                opacity: 0;
+
+                &:checked + span {
+                    background-color: $col-secondary-dark;
+                }
+            }
+
+            span {
+                font-size: .85em;
+                background-color: $col-primary-light;
+                padding: .1em .4em;
+                border-radius: 50rem;
+                border: 2px solid $col-primary-light;
+
+                transition: all .1s ease-out;
+
+                @include respond(tab-port) {
+                    font-size: 1.1em;
+                }
             }
         }
     }

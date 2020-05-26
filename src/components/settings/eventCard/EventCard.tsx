@@ -17,6 +17,7 @@ const {
     datetimepicker: s_datetimepicker,
     removeBtn: s_removeBtn,
     btnRow: s_btnRow,
+    intervalOptions: s_intervalOptions,
 } = CSS;
 
 export default function(props: EventCardProps): JSX.Element {
@@ -89,6 +90,7 @@ export default function(props: EventCardProps): JSX.Element {
                         value={props.data.interval}
                         onChange={newInterval => props.onChange<IntervalType>('interval', newInterval as IntervalType)}
                         options={IntervalOptions}
+                        addClass={toCss(s_intervalOptions)}
                     />
                 </div>
 
