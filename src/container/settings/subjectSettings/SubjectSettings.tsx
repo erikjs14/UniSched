@@ -205,6 +205,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         <SubSettings
                                             ref={eventsRef}
                                             dataTypeId='event'
+                                            areaTitle='Events'
                                             subjectId={state.subject?.id || ''}
                                             initialData={state.initialData?.events}
                                             onDataChanged={() => setEventsDataChanged(true)}
@@ -223,6 +224,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         <SubSettings
                                             ref={examsRef}
                                             dataTypeId='exam'
+                                            areaTitle='Exams'
                                             subjectId={state.subject?.id || ''}
                                             initialData={state.initialData?.exams}
                                             onDataChanged={() => setExamsDataChanged(true)}

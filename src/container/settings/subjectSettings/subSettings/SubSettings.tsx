@@ -79,7 +79,7 @@ export default React.memo(
     return (
         <Fragment>
             <SettingsCards 
-                title='EVENTS'
+                title={props.areaTitle}
                 icon={props.iconType}
                 onAddNew={addNewEventHandler}
             >

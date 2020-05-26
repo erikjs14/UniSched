@@ -7,6 +7,7 @@ export interface SubSettingsProps<T extends SubjectDataModel, TId extends ModelW
     dataTypeId: DataTypeId;
     dataStartState: T;
     iconType: IconType;
+    areaTitle: string;
     cardComponent: (props: SubjectDataCardProps<T>) => JSX.Element;
 }
 
