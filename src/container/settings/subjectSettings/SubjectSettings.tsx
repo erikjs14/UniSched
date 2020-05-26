@@ -14,8 +14,12 @@ import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './..
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
-import EventsSettings from './subSettings/eventsSettings/EventsSettings';
-import ExamsSettings from './subSettings/examsSettings/ExamsSettings';
+import { EXAM_START_STATE, EVENTS_START_STATE } from './../../../config/settingsConfig';
+import { ICON_EXAMS_TYPE } from '../../../config/globalTypes.d';
+import ExamCard from '../../../components/settings/examCard/ExamCard';
+import SubSettings from './subSettings/SubSettings';
+import { ICON_SCHEDULE_TYPE } from './../../../config/globalTypes.d';
+import EventCard from '../../../components/settings/eventCard/EventCard';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -198,8 +202,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                     </div>
                                 
                                     <div className={toCss(s_eventsArea)}>
-                                        <EventsSettings
+                                        <SubSettings
                                             ref={eventsRef}
+                                            dataTypeId='event'
                                             subjectId={state.subject?.id || ''}
                                             initialData={state.initialData?.events}
                                             onDataChanged={() => setEventsDataChanged(true)}
@@ -208,12 +213,16 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                                 if (newState) setEventsDataChanged(false);
                                             }}
                                             onError={error => dispatch(setError(error))}
+                                            dataStartState={EVENTS_START_STATE}
+                                            iconType={ICON_SCHEDULE_TYPE}
+                                            cardComponent={EventCard}
                                         />
                                     </div>
 
                                     <div className={toCss(s_examsArea)}>
-                                        <ExamsSettings
+                                        <SubSettings
                                             ref={examsRef}
+                                            dataTypeId='exam'
                                             subjectId={state.subject?.id || ''}
                                             initialData={state.initialData?.exams}
                                             onDataChanged={() => setExamsDataChanged(true)}
@@ -222,6 +231,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                                 if (newState) setExamsDataChanged(false);
                                             }}
                                             onError={error => dispatch(setError(error))}
+                                            dataStartState={EXAM_START_STATE}
+                                            iconType={ICON_EXAMS_TYPE}
+                                            cardComponent={ExamCard}
                                         />
                                     </div>
 

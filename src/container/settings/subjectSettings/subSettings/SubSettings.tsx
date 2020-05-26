@@ -1,21 +1,19 @@
 import React, { useEffect, forwardRef, useImperativeHandle, useCallback, Fragment, useState } from 'react';
-import Loader from '../../../../../components/ui/loader/Loader';
+import Loader from '../../../../components/ui/loader/Loader';
 
-// import CSS from './EventsSettings.module.scss';
-import { ExamsSettingsProps } from './ExamsSettings.d';
-// import { toCss } from './../../../../../util/util';
-import useSubjectData from './../../../../../hooks/useSubjectData';
-import { ExamModelWithId, ExamModel } from './../../../../../firebase/model';
-import SettingsCards from '../../../../../components/settings/SettingsCards';
-import ExamCard from '../../../../../components/settings/examCard/ExamCard';
-import { EXAM_START_STATE } from '../../../../../config/settingsConfig';
+import { SubSettingsProps } from './SubSettings.d';
+import useSubjectData from './../../../../hooks/useSubjectData';
+import SettingsCards from '../../../../components/settings/SettingsCards';
 import { Dialog } from 'evergreen-ui';
-import { ICON_EXAMS_TYPE } from './../../../../../config/globalTypes.d';
-// const {
-//     wrapper: s_wrapper,
-// } = CSS;
+import { SubjectDataModelWithId, SubjectDataModel } from './../../../../firebase/model';
 
-export default React.memo(forwardRef(function(props: ExamsSettingsProps, ref): JSX.Element {
+export default React.memo(
+    forwardRef(
+        <M extends SubjectDataModel, MId extends SubjectDataModelWithId>(
+            props: SubSettingsProps<M, MId>, 
+            ref: React.Ref<any>
+        )
+    : JSX.Element => {
 
     const {
         fetchAllData,
@@ -24,7 +22,7 @@ export default React.memo(forwardRef(function(props: ExamsSettingsProps, ref): J
         deleteData,
         saveChanges,
         data
-    } = useSubjectData<ExamModel>('exam', props.subjectId, props.initialData || null);
+    } = useSubjectData<M>(props.dataTypeId, props.subjectId, props.initialData || null);
 
     const [wantDelete, setWantDelete] = useState<string|null>(null);
     const [deleting, setDeleting] = useState(false);
@@ -51,11 +49,11 @@ export default React.memo(forwardRef(function(props: ExamsSettingsProps, ref): J
     );
 
     const addNewEventHandler = useCallback(() => {
-        addNewDatum(EXAM_START_STATE);
+        addNewDatum(props.dataStartState);
         props.onDataChanged();
     }, [addNewDatum, props]);
 
-    const valChangedHandler = useCallback(<K extends keyof ExamModel, T extends any>(dataId: string, key: K, newVal: T | null): void => {
+    const valChangedHandler = useCallback(<K extends keyof M, T extends any>(dataId: string, key: K, newVal: T | null): void => {
         
         if (newVal === null) return;
 
@@ -68,31 +66,30 @@ export default React.memo(forwardRef(function(props: ExamsSettingsProps, ref): J
         return <Loader />;
     }
 
-    const events = data.items.map(el => {
-        return (
-            <ExamCard
-                key={el.id}
-                data={el as ExamModelWithId}
-                onChange={(key: keyof ExamModel, newVal) => valChangedHandler(el.id, key, newVal)}
-                onRemove={() => setWantDelete(el.id)}
-            />
-        )
-    })
+    const Card = props.cardComponent;
+    const cards = data.items.map(dataItem => (
+        <Card
+            key={dataItem.id}
+            data={dataItem as MId}
+            onChange={(key: keyof M, newVal) => valChangedHandler(dataItem.id, key, newVal)}
+            onRemove={() => setWantDelete(dataItem.id)}
+        />
+    ));
     
     return (
         <Fragment>
             <SettingsCards 
                 title='EVENTS'
-                icon={ICON_EXAMS_TYPE}
+                icon={props.iconType}
                 onAddNew={addNewEventHandler}
             >
-                {events}
+                {cards}
             </SettingsCards>
 
             <Dialog
                 isShown={wantDelete ? true : false}
                 isConfirmLoading={deleting}
-                title={`Delete event ${(data.items.find(el => el.id === wantDelete) as ExamModelWithId)?.type}`}
+                title={`Delete event ${(data.items.find(el => el.id === wantDelete) as MId)?.type}`}
                 confirmLabel='Confirm'
                 onCancel={close => {
                     setWantDelete(null);

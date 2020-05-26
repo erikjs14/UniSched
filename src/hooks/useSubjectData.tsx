@@ -3,7 +3,7 @@ import { SubjectDataModel, ExamModel, TaskModel, EventModel, ModelWithId, ExamMo
 import { fetchExams, fetchEvents, fetchTasks, fetchExam, fetchEvent, fetchTask, addExam, addTask, addEvent, updateExam, updateTask, updateEvent, deleteExam, deleteTask, deleteEvent } from './../firebase/firestore';
 import { removeKey } from './../util/util';
 
-type DataTypeId = 'exam' | 'task' | 'event';
+export type DataTypeId = 'exam' | 'task' | 'event';
 
 const g_fetchAllData = (type: DataTypeId, subjectId: string): Promise<ModelWithId[]> => {
     switch (type) {

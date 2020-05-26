@@ -31,6 +31,8 @@ export interface SubjectDataModel extends BaseModel {
     type: string;
 }
 
+export interface SubjectDataModelWithId extends SubjectDataModel, ModelWithId {}
+
 export const IntervalOptions = ['weekly', 'biweekly', 'daily', 'once'];
 export type IntervalType = typeof IntervalOptions[number]; //'weekly' | 'biweekly' | 'daily' | 'once';
 export interface EventModel extends SubjectDataModel {
@@ -39,15 +41,15 @@ export interface EventModel extends SubjectDataModel {
     endAt: Timestamp;
     interval: IntervalType;
 }
-export interface EventModelWithId extends EventModel, ModelWithId {}
+export interface EventModelWithId extends EventModel, SubjectDataModelWithId {}
 
 export interface ExamModel extends SubjectDataModel {
     start: Timestamp;
 }
-export interface ExamModelWithId extends ExamModel, ModelWithId {}
+export interface ExamModelWithId extends ExamModel, SubjectDataModelWithId {}
 
 export interface TaskModel extends SubjectDataModel {
     timestamps: Timestamp[];
     timestampsDone: Timestamp[];
 }
-export interface TaskModelWithId extends TaskModel, ModelWithId {}
+export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}

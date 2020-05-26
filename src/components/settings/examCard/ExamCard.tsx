@@ -2,18 +2,18 @@ import React from 'react';
 import DateTimePicker from 'react-datepicker';
 
 import CSS from '../settingsCard/SettingsCard.module.scss';
-import { ExamCardProps } from './ExamCard.d';
 import SettingsCard from '../settingsCard/SettingsCard';
-import { Timestamp } from '../../../firebase/model';
+import { Timestamp, ExamModel } from '../../../firebase/model';
 import { getDateFromSeconds, getTimestampFromDate } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/settingsConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
+import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
 const {
     row: s_row,
 } = CSS;
 
-export default function(props: ExamCardProps): JSX.Element {
+export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
 
     return (
         <SettingsCard
