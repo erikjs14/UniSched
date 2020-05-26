@@ -109,12 +109,12 @@ const replaceId = (oldId: string, newId: string): ReplaceIdActionModel => {
 }
 
 interface RemoveDatumActionModel extends ActionModel {
-    id: string;
+    dataId: string;
 }
 const removeDatum = (datumId: string): RemoveDatumActionModel => {
     return {
         type: ACTION_REMOVE_DATUM,
-        id: datumId,
+        dataId: datumId,
     };
 }
 
@@ -309,9 +309,10 @@ const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionMo
                 },
             };
         case ACTION_REMOVE_DATUM:
-            const removeAction = (action as unknown as RemoveDataActionModel);
+            const removeAction = (action as unknown as RemoveDatumActionModel);
             changedIds = new Set(state.dataChanged);
-            changedIds.add(removeAction.dataId);
+            if (removeAction.dataId.startsWith('NEW_')) changedIds.delete(removeAction.dataId);
+            else changedIds.add(removeAction.dataId);
             return {
                 ...state,
                 dataChanged: changedIds,

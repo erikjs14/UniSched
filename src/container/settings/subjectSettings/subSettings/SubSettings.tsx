@@ -22,6 +22,7 @@ export default React.memo(
         updateValue,
         deleteData,
         saveChanges,
+        remove,
         data
     } = useSubjectData<M>(props.dataTypeId, props.subjectId, props.initialData || null);
 
@@ -101,16 +102,25 @@ export default React.memo(
                         props.onError('Unexpected error.');
                     } else {
                         setDeleting(true);
-                        deleteData(wantDelete)
-                            .then(() => {
-                                close();
-                            })
-                            .catch(error => {
-                                props.onError(error);
-                            })
-                            .finally(() => {
-                                setWantDelete(null);
-                            })
+
+                        if (wantDelete.startsWith('NEW_')) {
+                            console.log(data)
+                            remove(wantDelete);
+                            setDeleting(false);
+                            setWantDelete(null);
+                            console.log(data)
+                        } else {
+                            deleteData(wantDelete)
+                                .then(() => {
+                                    close();
+                                })
+                                .catch(error => {
+                                    props.onError(error);
+                                })
+                                .finally(() => {
+                                    setWantDelete(null);
+                                })
+                        }
                     }
                 }}
                 onCloseComplete={() => { //closed in another way
