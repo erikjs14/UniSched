@@ -1,3 +1,5 @@
 export interface SettingsCardProps {
-    header: React.ReactNode;
+    headerValue: string;
+    onHeaderValueChange(newVal: string): void;
+    onRemoveClicked: Function;
 }

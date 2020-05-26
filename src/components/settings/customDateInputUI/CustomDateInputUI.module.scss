@@ -1,0 +1,11 @@
+@import '../../../style/abstract/variables';
+
+.datetimepicker {
+    cursor: pointer;
+    background-color: rgba(#fff, .7);
+    border: 2px solid rgba($col-primary-dark, .7);
+    border-radius: 2px;
+    padding: .1em .3em;
+    min-width: 13em;
+    color: $col-primary-dark;
+}
