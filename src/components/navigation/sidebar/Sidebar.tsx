@@ -8,6 +8,7 @@ import { ReactComponent as BlankUserIcon } from '../../../assets/user_blank.svg'
 import NavigationItems from '../navigationItems/NavigationItems';
 import { logout } from '../../../store/actions/dispatcher';
 import { useDispatch } from 'react-redux';
+import { Clock } from 'grommet';
 const {
     sidebar: s_sidebar,
     userArea: s_userArea,
@@ -15,6 +16,7 @@ const {
     username: s_username,
     navArea: s_navArea,
     logoutArea: s_logoutArea,
+    clock: s_clock,
 } = CSS;
 
 export default function(props: SidebarProps): JSX.Element {
@@ -23,6 +25,9 @@ export default function(props: SidebarProps): JSX.Element {
 
     return (
         <div className={toCss(s_sidebar)}>
+
+            <Clock type='digital' alignSelf='center' precision='seconds' className={toCss(s_clock)}/>
+
             <div className={toCss(s_userArea)}>
                 {props.imgUrl
                     ? <img src={props.imgUrl} alt='User icon' className={toCss(s_userImg)} />
