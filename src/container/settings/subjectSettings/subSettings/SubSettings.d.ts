@@ -1,17 +1,17 @@
-import { ModelWithId, SubjectDataModel } from './../../../../../firebase/model';
+import { SubjectDataModelWithId, SubjectDataModel } from './../../../../../firebase/model';
 import { DataTypeId } from '../../../../hooks/useSubjectData';
 import { SubjectDataCardProps } from '../../../../components/settings/settingsCard/SettingsCard.d';
-import { IconType } from '../../../../config/globalTypes';
+import { IconType } from '../../../../config/globalTypes'
 
-export interface SubSettingsProps<T extends SubjectDataModel, TId extends ModelWithId> extends SubjectDataSettingsProps<TId>{
+export interface SubSettingsProps<T extends SubjectDataModel, TId extends SubjectDataModelWithId> extends SubjectDataSettingsProps<TId>{
     dataTypeId: DataTypeId;
     dataStartState: T;
     iconType: IconType;
     areaTitle: string;
-    cardComponent: (props: SubjectDataCardProps<T>) => JSX.Element;
+    cardComponent: (props: SubjectDataCardProps<SubjectDataModel>) => JSX.Element;
 }
 
-export interface SubjectDataSettingsProps<TId extends ModelWithId> {
+export interface SubjectDataSettingsProps<TId extends SubjectDataModelWithId> {
     subjectId: string;
     initialData?: TId[];
     onDataChanged: Function;

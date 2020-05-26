@@ -14,12 +14,13 @@ import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './..
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
-import { EXAM_START_STATE, EVENTS_START_STATE } from './../../../config/settingsConfig';
-import { ICON_EXAMS_TYPE } from '../../../config/globalTypes.d';
+import { EXAM_START_STATE, EVENTS_START_STATE, TASK_START_STATE } from './../../../config/settingsConfig';
+import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/settings/examCard/ExamCard';
 import SubSettings from './subSettings/SubSettings';
 import { ICON_SCHEDULE_TYPE } from './../../../config/globalTypes.d';
 import EventCard from '../../../components/settings/eventCard/EventCard';
+import TaskCard from '../../../components/settings/taskCard/TaskCard';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -52,11 +53,18 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [examsDataChanged, setExamsDataChanged] = useState(false);
     const [examsSaveState, setExamsSaveState] = useState(false);
 
+    const [tasksDataChanged, setTasksDataChanged] = useState(false);
+    const [tasksSaveState, setTasksSaveState] = useState(false);
+
     const eventsRef = useRef<{
         save: () => void;
         isSaving: () => boolean;
     }>();
     const examsRef = useRef<{
+        save: () => void;
+        isSaving: () => Boolean;
+    }>();
+    const tasksRef = useRef<{
         save: () => void;
         isSaving: () => Boolean;
     }>();
@@ -101,6 +109,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
         eventsRef.current?.save();
         examsRef.current?.save();
+        tasksRef.current?.save();
 
         if (state.subject?.changed) {
             dispatch(startSaving());
@@ -198,7 +207,22 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 <div className={toCss(s_settingsArea)}>
 
                                     <div className={toCss(s_tasksArea)}>
-                                        TASKS
+                                        <SubSettings
+                                            ref={tasksRef}
+                                            dataTypeId='task'
+                                            areaTitle='Tasks'
+                                            subjectId={state.subject?.id || ''}
+                                            initialData={state.initialData?.tasks}
+                                            onDataChanged={() => setTasksDataChanged(true)}
+                                            onSaveStateChanged={newState => {
+                                                setTasksSaveState(newState);
+                                                if (newState) setTasksDataChanged(false);
+                                            }}
+                                            onError={error => dispatch(setError(error))}
+                                            dataStartState={TASK_START_STATE}
+                                            iconType={ICON_TODO_TYPE}
+                                            cardComponent={TaskCard}
+                                        />
                                     </div>
                                 
                                     <div className={toCss(s_eventsArea)}>
@@ -247,9 +271,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         className={toCss(s_saveBtn)}
                                         iconBefore='floppy-disk'
                                         isLoading={
-                                            state.saving || eventsSaveState || examsSaveState
+                                            state.saving || eventsSaveState || examsSaveState || tasksSaveState
                                         }
-                                        disabled={!eventsDataChanged && !examsDataChanged && !state.subject?.changed}
+                                        disabled={!eventsDataChanged && !examsDataChanged && !tasksDataChanged && !state.subject?.changed}
                                         onClick={saveHandler}
                                     >
                                         Save
@@ -297,7 +321,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 }}
             </Transition>
             <Prompt
-                when={(state.subject?.changed || eventsDataChanged || examsDataChanged) && !deleting && !(props.new && state.saving)}
+                when={(state.subject?.changed || eventsDataChanged || examsDataChanged || tasksDataChanged) && !deleting && !(props.new && state.saving)}
                 message='You have unsaved changes. Proceed?'
             />
         </Fragment>

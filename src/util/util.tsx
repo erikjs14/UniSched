@@ -27,3 +27,5 @@ export const hex2rgba = ( hex: string, a: number = 1 ): string => {
     b = parseInt( b ,16);
     return 'rgb(' + r + ',' + g + ',' + b + ',' + a + ')';
 }
+
+export const getResult = <T extends any>(fct: () => T ): T => fct();

@@ -6,6 +6,7 @@ import useSubjectData from './../../../../hooks/useSubjectData';
 import SettingsCards from '../../../../components/settings/SettingsCards';
 import { Dialog } from 'evergreen-ui';
 import { SubjectDataModelWithId, SubjectDataModel } from './../../../../firebase/model';
+import { removeKey } from '../../../../util/util';
 
 export default React.memo(
     forwardRef(
@@ -70,7 +71,7 @@ export default React.memo(
     const cards = data.items.map(dataItem => (
         <Card
             key={dataItem.id}
-            data={dataItem as MId}
+            data={removeKey('id', dataItem) as M}
             onChange={(key: keyof M, newVal) => valChangedHandler(dataItem.id, key, newVal)}
             onRemove={() => setWantDelete(dataItem.id)}
         />

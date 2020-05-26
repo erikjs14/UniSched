@@ -7,7 +7,7 @@ export interface SettingsCardProps {
 }
 
 export interface SubjectDataCardProps<M extends SubjectDataModel> {
-    data: EventModelWithId;
+    data: M;
     onChange<T>(key: keyof M, newVal: T | null): void;
     onRemove: Function;
 }
