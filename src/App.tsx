@@ -28,6 +28,7 @@ function App() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 dispatch(actions.setSignedIn(user))
+                dispatch(actions.fetchShallowSubjects());
             } else {
                 dispatch(actions.setSignedOut());
             }
