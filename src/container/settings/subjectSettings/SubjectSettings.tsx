@@ -14,7 +14,7 @@ import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './..
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
-import { EXAM_START_STATE, EVENTS_START_STATE, TASK_START_STATE } from './../../../config/settingsConfig';
+import { EXAM_START_STATE, EVENTS_START_STATE, TASK_START_STATE, getTaskStartState } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/settings/examCard/ExamCard';
 import SubSettings from './subSettings/SubSettings';
@@ -245,7 +245,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                                 if (newState) setTasksDataChanged(false);
                                             }}
                                             onError={error => dispatch(setError(error))}
-                                            dataStartState={TASK_START_STATE}
+                                            dataStartState={getTaskStartState()}
                                             iconType={ICON_TODO_TYPE}
                                             cardComponent={TaskCard}
                                         />

@@ -188,6 +188,7 @@ export const getIntervalTypeFromSeconds = (secs: number): IntervalType => {
         default: throw new Error('Malformed timestamps.');
     }
 }
+
 export const getSecondsFromIntervalType = (interval: IntervalType): number => {
     switch (interval) {
         case 'once': return 0;
@@ -214,8 +215,13 @@ export const getConfigDataFromTimestamps = (timestamps: Timestamp[], timestampsD
         if (timestamps.length < 2) {
             return 'once';
         } else {
-            const intervalSeconds = timestamps[1].seconds - timestamps[0].seconds;
-            return getIntervalTypeFromSeconds(intervalSeconds);
+            const today = todaysTimestamp();
+            if (timestamps[timestamps.length - 1].seconds < today.seconds) {
+                return 'daily';
+            } else {
+                const intervalSeconds = timestamps[timestamps.length-1].seconds - timestamps[timestamps.length-2].seconds;
+                return getIntervalTypeFromSeconds(intervalSeconds);
+            }
         }
     }),
 });
@@ -248,12 +254,27 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
     const shift = nextTimestamp && timestampsOld.length > 0
         ? newConfig.firstDeadline.seconds - timestampsOld[0].seconds
         : 0;
-    
+
     const newFutureTimestamps = getTimestampsFromConfig({
         firstDeadline: newConfig.firstDeadline,
         lastDeadline: newConfig.lastDeadline,
         interval: newConfig.interval,
     });
+    
+    // let firstDeadlineInFuture = newConfig.firstDeadline.seconds;
+    // while (firstDeadlineInFuture < today.seconds && newConfig.interval !== 'once') {
+    //     firstDeadlineInFuture += getSecondsFromIntervalType(newConfig.interval);
+    // }
+    // const newFutureTimestamps = getTimestampsFromConfig({
+    //     firstDeadline: getTimestampFromSeconds(firstDeadlineInFuture),
+    //     lastDeadline: getResult(() => {
+    //         if (newConfig.lastDeadline.seconds < firstDeadlineInFuture) {
+    //             return getTimestampFromSeconds(firstDeadlineInFuture);
+    //         }
+    //         return newConfig.lastDeadline;
+    //     }),
+    //     interval: newConfig.interval,
+    // });
 
     const timestampsOut = [...pastTimestamps, ...newFutureTimestamps];
     let timestampsDoneOut = [...pastTimestampsDone];
@@ -264,7 +285,7 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
     );
 
     // if only one timestamp is contained and interval it not 'once' --> add one extra timestamp
-    if (timestampsOut.length === 1) {
+    if (newConfig.interval !== 'once' && timestampsOut.length === 1) {
         timestampsOut.push(
             getTimestampFromSeconds(
                 timestampsOut[0].seconds + getSecondsFromIntervalType(newConfig.interval)
@@ -272,7 +293,7 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
         );
     }
 
-    return [timestampsOut, timestampsDoneOut];
+    return [removeDuplicateTimestamps(timestampsOut), removeDuplicateTimestamps(timestampsDoneOut)];
 }
 
 const plusMinus = (nr: number, range: number): boolean => {
@@ -294,4 +315,13 @@ export const getFilterForInterval = (startSecs: number, interval: IntervalType):
             default: return true;
         }
     }
+}
+
+export const removeDuplicateTimestamps = (array: Timestamp[]): Timestamp[] => {
+    return array.reduce<Timestamp[]>((unique, o) => {
+        if (!unique.some(ts => ts.seconds === o.seconds && ts.nanoseconds === o.nanoseconds)) {
+            unique.push(o);
+        }
+        return unique;
+    }, []);
 }

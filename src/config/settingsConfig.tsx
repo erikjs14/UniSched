@@ -1,4 +1,5 @@
 import { TaskModel, ExamModel, EventModel } from './../firebase/model';
+import { getTimestampFromDate } from '../util/timeUtil';
 
 export const TIME_INTERVAL_SELECT = 15;
 export const TIME_FORMAT = 'HH:mm';
@@ -31,3 +32,8 @@ export const TASK_START_STATE: TaskModel = {
     timestamps: [],
     timestampsDone: [],
 }
+export const getTaskStartState = (): TaskModel => ({
+    type: '',
+    timestamps: [getTimestampFromDate(new Date())],
+    timestampsDone: [],
+});
