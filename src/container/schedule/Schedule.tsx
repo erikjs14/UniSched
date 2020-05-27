@@ -66,6 +66,10 @@ export default function() {
             .catch(error => {
                 setError(true);
             })
+        }
+    }, [eventsConfig, subjects]);
+    useEffect(() => {
+        if (subjects && !examsConfig) {
             Promise.all(
                 subjects.map(sub => fetchExams(sub.id))
             )
@@ -83,8 +87,9 @@ export default function() {
                 });
                 setExamsConfig(newExamsConfig);
             })
+            .catch(error => setError(true));
         }
-    }, [subjects, eventsConfig]);
+    }, [examsConfig, subjects]);
 
     if (!eventsConfig || !examsConfig) {
         return <Loader />;

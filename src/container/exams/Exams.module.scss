@@ -1,0 +1,13 @@
+@import '../../style/abstract/mixins';
+
+.wrapperCalendar {
+    margin: 3rem 10rem;
+
+    @include respond(tab-land) {
+        margin: 3rem 4rem;
+    }
+
+    @include respond(phone) {
+        margin: 2rem 2rem;
+    }
+}
