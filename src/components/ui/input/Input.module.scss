@@ -118,7 +118,6 @@
         display: block;
         width: 2em;
         height: 2em;
-
         input {
             position: relative;
             appearance: none;
@@ -154,8 +153,14 @@
             top: 0;
             right: 0;
             bottom: 0;
-            border: .1em solid $col-primary-dark;
+            border: .15em solid rgba($col-primary-dark, .7);
             border-radius: 50%;
+            
+            transition: all .3s;
+
+            &:hover {
+                border-color: $col-primary-dark;
+            }
 
             &::before {
                 content: '';
