@@ -213,6 +213,18 @@ export const updateTask = async <D extends keyof models.TaskModel>(subjectId: st
     await updateDoc(task_ref(subjectId, id), task);
 }
 
+export const saveTaskChecked = async (subjectId: string, id: string, timestamp: models.Timestamp): Promise<void> => {
+    await task_ref(subjectId, id).update({
+        timestampsDone: firebase.firestore.FieldValue.arrayUnion(timestamp),
+    });
+}
+
+export const saveTaskUnchecked = async (subjectId: string, id: string, timestamp: models.Timestamp): Promise<void> => {
+    await task_ref(subjectId, id).update({
+        timestampsDone: firebase.firestore.FieldValue.arrayRemove(timestamp),
+    });
+}
+
 /************ DELETING DATA ****************/
 
 const deleteDoc = async (docRef: DocRef): Promise<void> => {

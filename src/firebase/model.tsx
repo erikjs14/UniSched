@@ -53,3 +53,5 @@ export interface TaskModel extends SubjectDataModel {
     timestampsDone: Timestamp[];
 }
 export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}
+
+export interface TaskModelWithIdAndSubjectId extends TaskModelWithId {subjectId: string}

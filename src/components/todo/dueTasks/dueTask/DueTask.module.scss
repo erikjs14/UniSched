@@ -1,0 +1,43 @@
+@import '../../../../style/abstract/mixins';
+
+.wrapper {
+    position: relative;
+    width: 97%;
+    margin: 2rem auto 0;
+    border-radius: 1.5rem;
+    background-image: linear-gradient(to bottom right, rgba(#fff, 0) 30%, rgba(#fff, .2));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 10rem;
+    
+    .checkWrapper {
+        position: absolute;
+        left: 1.5rem;
+
+        &::before {
+            content: '';
+            @include absCenter;
+            display: block;
+            width: .1px;
+            height: .1px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 1em rgba(#fff, .7);
+        }
+    }
+
+    .title {
+        min-width: 70%;
+        text-transform: uppercase;
+        line-height: 1.5em;
+
+        @include respond(tab-port) {
+            font-size: 1.15em;
+        }
+    }
+
+    .dueAt {
+
+    }
+}

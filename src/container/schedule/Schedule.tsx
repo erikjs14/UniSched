@@ -45,7 +45,7 @@ export default function() {
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
 
     useEffect(() => {
-        if (subjects && !eventsConfig) {
+        if (subjects && !eventsConfig && !error) {
             Promise.all(
                 subjects.map(sub => fetchEvents(sub.id))
             )
@@ -67,9 +67,9 @@ export default function() {
                 setError(true);
             })
         }
-    }, [eventsConfig, subjects]);
+    }, [error, eventsConfig, subjects]);
     useEffect(() => {
-        if (subjects && !examsConfig) {
+        if (subjects && !examsConfig && !error) {
             Promise.all(
                 subjects.map(sub => fetchExams(sub.id))
             )
@@ -89,12 +89,12 @@ export default function() {
             })
             .catch(error => setError(true));
         }
-    }, [examsConfig, subjects]);
+    }, [error, examsConfig, subjects]);
 
-    if (!eventsConfig || !examsConfig) {
-        return <Loader />;
-    } else if (error) {
+    if (error) {
         return <h2>An unexpected error has occurred. Try reloading the page.</h2>
+    } else if (!eventsConfig || !examsConfig) {
+        return <Loader />;
     }
 
     return (

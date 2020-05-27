@@ -1,3 +1,5 @@
+import { SubjectModelWithId, SubjectModel } from "../firebase/model";
+
 export const toCss = (...classNames: string[]): string => {
     return classNames.join(' ');
 }
@@ -29,3 +31,9 @@ export const hex2rgba = ( hex: string, a: number = 1 ): string => {
 }
 
 export const getResult = <T extends any>(fct: () => T ): T => fct();
+
+export const subjectsToObject = (subjects: SubjectModelWithId[]): {[id: string]: SubjectModel} => {
+    const out: {[id: string]: SubjectModel} = {};
+    subjects.forEach(sub => out[sub.id] = (removeKey('id', sub) as SubjectModel));
+    return out;
+}

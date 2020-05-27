@@ -1,0 +1,48 @@
+@import '../../../style/abstract/variables';
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    width: 90%;
+    margin: auto;
+
+    .dayWrapper {
+
+        &:not(:last-child) {
+            margin-bottom: 3rem;
+        }
+    }
+}
+
+.noTodo {
+    animation: fadeIn .8s;
+    display: flex;
+    width: 60%;
+    margin: auto;
+    color: $col-primary-light;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 70vh;
+    text-align: center;
+
+    svg {
+        font-size: 7.5rem;
+    }
+
+    @include respond(tab-port) {
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    @include respond(phone) {
+        width: 90%;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

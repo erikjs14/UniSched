@@ -1,0 +1,38 @@
+@import '../../../../style/abstract/mixins';
+
+.wrapper {
+    background-color: #eee;
+    border-radius: 5px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+        "weekday date amount";
+    padding: 1rem 10rem 1rem 3rem;
+
+    @include respond(phone) {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-areas:
+            "weekday amount"
+            "date date";
+        row-gap: .3rem;
+    }
+    
+    .weekday {
+        grid-area: weekday;
+    }
+
+    .date {
+        text-align: center;
+        grid-area: date;
+
+        @include respond(phone) {
+            text-align: left;
+        }
+    }
+
+    .amount {
+        text-align: right;
+        grid-area: amount;
+    }
+}

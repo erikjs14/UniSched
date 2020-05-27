@@ -1,4 +1,4 @@
-import { Timestamp, TaskModel, IntervalType } from './../firebase/model';
+import { Timestamp, TaskModel, IntervalType, TaskModelWithIdAndSubjectId } from './../firebase/model';
 import { getResult } from './util';
 
 export const containsTimestamp = (toCheck: Timestamp, array: Timestamp[]): boolean => {
@@ -21,7 +21,14 @@ export const removeTimestamp = (toRemove: Timestamp, array: Timestamp[]): Timest
     }, []);
 }
 
-export const getRelevantTimestamps = (timestamps: Timestamp[], timestampsDone: Timestamp[]): Timestamp[] => {
+export const containsDay = (toCheck: Date[], date: Date): boolean => {
+    if (toCheck.find(d => sameDay(d, date))) {
+        return true;
+    }
+    return false;
+}
+
+export const getRelevantTimestamps = (timestamps: Timestamp[], timestampsDone: Timestamp[], forceAppendFuture: boolean): Timestamp[] => {
     const now = Date.now() / 1000;
 
     // all timestamps from past that haven't been checked
@@ -32,17 +39,89 @@ export const getRelevantTimestamps = (timestamps: Timestamp[], timestampsDone: T
         return acc;
     }, []);
 
-    // append first timestamp from future
     const firstInFuture: Timestamp | undefined = timestamps.find(t => t.seconds > now);
-    
-    if (!firstInFuture) {
-        return relevantFromPast;
+
+    if (forceAppendFuture) {
+        // append first timestamp from future
+        
+        if (!firstInFuture) {
+            return relevantFromPast;
+        } else {
+            return [
+                ...relevantFromPast,
+                firstInFuture
+            ];
+        }
     } else {
-        return [
-            ...relevantFromPast,
-            firstInFuture
-        ];
+        if (!firstInFuture || containsTimestamp(firstInFuture, timestampsDone)) {
+            return relevantFromPast;
+        } else {
+            return [
+                ...relevantFromPast,
+                firstInFuture,
+            ];
+        }
     }
+}
+
+export const formatDateOutput = (date: Date): string => date.toISOString().slice(0, 10).replace(/-/g, '/').replace('T', ' ');
+export const formatDateTimeOutput = (date: Date): string => date.toISOString().slice(0, 16).replace(/-/g, '/').replace('T', ' ');
+
+export const sameDay = (d1: Date | null, d2: Date | null): boolean => {
+    if (!d1 || !d2) return false;
+    const date1 = typeof d1 === 'string' ? new Date(d1) : d1;
+    const date2 = typeof d2 === 'string' ? new Date(d2) : d2;
+    return date1.getFullYear() === date2.getFullYear() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDate() === date2.getDate();
+}
+
+export const groupTaskSemanticsByDueDay = (sortedTasks: TaskSemantic[]): TaskSemantic[][] => {
+    const out: TaskSemantic[][] = [];
+
+    let prev = null;
+    for (const ts of sortedTasks) {
+        if (sameDay(prev, ts.dueAt)) {
+            out[out.length-1].push(ts);
+        } else {
+            out.push([ts]);
+        }
+        prev = ts.dueAt;
+    }
+
+    return out;
+}
+
+export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean): TaskSemantic[] => {
+    const out: TaskSemantic[][] = [];
+    
+    rawTasks.forEach(task => {
+        out.push(
+            getRelevantTimestamps(task.timestamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
+                name: task.type,
+                taskId: task.id,
+                subjectId: task.subjectId,
+                checked: containsTimestamp(tstamp, task.timestampsDone),
+                dueString: formatDateTimeOutput(getDateFromTimestamp(tstamp)),
+                dueAt: getDateFromTimestamp(tstamp),
+            }))
+        )
+    });
+
+    return out.flat().sort((ts1, ts2) => ts1.dueAt.getTime() - ts2.dueAt.getTime());
+}
+export const getRelevantTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture));
+
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+export const getWeekDay = (date: Date): typeof days[number] => days[date.getDay()];
+
+export interface TaskSemantic {
+    name: string;
+    dueString: string;
+    taskId: string;
+    subjectId: string;
+    checked: boolean;
+    dueAt: Date;
 }
 
 export const checkTask = (timestamp: Timestamp, task: TaskModel): TaskModel => {
