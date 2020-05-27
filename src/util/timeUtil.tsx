@@ -97,6 +97,7 @@ export const endOf = (date: Date): Date => {
 export const getTimestampFromSeconds = (secs: number): Timestamp => ({seconds: secs, nanoseconds: 0});
 export const getSecondsFromDate = (date: Date): number => Math.round(date.getTime() / 1000);
 export const getDateFromSeconds = (secs: number): Date => new Date(secs * 1000);
+export const getDateFromTimestamp = (t: Timestamp): Date => getDateFromSeconds(t.seconds);
 export const getTimestampFromDate = (date: Date): Timestamp => ({seconds: Math.round(date.getTime() / 1000), nanoseconds: 0});
 
 export const getIntervalTypeFromSeconds = (secs: number): IntervalType => {
