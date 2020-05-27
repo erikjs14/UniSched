@@ -11,3 +11,20 @@
         margin: 2rem 2rem;
     }
 }
+
+.viewToggle {
+    color: #fff;
+    justify-content: center !important;
+    margin: 3rem 0 -6rem 5rem !important;
+
+    @include respond(tab-port) {
+        max-width: 45%;
+        margin: 3rem auto -6rem !important;
+    }
+
+    @include respond(phone) {
+        max-width: unset;
+        margin: unset !important;
+        margin-top: 3rem !important;
+    }
+}

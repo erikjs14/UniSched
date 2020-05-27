@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
 
@@ -20,11 +20,22 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../..';
 import { getAllConfigFromEvents, getAllConfigFromExams } from '../../util/scheduleUtil';
 import { findColorConfig } from './../../config/colorChoices';
+import Input from '../../components/ui/input/Input';
 const {
     wrapperCalendar: s_wrapperCalendar,
+    viewToggle: s_viewToggle,
 } = CSS;
 
+const availableViews = ['timeGridDay', 'timeGridWeek', 'dayGridMonth', 'listWeek'];
 export default function() {
+
+    const [calendarView, setCalendarView] = useState(window.innerWidth < 600 ? 'timeGridDay' : 'timeGridWeek');
+    const calAspectRatio = React.useMemo(() => window.innerWidth < 900 ? undefined : 2.2, []);
+    const calRef = useRef<FullCalendar>(null);
+
+    useEffect(() => {
+        calRef.current?.getApi().changeView(calendarView);
+    }, [calendarView]);
 
     const [eventsConfig, setEventsConfig] = useState<object[]|null>(null);
     const [examsConfig, setExamsConfig] = useState<object[]|null>(null);
@@ -83,12 +94,23 @@ export default function() {
             
             <SiteHeader type='schedule' title='Schedule' />
 
+            <Input
+                elementType='select-visual'
+                value={calendarView}
+                onChange={newView => setCalendarView(newView)}
+                label='Views'
+                options={availableViews}
+                addClass={toCss(s_viewToggle)}
+            />
+
             <div className={toCss(s_wrapperCalendar)}>
                 <FullCalendar
-                    defaultView='dayGridMonth'
+                    ref={calRef}
+                    defaultView={calendarView}
+                    minTime='06:00'
                     plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
                     nowIndicator
-                    aspectRatio={2.2}
+                    aspectRatio={calAspectRatio}
                     events={[...eventsConfig, ...examsConfig]}
                 />
             </div>
