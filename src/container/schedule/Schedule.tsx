@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
+import { toaster } from 'evergreen-ui';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -114,6 +115,10 @@ export default function() {
                     nowIndicator
                     aspectRatio={calAspectRatio}
                     events={[...eventsConfig, ...examsConfig]}
+                    eventClick={({event}) => toaster.notify(event.title, {
+                        id: 'unique',
+                        duration: 2,
+                    })}
                 />
             </div>
 
