@@ -55,6 +55,7 @@ export default function() {
                         ...newEventsConfig,
                         ...getAllConfigFromEvents(events).map(conf => ({
                             ...conf,
+                            title: '[' + subjects[idx].name + '] ' + conf.title,
                             backgroundColor: findColorConfig(subjects[idx].color).value,
                         })),
                     ];
@@ -74,6 +75,7 @@ export default function() {
                         ...newExamsConfig,
                         ...getAllConfigFromExams(exams).map(conf => ({
                             ...conf,
+                            title: '[' + subjects[idx].name + '] ' + conf.title,
                             backgroundColor: findColorConfig(subjects[idx].color).value,
                         })),
                     ];
