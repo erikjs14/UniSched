@@ -10,3 +10,6 @@ export interface SignOutFailAC extends BaseActionCreator {error: string}
 export interface FetchShallowSubjectsAC extends BaseActionCreator {}
 export interface FetchShallowSubjectsSuccessAC extends BaseActionCreator {shallowSubjects: SubjectModelWithId[]}
 export interface FetchShallowSubjectsFailAC extends BaseActionCreator {error: string}
+
+export interface RemoveSubjectLocallyAC extends BaseActionCreator {id: string}
+export interface AddSubjectLocallyAC extends BaseActionCreator {subject: SubjectModelWithId}

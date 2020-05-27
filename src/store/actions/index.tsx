@@ -6,4 +6,6 @@ export {
     fetchShallowSubjects,
     fetchShallowSubjectsSuccess,
     fetchShallowSubjectsFail,
+    removeSubjectLocally,
+    addSubjectLocally,
 } from './user';

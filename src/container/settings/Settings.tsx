@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { useHistory } from 'react-router-dom';
-import Loader from '../../components/ui/loader/Loader';
-import { fetchSubjectsShallow } from '../../firebase/firestore';
-import { SubjectModelWithId } from './../../firebase/model';
 import SimpleSettingsRow from '../../components/ui/SimpleSettingsRow/SimpleSettingsRow';
 import CSS from './Settings.module.scss';
 import { toCss } from './../../util/util';
@@ -12,6 +9,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ICON_SETTINGS_TYPE, ICON_SETTINGS_ALT } from './../../config/globalTypes.d';
+import { useSelector } from 'react-redux';
+import { RootState } from '../..';
 const {
     container: s_container,
     subjects: s_subjects,
@@ -24,30 +23,10 @@ export default function(): JSX.Element {
 
     const history = useHistory();
 
-    const [subjects, setSubjects] = useState<SubjectModelWithId[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
-
-    useEffect(() => {
-        fetchSubjectsShallow()
-            .then(subjects => {
-                setSubjects(subjects);
-                setError(null);
-            })
-            .catch(error => {
-                setError(error);
-                setSubjects([]);
-            }).finally(() => {
-                setLoading(false);
-            })
-    }, []);
+    const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
 
     let content;
-    if (loading) {
-        content = <Loader />;
-    } else if (error) { 
-        content = 'ERROR. Refresh Page.'; // ToDo: nsert something more meaningful
-    } else if (subjects.length === 0) { 
+    if (!subjects || subjects.length === 0) { 
         
         content = (
             <div className={toCss(s_wrapper)}>

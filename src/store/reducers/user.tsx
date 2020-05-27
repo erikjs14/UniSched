@@ -1,8 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
-import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC } from '../actions/user.d';
-import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC } from './../actions/user.d';
+import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC } from '../actions/user.d';
+import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC } from './../actions/user.d';
 
 const initialState: UserState = {
     username: null,
@@ -21,6 +21,8 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
         case actionTypes.FETCH_SHALLOW_SUBJECTS: return fetchShallowSubjects(state, action as FetchShallowSubjectsAC);
         case actionTypes.FETCH_SHALLOW_SUBJECTS_SUCCESS: return fetchShallowSubjectsSuccess(state, action as FetchShallowSubjectsSuccessAC);
         case actionTypes.FETCH_SHALLOW_SUBJECTS_FAIL: return fetchShallowSubjectsFail(state, action as FetchShallowSubjectsFailAC);
+        case actionTypes.REMOVE_SUBJECT_LOCALLY: return removeSubjectLocally(state, action as RemoveSubjectLocallyAC);
+        case actionTypes.ADD_SUBJECT_LOCALLY: return addSubjectLocally(state, action as AddSubjectLocallyAC);
         default: return state;
     }
 }
@@ -73,5 +75,17 @@ const fetchShallowSubjectsFail = (state: UserState, action: FetchShallowSubjects
     return updateObject(state, {
         globalLoading: false,
         error: action.error,
+    });
+};
+
+const removeSubjectLocally = (state: UserState, action: RemoveSubjectLocallyAC): UserState => {
+    return updateObject(state, {
+        shallowSubjects: state.shallowSubjects?.filter(sub => sub.id !== action.id),
+    });
+};
+
+const addSubjectLocally = (state: UserState, action: AddSubjectLocallyAC): UserState => {
+    return updateObject(state, {
+        shallowSubjects: state.shallowSubjects ? [...state.shallowSubjects, action.subject] : [action.subject],
     });
 };

@@ -21,6 +21,9 @@ import SubSettings from './subSettings/SubSettings';
 import { ICON_SCHEDULE_TYPE } from './../../../config/globalTypes.d';
 import EventCard from '../../../components/settings/eventCard/EventCard';
 import TaskCard from '../../../components/settings/taskCard/TaskCard';
+import { removeSubjectLocally, addSubjectLocally } from '../../../store/actions';
+import { SubjectModel } from '../../../firebase/model';
+import { useDispatch } from 'react-redux';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -40,6 +43,8 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
     const location = useLocation();
     const history = useHistory();
+
+    const dispatchToStore = useDispatch();
     
     const [state, dispatch] = props.new
         ? useReducer(reducer, initialStateNew)
@@ -118,19 +123,25 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
         if (state.subject?.changed) {
             dispatch(startSaving());
             if (props.new) {
-                addSubject({
+                const sub: SubjectModel = {
                     name: state.subject.name,
                     color: state.subject.color.newColor.name,
-                }).then(id => {
-                    eventsRef.current?.save(id);
-                    examsRef.current?.save(id);
-                    tasksRef.current?.save(id);
+                };
+                addSubject(sub)
+                    .then(id => {
+                        eventsRef.current?.save(id);
+                        examsRef.current?.save(id);
+                        tasksRef.current?.save(id);
 
-                    history.replace(`/settings/${id}`);
-                    dispatch(setSaved());
-                }).catch(error => {
-                    dispatch(setError(error.message));
-                })
+                        history.replace(`/settings/${id}`);
+                        dispatchToStore(addSubjectLocally({
+                            ...sub,
+                            id
+                        }));
+                        dispatch(setSaved());
+                    }).catch(error => {
+                        dispatch(setError(error.message));
+                    })
 
             } else {
 
@@ -147,7 +158,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 })
             }
         }
-    }, [dispatch, history, props.new, state.subject]);
+    }, [dispatch, dispatchToStore, history, props.new, state.subject]);
 
     if (state.loading) {
         return <Loader />;
@@ -318,6 +329,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                             deleteSubject(state.subject.id)
                                                 .then(() => {
                                                     close();
+                                                    dispatchToStore(removeSubjectLocally(state.subject?.id || ''))
                                                     history.push('/settings');
                                                 })
                                                 .catch(error => {
