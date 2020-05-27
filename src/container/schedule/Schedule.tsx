@@ -105,7 +105,7 @@ export default function() {
             <Input
                 elementType='select-visual'
                 value={calendarView}
-                onChange={newView => setCalendarView(newView)}
+                onChange={newView => setCalendarView(newView as string)}
                 label='Views'
                 options={availableViews}
                 addClass={toCss(s_viewToggle)}

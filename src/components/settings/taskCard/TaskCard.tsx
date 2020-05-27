@@ -69,7 +69,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         label='Interval'
                         elementType='select-visual'
                         value={interval}
-                        onChange={newInterval => changeHandler({firstDeadline, lastDeadline, interval: newInterval})}
+                        onChange={newInterval => changeHandler({firstDeadline, lastDeadline, interval: newInterval as string})}
                         options={IntervalOptions}
                         addClass={toCss(s_intervalOptions)}
                     />

@@ -21,7 +21,7 @@ export default function(props: PropsWithChildren<SettingsCardProps>): JSX.Elemen
             <Input
                 elementType='input-transparent'
                 value={props.headerValue}
-                onChange={newVal => props.onHeaderValueChange(newVal)}
+                onChange={newVal => props.onHeaderValueChange(newVal as string)}
                 label='Insert title here'
             />
         </div>

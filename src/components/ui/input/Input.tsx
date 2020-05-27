@@ -9,10 +9,12 @@ const {
     transparent: s_transparent,
     selectVisual: s_selectVisual,
     wrapperSelect: s_wrapperSelect,
+    checkbox: s_checkbox,
+    checkWrapper: s_checkWrapper,
 } = CSS;
 
 export interface InputProps<T> {
-    elementType: 'input' |'input-transparent' | 'select-visual';
+    elementType: 'input' |'input-transparent' | 'select-visual' | 'checkbox';
     value: T;
     onChange(val: T): void;
     label: string;
@@ -25,7 +27,7 @@ export interface InputProps<T> {
     labelLeft?: boolean;
 }
 
-export default function(props: InputProps<string>): JSX.Element| null {
+export default function(props: InputProps<string|boolean>): JSX.Element| null {
 
     const style: {width?: string} = {}
     if (props.width) style.width = props.width+'rem';
@@ -34,7 +36,7 @@ export default function(props: InputProps<string>): JSX.Element| null {
         case 'input': 
             return (
                 <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
-                    <input {...props.elementConfig} placeholder='' value={props.value} onChange={event => props.onChange(event.target.value)} className={toCss(s_input)} />
+                    <input {...props.elementConfig} placeholder='' value={props.value as string} onChange={event => props.onChange(event.target.value)} className={toCss(s_input)} />
                     <label className={toCss(s_label)} >{props.label}</label>
                 </div>
             );
@@ -43,7 +45,7 @@ export default function(props: InputProps<string>): JSX.Element| null {
                 <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
                     <input 
                         {...props.elementConfig} 
-                        value={props.value} 
+                        value={props.value as string} 
                         onChange={event => props.onChange(event.target.value)} 
                         className={toCss(s_input, s_transparent)}
                         style={{color: props.inputColor ? hex2rgba(props.inputColor) : 'inherit'}}
@@ -72,12 +74,29 @@ export default function(props: InputProps<string>): JSX.Element| null {
                                 type='checkbox'
                                 value={option}
                                 onChange={event => props.onChange(event.target.value)}
-                                checked={option === props.value}
+                                checked={props.value === option}
                                 name={props.label}
                             />
                             <span>{option}</span>
                         </label>
                     ))}
+                </div>
+            );
+        case 'checkbox':
+            return (
+                <div className={toCss(s_checkWrapper)}>
+                    <label
+                        className={toCss(s_checkbox)}
+                    >
+                        <input
+                            type='checkbox'
+                            value={props.label}
+                            onChange={event => props.onChange(event.target.value)}
+                            checked={props.value as boolean}
+                            name={props.label}
+                        />
+                        <span></span>
+                    </label>
                 </div>
             );
         default:
