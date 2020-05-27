@@ -3,7 +3,7 @@
 
 .navItem {
     list-style: none;
-    padding: 1rem 0;
+    // padding: 1rem 0;
     position: relative;
     border-radius: 5rem;
     overflow: hidden;
@@ -63,6 +63,9 @@
         text-transform: uppercase;
         letter-spacing: 2px;
         z-index: 100;
+        display: block;
+        width: 100%;
+        line-height: 3em;
 
         &.active {
             color: $col-secondary-dark
