@@ -13,6 +13,7 @@ const {
     wrapper: s_wrapper,
     dayWrapper: s_dayWrapper,
     noTodo: s_noTodo,
+    fadeOutMargin: s_fadeOutMargin,
 } = CSS;
 
 const taskContained = (taskId: string, seconds: number, array: [string, number][]): boolean => {
@@ -59,37 +60,40 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         )
     }
     
-    const allTasks = semTasks.map(tasksOneDay => (
-        <AnimateHeight
-            key={tasksOneDay[0].dueAt.getTime()} 
-            height={containsDay(fadeDayOut, tasksOneDay[0].dueAt) ? 0 : 'auto'}
-            duration={400}
-            delay={1800}
-            className={toCss(s_dayWrapper)}
-        >
-            <div>
-                <WeekdaySeperator
-                    date={tasksOneDay[0].dueAt}
-                    amount={tasksOneDay.length}
-                />
-                {tasksOneDay.map(task => (
-                    <DueTask
-                        key={task.taskId}
-                        taskSemantic={task}
-                        subjectDisplayName={props.subjects[task.subjectId].name}
-                        onCheck={() => {
-                            if (!taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)) {
-                                setFadeTaskOut(prev => [...prev, [task.taskId, task.dueAt.getTime()]]);
-                            }
-                        }}
-                        fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
-                        onFadeOutComplete={() => props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt))}
-                        backgroundColor={props.subjects[task.subjectId].color}
+    const allTasks = semTasks.map(tasksOneDay => {
+        const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
+        return (
+            <AnimateHeight
+                key={tasksOneDay[0].dueAt.getTime()} 
+                height={dayContained ? 0 : 'auto'}
+                duration={400}
+                delay={1800}
+                
+            >
+                <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''))}>
+                    <WeekdaySeperator
+                        date={tasksOneDay[0].dueAt}
+                        amount={tasksOneDay.length}
                     />
-                ))}
-            </div>
-        </AnimateHeight>
-    ));
+                    {tasksOneDay.map(task => (
+                        <DueTask
+                            key={task.taskId}
+                            taskSemantic={task}
+                            subjectDisplayName={props.subjects[task.subjectId].name}
+                            onCheck={() => {
+                                if (!taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)) {
+                                    setFadeTaskOut(prev => [...prev, [task.taskId, task.dueAt.getTime()]]);
+                                }
+                            }}
+                            fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
+                            onFadeOutComplete={() => props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt))}
+                            backgroundColor={props.subjects[task.subjectId].color}
+                        />
+                    ))}
+                </div>
+            </AnimateHeight>
+        );
+    });
     
     return (
         <div className={toCss(s_wrapper)}>

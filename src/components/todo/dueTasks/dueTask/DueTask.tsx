@@ -33,7 +33,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
             delay={1500}
             animateOpacity={true}
         >
-            <div 
+            <div
                 className={toCss(s_wrapper, (props.fadeOut ? s_fadeOut : ''))}
                 style={props.backgroundColor 
                     ? {
