@@ -28,11 +28,11 @@ jobs:
         env:
           FILE_NAME: .firebaserc
           FILE_DATA: ${{ secrets.FIREBASERC }}
-     - name: Add firebase.json
-       uses: finnp/create-file-action@1.0.0
-       env:
-         FILE_NAME: firebase.json
-         FILE_DATA: ${{ secrets.FIREBASE_JSON }}
+      - name: Add firebase.json
+        uses: finnp/create-file-action@1.0.0
+        env:
+          FILE_NAME: firebase.json
+          FILE_DATA: ${{ secrets.FIREBASE_JSON }}
       - name: Install Dependencies
         run: yarn install
       - name: Build
