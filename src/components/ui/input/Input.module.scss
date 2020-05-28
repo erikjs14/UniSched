@@ -99,11 +99,24 @@
                 padding: .1em .4em;
                 border-radius: 50rem;
                 border: 2px solid $col-primary-light;
+                display: inline-block;
+                text-align: center;
 
                 transition: all .1s ease-out;
 
                 @include respond(tab-port) {
                     font-size: 1.1em;
+                }
+            }
+
+            &.minSize span {
+                min-width: 5em;
+
+                @include respond(tab-port) {
+                    min-height: 2.5em;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
             }
         }

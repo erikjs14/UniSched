@@ -27,7 +27,12 @@ const {
     viewToggle: s_viewToggle,
 } = CSS;
 
-const availableViews = ['timeGridDay', 'timeGridWeek', 'dayGridMonth', 'listWeek'];
+const availableViews: {[id: string]: string} = {
+    timeGridDay: 'Day',
+    timeGridWeek: 'Week',
+    dayGridMonth: 'Month',
+    listWeek: 'List',
+};
 export default function() {
 
     const [calendarView, setCalendarView] = useState(window.innerWidth < 600 ? 'timeGridDay' : 'timeGridWeek');
@@ -104,11 +109,12 @@ export default function() {
 
             <Input
                 elementType='select-visual'
-                value={calendarView}
-                onChange={newView => setCalendarView(newView as string)}
+                value={availableViews[calendarView]}
+                onChange={newView => setCalendarView(Object.keys(availableViews).find(key => availableViews[key] === newView) || 'timeGridWeek')}
                 label='Views'
-                options={availableViews}
+                options={Object.values(availableViews)}
                 addClass={toCss(s_viewToggle)}
+                minSize
             />
 
             <div className={toCss(s_wrapperCalendar)}>

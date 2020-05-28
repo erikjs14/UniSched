@@ -12,6 +12,7 @@ const {
     checkbox: s_checkbox,
     checkWrapper: s_checkWrapper,
     disabled: s_disabled,
+    minSize: s_minSize,
 } = CSS;
 
 export interface InputProps<T> {
@@ -27,6 +28,7 @@ export interface InputProps<T> {
     options?: string[];
     labelLeft?: boolean;
     disabled?: boolean;
+    minSize?: boolean;
 }
 
 export default function(props: InputProps<string|boolean>): JSX.Element| null {
@@ -70,7 +72,7 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                     {props.options?.map(option => (
                         <label
                             key={option}
-                            className={toCss(s_selectVisual)}
+                            className={toCss(s_selectVisual, (props.minSize ? '' + s_minSize : ''))}
                         >
                             <input
                                 type='checkbox'

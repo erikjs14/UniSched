@@ -1,3 +1,5 @@
+@import './abstract/mixins';
+
 .react-datepicker {
     z-index: 1000000;
     font-size: 1.5rem !important;
@@ -36,4 +38,20 @@
     to {
         transform: scale(1);
     }
+}
+
+.fc {
+
+    
+        @include respond(phone) {
+            &-next-button,
+            &-prev-button {
+                height: 6rem;
+                width: 6rem;
+            }
+            &-today-button {
+                height: 5rem;
+                min-width: 8rem;
+            }
+        }
 }

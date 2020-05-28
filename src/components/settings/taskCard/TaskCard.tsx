@@ -60,7 +60,9 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                 </div>
 
                 <div className={toCss(s_row)}>
-                    <span>Last deadline</span>
+                    <span>
+                        Last Deadline
+                    </span>
                     <DateTimePicker
                         customInput={<CustomDateInputUI />}
                         showWeekNumbers

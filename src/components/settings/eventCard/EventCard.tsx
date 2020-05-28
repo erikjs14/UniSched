@@ -11,9 +11,11 @@ import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from '../customDateInputUI/CustomDateInputUI';
 import { EventModel } from './../../../firebase/model';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
+import { Tooltip, InfoSignIcon } from 'evergreen-ui';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
+    infoIcon: s_infoIcon,
 } = CSS;
 
 export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
@@ -26,7 +28,12 @@ export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
         >
 
                 <div className={toCss(s_row)}>
-                    <span>First Start</span>
+                    <span>
+                        First Start
+                        <Tooltip content='Select the start (date and time) of the first event of this type.'>
+                            <InfoSignIcon className={toCss(s_infoIcon)} />
+                        </Tooltip>
+                    </span>
                     <DateTimePicker
                         customInput={<CustomDateInputUI />}
                         showWeekNumbers
@@ -38,7 +45,12 @@ export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
                 </div>
 
                 <div className={toCss(s_row)}>
-                    <span>First End</span>
+                    <span>
+                        First End
+                        <Tooltip content='Select the end (date and time) of the first event of this type.'>
+                            <InfoSignIcon className={toCss(s_infoIcon)} />
+                        </Tooltip>
+                    </span>
                     <DateTimePicker
                         customInput={<CustomDateInputUI />}
                         showWeekNumbers
@@ -51,7 +63,12 @@ export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
                 </div>
 
                 <div className={toCss(s_row)}>
-                    <span>End at</span>
+                    <span>
+                        Last Event
+                        <Tooltip content='Select the day when this event will happen for the last time.'>
+                            <InfoSignIcon className={toCss(s_infoIcon)} />
+                        </Tooltip>
+                    </span>
                     <DateTimePicker
                         customInput={<CustomDateInputUI />}
                         showWeekNumbers

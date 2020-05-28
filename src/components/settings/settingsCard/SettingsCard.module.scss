@@ -33,6 +33,16 @@
             margin-bottom: 1.5rem;
         }
 
+        span {
+            display: flex;
+            align-items: center;
+
+            .infoIcon {
+                width: 14px;
+                height: 14px;
+                margin-left: 1rem;
+            }
+        }
 
         .datetimepicker {
             cursor: pointer;
