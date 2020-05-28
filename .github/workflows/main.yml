@@ -23,6 +23,8 @@ jobs:
         env:
           FILE_NAME: ./src/firebase/firebaseConfig.json
           FILE_DATA: ${{ secrets.FIREBASE_CONFIG }}
+      - name: check config file
+        run: cat src/firebase/firebaseConfig.json
       - name: Install Dependencies
         run: yarn install
       - name: Build
