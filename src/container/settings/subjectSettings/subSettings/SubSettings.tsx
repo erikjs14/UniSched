@@ -75,6 +75,7 @@ export default React.memo(
             data={removeKey('id', dataItem) as M}
             onChange={(key: keyof M, newVal) => valChangedHandler(dataItem.id, key, newVal)}
             onRemove={() => setWantDelete(dataItem.id)}
+            new={dataItem.id.startsWith('NEW_')}
         />
     ));
     

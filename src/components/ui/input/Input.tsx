@@ -11,6 +11,7 @@ const {
     wrapperSelect: s_wrapperSelect,
     checkbox: s_checkbox,
     checkWrapper: s_checkWrapper,
+    disabled: s_disabled,
 } = CSS;
 
 export interface InputProps<T> {
@@ -25,6 +26,7 @@ export interface InputProps<T> {
     addClass?: string;
     options?: string[];
     labelLeft?: boolean;
+    disabled?: boolean;
 }
 
 export default function(props: InputProps<string|boolean>): JSX.Element| null {
@@ -86,12 +88,12 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
             return (
                 <div className={toCss(s_checkWrapper)}>
                     <label
-                        className={toCss(s_checkbox)}
+                        className={toCss(s_checkbox, (props.disabled ? s_disabled : ''))}
                     >
                         <input
                             type='checkbox'
                             value={props.label}
-                            onChange={event => props.onChange(event.target.value)}
+                            onChange={event => props.disabled ? null : props.onChange(event.target.value)}
                             checked={props.value as boolean}
                             name={props.label}
                         />

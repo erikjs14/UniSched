@@ -10,4 +10,5 @@ export interface SubjectDataCardProps<M extends SubjectDataModel> {
     data: M;
     onChange<T>(key: keyof M, newVal: T | null): void;
     onRemove: Function;
+    new?: boolean;
 }

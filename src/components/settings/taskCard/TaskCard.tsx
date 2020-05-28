@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import DateTimePicker from 'react-datepicker';
 
 import CSS from '../settingsCard/SettingsCard.module.scss';
@@ -10,6 +10,7 @@ import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
 import Input from '../../ui/input/Input';
+import { toaster } from 'evergreen-ui';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
@@ -26,6 +27,15 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
     }, [onChange, oldTimestamps, oldTimestampsDone]);
 
     const {firstDeadline, lastDeadline, interval} = getConfigDataFromTimestamps(oldTimestamps, oldTimestampsDone);
+
+    const notifyNotNew = useMemo(() => {
+        return () => {
+            toaster.notify('Only the end date can be modified on non-new tasks.', {
+                id: 'unique',
+                duration: 3,
+            });
+        }
+    }, []);
 
     return (
         <SettingsCard
@@ -44,6 +54,8 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         onChange={date => date ? changeHandler({firstDeadline: getTimestampFromDate(date), lastDeadline, interval}) : null}
                         minDate={new Date()}
                         {...DATETIMEPICKER_DEFAULT_PROPS}
+                        disabled={!props.new}
+                        onInputClick={props.new ? undefined : () => notifyNotNew()}
                     />
                 </div>
 
@@ -69,7 +81,10 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         label='Interval'
                         elementType='select-visual'
                         value={interval}
-                        onChange={newInterval => changeHandler({firstDeadline, lastDeadline, interval: newInterval as string})}
+                        onChange={newInterval => !props.new
+                            ? notifyNotNew()
+                            : changeHandler({firstDeadline, lastDeadline, interval: newInterval as string})
+                        }
                         options={IntervalOptions}
                         addClass={toCss(s_intervalOptions)}
                     />

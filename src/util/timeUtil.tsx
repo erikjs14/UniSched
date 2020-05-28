@@ -242,47 +242,13 @@ export const getTimestampsFromConfig = ({firstDeadline, lastDeadline, interval}:
 }
 
 export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timestamp[], timestampsDoneOld: Timestamp[]): [Timestamp[], Timestamp[]] => {
-    const today = todaysTimestamp();
-    const pastTimestamps = timestampsOld.filter(t => t.seconds < today.seconds); //keep past timestamps
-    const pastTimestampsDone = timestampsDoneOld.filter(t => t.seconds < today.seconds);
-
-    // whether next due task is already checked --> keep in updated version.
-    const nextTimestamp = timestampsOld.find(t => t.seconds > todaysTimestamp().seconds);
-    const checkFirstInFuture = nextTimestamp
-        ? containsTimestamp(nextTimestamp, timestampsDoneOld)
-        : false;
-    const shift = nextTimestamp && timestampsOld.length > 0
-        ? newConfig.firstDeadline.seconds - timestampsOld[0].seconds
-        : 0;
-
-    const newFutureTimestamps = getTimestampsFromConfig({
+    const timestampsOut = getTimestampsFromConfig({
         firstDeadline: newConfig.firstDeadline,
-        lastDeadline: newConfig.lastDeadline,
+        lastDeadline: newConfig.lastDeadline.seconds < newConfig.firstDeadline.seconds ? newConfig.firstDeadline : newConfig.lastDeadline,
         interval: newConfig.interval,
     });
-    
-    // let firstDeadlineInFuture = newConfig.firstDeadline.seconds;
-    // while (firstDeadlineInFuture < today.seconds && newConfig.interval !== 'once') {
-    //     firstDeadlineInFuture += getSecondsFromIntervalType(newConfig.interval);
-    // }
-    // const newFutureTimestamps = getTimestampsFromConfig({
-    //     firstDeadline: getTimestampFromSeconds(firstDeadlineInFuture),
-    //     lastDeadline: getResult(() => {
-    //         if (newConfig.lastDeadline.seconds < firstDeadlineInFuture) {
-    //             return getTimestampFromSeconds(firstDeadlineInFuture);
-    //         }
-    //         return newConfig.lastDeadline;
-    //     }),
-    //     interval: newConfig.interval,
-    // });
 
-    const timestampsOut = [...pastTimestamps, ...newFutureTimestamps];
-    let timestampsDoneOut = [...pastTimestampsDone];
-    if (checkFirstInFuture && nextTimestamp) timestampsDoneOut.push(
-        getTimestampFromSeconds(
-            nextTimestamp.seconds + shift
-        )
-    );
+    const timestampsDoneOut = timestampsDoneOld.filter(ts => containsTimestamp(ts, timestampsOut));
 
     // if only one timestamp is contained and interval it not 'once' --> add one extra timestamp
     if (newConfig.interval !== 'once' && timestampsOut.length === 1) {
@@ -293,8 +259,63 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
         );
     }
 
-    return [removeDuplicateTimestamps(timestampsOut), removeDuplicateTimestamps(timestampsDoneOut)];
+    return [timestampsOut, timestampsDoneOut];
 }
+
+// export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timestamp[], timestampsDoneOld: Timestamp[]): [Timestamp[], Timestamp[]] => {
+//     const today = todaysTimestamp();
+//     const pastTimestamps = timestampsOld.filter(t => t.seconds < today.seconds); //keep past timestamps
+//     const pastTimestampsDone = timestampsDoneOld.filter(t => t.seconds < today.seconds);
+
+//     // whether next due task is already checked --> keep in updated version.
+//     const nextTimestamp = timestampsOld.find(t => t.seconds > todaysTimestamp().seconds);
+//     const checkFirstInFuture = nextTimestamp
+//         ? containsTimestamp(nextTimestamp, timestampsDoneOld)
+//         : false;
+//     const shift = nextTimestamp && timestampsOld.length > 0
+//         ? newConfig.firstDeadline.seconds - timestampsOld[0].seconds
+//         : 0;
+
+//     const newFutureTimestamps = getTimestampsFromConfig({
+//         firstDeadline: newConfig.firstDeadline,
+//         lastDeadline: newConfig.lastDeadline,
+//         interval: newConfig.interval,
+//     });
+    
+//     // let firstDeadlineInFuture = newConfig.firstDeadline.seconds;
+//     // while (firstDeadlineInFuture < today.seconds && newConfig.interval !== 'once') {
+//     //     firstDeadlineInFuture += getSecondsFromIntervalType(newConfig.interval);
+//     // }
+//     // const newFutureTimestamps = getTimestampsFromConfig({
+//     //     firstDeadline: getTimestampFromSeconds(firstDeadlineInFuture),
+//     //     lastDeadline: getResult(() => {
+//     //         if (newConfig.lastDeadline.seconds < firstDeadlineInFuture) {
+//     //             return getTimestampFromSeconds(firstDeadlineInFuture);
+//     //         }
+//     //         return newConfig.lastDeadline;
+//     //     }),
+//     //     interval: newConfig.interval,
+//     // });
+
+//     const timestampsOut = [...pastTimestamps, ...newFutureTimestamps];
+//     let timestampsDoneOut = [...pastTimestampsDone];
+//     if (checkFirstInFuture && nextTimestamp) timestampsDoneOut.push(
+//         getTimestampFromSeconds(
+//             nextTimestamp.seconds + shift
+//         )
+//     );
+
+//     // if only one timestamp is contained and interval it not 'once' --> add one extra timestamp
+//     if (newConfig.interval !== 'once' && timestampsOut.length === 1) {
+//         timestampsOut.push(
+//             getTimestampFromSeconds(
+//                 timestampsOut[0].seconds + getSecondsFromIntervalType(newConfig.interval)
+//             )
+//         );
+//     }
+
+//     return [removeDuplicateTimestamps(timestampsOut), removeDuplicateTimestamps(timestampsDoneOut)];
+// }
 
 const plusMinus = (nr: number, range: number): boolean => {
     return -range <= nr && range >= nr;
