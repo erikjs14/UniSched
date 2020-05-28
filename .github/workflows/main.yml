@@ -18,6 +18,11 @@ jobs:
           npm install -g yarn
       - name: Checkout Repo
         uses: actions/checkout@v2
+      - name: Add firebase config
+        uses: finnp/create-file-action@1.0.0
+        env:
+          FILE_NAME: ./src/firebase/firebaseConfig.json
+          FILE_DATA: ${{ secrets.FIREBASE_CONFIG }}
       - name: Install Dependencies
         run: yarn install
       - name: Build
