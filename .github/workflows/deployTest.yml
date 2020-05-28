@@ -1,0 +1,45 @@
+name: Build and Deploy to Firebase Hosting
+on:
+  push:
+    branches: 
+      - production
+        
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Yarn installation
+        run: |
+          mkdir ~/.npm-global
+          npm config set prefix '~/.npm-global'
+          export PATH=~/.npm-global/bin:$PATH
+          source ~/.profile
+          npm install -g yarn
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Add firebase config
+        uses: finnp/create-file-action@1.0.0
+        env:
+          FILE_NAME: ./src/firebase/firebaseConfig.json
+          FILE_DATA: ${{ secrets.FIREBASE_CONFIG }}
+      - name: Add .firebaserc
+        uses: finnp/create-file-action@1.0.0
+        env:
+          FILE_NAME: .firebaserc
+          FILE_DATA: ${{ secrets.FIREBASERC }}
+     - name: Add firebase.json
+       uses: finnp/create-file-action@1.0.0
+       env:
+         FILE_NAME: firebase.json
+         FILE_DATA: ${{ secrets.FIREBASE_JSON }}
+      - name: Install Dependencies
+        run: yarn install
+      - name: Build
+        run: yarn run build
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@v1.3.1
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
