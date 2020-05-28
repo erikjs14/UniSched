@@ -38,7 +38,10 @@ export default function(props: SideDrawerProps): JSX.Element {
                 />
             </div>
             
-            <div className={toCss(s_backdrop)}></div>
+            <div 
+                onClick={() => setToggled(false)}
+                className={toCss(s_backdrop)}
+            ></div>
 
             <div className={toCss(s_menu)}>
                 <div className={toCss(s_userArea)}>
