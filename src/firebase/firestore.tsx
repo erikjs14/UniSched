@@ -6,6 +6,7 @@ import * as fields from './fields';
 const users_ref = db.collection(fields.USER_COL);
 const user_ref = () => users_ref.doc(firebase.auth().currentUser?.uid);
 const subjects_ref = () => user_ref().collection(fields.SUBJECTS_COL);
+const subjects_q_by_name = () => user_ref().collection(fields.SUBJECTS_COL).orderBy('name');
 const subject_ref = (subjectId: string) => subjects_ref().doc(subjectId);
 const exams_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.EXAMS_COL);
 const exam_ref = (subjectId: string, examId: string) => exams_ref(subjectId).doc(examId);
@@ -18,12 +19,13 @@ type QSnap = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 type DocSnap = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
 type DocRef = firebase.firestore.DocumentReference<DocData>;
 type ColRef = firebase.firestore.CollectionReference<DocData>;
+type Query = firebase.firestore.Query<firebase.firestore.DocumentData>;
 type DocData = firebase.firestore.DocumentData;
 type DocDataWithId = {data: DocData | undefined, id: string};
 
 /********** FETCHING DATA ***************/
 
-const fetchCollection = async (col_ref: ColRef): Promise<DocDataWithId[]> => {
+const fetchCollection = async (col_ref: ColRef|Query): Promise<DocDataWithId[]> => {
     const qSnap: QSnap  = await col_ref.get();
     const elements: DocDataWithId[] = [];
     qSnap.forEach(docSnap => {
@@ -56,7 +58,7 @@ export const fetchUser = async (): Promise<models.UserModelWithId> => {
 }
 
 export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[]> => {
-    const data: DocDataWithId[] = await fetchCollection(subjects_ref());
+    const data: DocDataWithId[] = await fetchCollection(subjects_q_by_name());
     const subjects: models.SubjectModelWithId[] = [];
 
     data.forEach(dataWithId => subjects.push({
