@@ -8,7 +8,7 @@ import { toCss } from './../../util/util';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ICON_SETTINGS_TYPE, ICON_SETTINGS_ALT } from './../../config/globalTypes.d';
+import { ICON_SETTINGS_TYPE } from './../../config/globalTypes.d';
 import { useSelector } from 'react-redux';
 import { RootState } from '../..';
 const {
