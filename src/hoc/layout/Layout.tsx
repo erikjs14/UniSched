@@ -1,4 +1,7 @@
-import React, { PropsWithChildren, Fragment } from 'react';
+import React, { PropsWithChildren, Fragment, useCallback } from 'react';
+import cuteDog from '../../assets/img/cute_dog.jpg';
+import bird1 from '../../assets/img/bird1.jpeg';
+import bird2 from '../../assets/img/bird2.jpeg';
 
 import Sidebar from '../../components/navigation/sidebar/Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +26,14 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
     let [displayName, imgUrl] = useSelector((state: RootState) => [state.user.username, state.user.userImgUrl]);
     if (!displayName) displayName = 'User';
 
+    const getRandomUserIconUrl = useCallback(() => {
+        switch (Math.floor(Math.random() * 3)) {
+            case 0: return cuteDog;
+            case 1: return bird1;
+            case 2: return bird2;
+        }
+    }, []);
+
     return (
         <Fragment>
             <nav className={toCss(s_navDesktop)}>
@@ -30,7 +41,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : 'img/cute_dog.jpg'}
+                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl()}
                 />
             </nav>
 
@@ -39,7 +50,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)}
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : 'img/cute_dog.jpg'}
+                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl()}
                 />  
             </nav>
 
