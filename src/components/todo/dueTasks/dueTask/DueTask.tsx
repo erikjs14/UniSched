@@ -10,7 +10,8 @@ const {
     wrapper: s_wrapper,
     fadeOut: s_fadeOut,
     checkWrapper: s_checkWrapper,
-    title: s_title,
+    titleSub: s_titleSub,
+    titleTask: s_titleTask,
     dueAt: s_dueAt,
 } = CSS;
 
@@ -53,12 +54,16 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                     />
                 </div>
 
-                <span className={toCss(s_title)}>
-                    [{props.subjectDisplayName}] - {props.taskSemantic.name}
+                <span className={toCss(s_titleTask)}>
+                {props.taskSemantic.name}
+                </span>
+
+                <span className={toCss(s_titleSub)}>
+                    {props.subjectDisplayName}
                 </span>
 
                 <span className={toCss(s_dueAt)}>
-                    Due at: {props.taskSemantic.dueString}
+                    Due at: {props.taskSemantic.dueString.slice(11)}
                 </span>
 
             </div>

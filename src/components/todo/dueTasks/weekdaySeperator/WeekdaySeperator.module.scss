@@ -10,6 +10,10 @@
         "weekday date amount";
     padding: 1rem 10rem 1rem 3rem;
 
+    @include respond(small-phone) {
+        padding: 1rem 3rem 1rem 3rem;
+    }
+
     @include respond(phone) {
         grid-template-columns: repeat(2, 1fr);
         grid-template-areas:

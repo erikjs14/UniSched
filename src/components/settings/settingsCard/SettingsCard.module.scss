@@ -33,6 +33,11 @@
             margin-bottom: 1.5rem;
         }
 
+        @include respond(small-phone) {
+            flex-direction: column;
+            span { margin-bottom: .7rem; }
+        }
+
         span {
             display: flex;
             align-items: center;
@@ -56,6 +61,10 @@
 
         .intervalOptions {
             max-width: 65%;
+
+            @include respond(small-phone) {
+                max-width: initial;
+            }
         }
     }
 

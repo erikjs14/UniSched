@@ -11,6 +11,14 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 10rem;
+
+    @include respond(phone) {
+        padding: 1rem 6rem 1rem 8rem;
+    }
+
+    @include respond(small-phone) {
+        padding: 1rem 3rem 1rem 7rem;
+    }
     
     .checkWrapper {
         position: absolute;
@@ -27,14 +35,20 @@
         }
     }
 
-    .title {
-        min-width: 70%;
+    .titleTask {
+        min-width: 100%;
         text-transform: uppercase;
         line-height: 1.5em;
+        font-weight: bold;
 
         @include respond(tab-port) {
             font-size: 1.15em;
         }
+    }
+
+    .titleSub {
+        text-transform: capitalize;
+
     }
 
     .dueAt {

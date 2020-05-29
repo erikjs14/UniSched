@@ -13,6 +13,7 @@ import CSS from './Exams.module.scss';
 import { toCss } from '../../util/util';
 const {
     wrapperCalendar: s_wrapperCalendar,
+    smallRow: s_smallRow,
 } = CSS;
 
 export default function() {
@@ -36,8 +37,10 @@ export default function() {
                         ...newExamsConfig,
                         ...getAllConfigFromExams(exams).map(conf => ({
                             ...conf,
-                            title: '[' + subjects[idx].name + '] ' + conf.title,
+                            title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
                             backgroundColor: findColorConfig(subjects[idx].color).value,
+                            className: s_smallRow,
+                            end: '', // unset end
                         })),
                     ];
                 });
@@ -53,6 +56,7 @@ export default function() {
         return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
+    console.log(examsConfig)
     return (
         <div>
             

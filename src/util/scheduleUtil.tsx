@@ -40,9 +40,9 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModel): ConfigTy
 
 export const getFullCalendarConfigFromExam = (exam: ExamModel): ConfigType => {
     return {
-        title: 'Exam: ' + exam.type,
+        title: exam.type,
         start: getDateFromTimestamp(exam.start),
-        end: getDateFromSeconds(exam.start.seconds + 3600)
+        end: getDateFromTimestamp(exam.start),
     };
 }
 
