@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
-import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC } from '../actions/user.d';
+import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC } from '../actions/user.d';
 import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC } from './../actions/user.d';
 
 const initialState: UserState = {
@@ -23,6 +23,7 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
         case actionTypes.FETCH_SHALLOW_SUBJECTS_FAIL: return fetchShallowSubjectsFail(state, action as FetchShallowSubjectsFailAC);
         case actionTypes.REMOVE_SUBJECT_LOCALLY: return removeSubjectLocally(state, action as RemoveSubjectLocallyAC);
         case actionTypes.ADD_SUBJECT_LOCALLY: return addSubjectLocally(state, action as AddSubjectLocallyAC);
+        case actionTypes.UPDATE_SUBJECT_LOCALLY: return updateSubjectLocally(state, action as UpdateSubjectLocallyAC);
         default: return state;
     }
 }
@@ -87,5 +88,16 @@ const removeSubjectLocally = (state: UserState, action: RemoveSubjectLocallyAC):
 const addSubjectLocally = (state: UserState, action: AddSubjectLocallyAC): UserState => {
     return updateObject(state, {
         shallowSubjects: state.shallowSubjects ? [...state.shallowSubjects, action.subject] : [action.subject],
+    });
+};
+
+const updateSubjectLocally = (state: UserState, action: UpdateSubjectLocallyAC): UserState => {
+    return updateObject(state, {
+        shallowSubjects: state.shallowSubjects 
+            ? [
+                ...state.shallowSubjects.filter(sub => sub.id !== action.subject.id),
+                action.subject,
+            ]
+            : [action.subject],
     });
 };

@@ -13,3 +13,4 @@ export interface FetchShallowSubjectsFailAC extends BaseActionCreator {error: st
 
 export interface RemoveSubjectLocallyAC extends BaseActionCreator {id: string}
 export interface AddSubjectLocallyAC extends BaseActionCreator {subject: SubjectModelWithId}
+export interface UpdateSubjectLocallyAC extends BaseActionCreator {subject: SubjectModelWithId}

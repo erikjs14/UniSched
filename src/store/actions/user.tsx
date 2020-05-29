@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC } from './user.d';
+import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC } from './user.d';
 import { SubjectModelWithId } from '../../firebase/model';
 
 export const setSignedIn = (user: firebase.User): SetSignedInAC => {
@@ -58,6 +58,13 @@ export const removeSubjectLocally = (id: string): RemoveSubjectLocallyAC => {
 export const addSubjectLocally = (subject: SubjectModelWithId): AddSubjectLocallyAC => {
     return {
         type: actionTypes.ADD_SUBJECT_LOCALLY,
+        subject,
+    };
+};
+
+export const updateSubjectLocally = (subject: SubjectModelWithId): UpdateSubjectLocallyAC  => {
+    return {
+        type: actionTypes.UPDATE_SUBJECT_LOCALLY,
         subject,
     };
 };

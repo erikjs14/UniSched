@@ -24,6 +24,7 @@ import TaskCard from '../../../components/settings/taskCard/TaskCard';
 import { removeSubjectLocally, addSubjectLocally } from '../../../store/actions';
 import { SubjectModel } from '../../../firebase/model';
 import { useDispatch } from 'react-redux';
+import { updateSubjectLocally } from '../../../store/actions/user';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -152,6 +153,13 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         color: state.subject.color.newColor.name,
                     }
                 ).then(() => {
+                    if (state.subject) {
+                        dispatchToStore(updateSubjectLocally({
+                            id: state.subject.id,
+                            name: state.subject.name,
+                            color: state.subject.color.newColor.name,
+                        }));
+                    }
                     dispatch(setSaved());
                 }).catch(error => {
                     dispatch(setError(error.message));
