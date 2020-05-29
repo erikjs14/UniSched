@@ -346,3 +346,10 @@ export const removeDuplicateTimestamps = (array: Timestamp[]): Timestamp[] => {
         return unique;
     }, []);
 }
+
+export const setTimeTo = (date: Date, hours: number, minutes: number): Date => {
+    const outDate = new Date(date);
+    outDate.setHours(hours);
+    outDate.setMinutes(minutes);
+    return outDate;
+}

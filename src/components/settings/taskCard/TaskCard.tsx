@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import DateTimePicker from 'react-datepicker';
 
 import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
 import { TaskModel, IntervalOptions } from '../../../firebase/model';
-import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps } from './../../../util/timeUtil';
+import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/settingsConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
@@ -17,6 +17,8 @@ const {
 } = CSS;
 
 export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
+
+    const [inputTouched, setInputTouched] = useState(false);
 
     const { onChange } = props;
     const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone } = props.data;
@@ -58,8 +60,13 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         customInput={<CustomDateInputUI />}
                         showWeekNumbers
                         withPortal
-                        selected={getDateFromSeconds(firstDeadline.seconds)}
-                        onChange={date => date ? changeHandler({firstDeadline: getTimestampFromDate(date), lastDeadline, interval}) : null}
+                        selected={props.new && !inputTouched ? setTimeTo(getDateFromSeconds(firstDeadline.seconds), 9, 0) : getDateFromSeconds(firstDeadline.seconds)}
+                        onChange={date => {
+                            if (date) {
+                                changeHandler({firstDeadline: getTimestampFromDate(date), lastDeadline, interval});
+                                setInputTouched(true);
+                            }
+                        }}
                         minDate={new Date()}
                         filterDate={!props.new && interval !== 'once' ? date => sameDay(date, getDateFromTimestamp(firstDeadline)) : undefined}
                         {...DATETIMEPICKER_DEFAULT_PROPS}
@@ -75,8 +82,13 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         customInput={<CustomDateInputUI />}
                         showWeekNumbers
                         withPortal
-                        selected={getDateFromSeconds(lastDeadline.seconds)}
-                        onChange={date => date ? changeHandler({firstDeadline, lastDeadline: getTimestampFromDate(date), interval}) : null}
+                        selected={props.new && !inputTouched ? setTimeTo(getDateFromSeconds(lastDeadline.seconds), 9, 0) : getDateFromSeconds(lastDeadline.seconds)}
+                        onChange={date => {
+                            if (date) {
+                                changeHandler({firstDeadline, lastDeadline: getTimestampFromDate(date), interval});
+                                setInputTouched(true);
+                            }
+                        }}
                         minDate={getDateFromSeconds(firstDeadline.seconds)}
                         filterDate={interval === 'daily' ? undefined : getFilterForInterval(firstDeadline.seconds, interval)}
                         readOnly={interval === 'once'}
