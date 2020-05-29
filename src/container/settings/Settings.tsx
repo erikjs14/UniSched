@@ -43,8 +43,7 @@ export default function(): JSX.Element {
             <SimpleSettingsRow 
                 key={subject.id}
                 title={subject.name} 
-                bgColor={subject.color} 
-                icon={ICON_SETTINGS_ALT} 
+                bgColor={subject.color}
                 linkTo={createLink(subject.id)}
             />
         ));
