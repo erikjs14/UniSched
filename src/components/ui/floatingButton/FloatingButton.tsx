@@ -8,8 +8,8 @@ const {
 } = CSS;
 
 export default function(props: FloatingButtonProps): JSX.Element {
-    
-    return (
+
+    const button =  (
         <button
             className={toCss(s_btn)}
             onClick={props.onClick}
@@ -17,4 +17,14 @@ export default function(props: FloatingButtonProps): JSX.Element {
             {props.children}
         </button>
     );
+
+    if (props.center) {
+        return (
+            <div className='util-center-content'>
+                {button}
+            </div>
+        );
+    } else {
+        return button;
+    }
 }

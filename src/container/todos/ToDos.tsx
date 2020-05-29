@@ -8,6 +8,10 @@ import Loader from '../../components/ui/loader/Loader';
 import DueTasks from '../../components/todo/dueTasks/DueTasks';
 import { subjectsToObject } from '../../util/util';
 import { getTimestampFromSeconds } from './../../util/timeUtil';
+import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
+import { useHistory } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const getUpdatedTasks = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
     return oldTasks.map(oldTask => {
@@ -26,6 +30,8 @@ const getUpdatedTasks = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: str
 }
 
 export default function() {
+
+    const history = useHistory();
 
     const [tasks, setTasks] = useState<TaskModelWithIdAndSubjectId[]|null>(null);
     const [error, setError] = useState(false);
@@ -77,6 +83,13 @@ export default function() {
                 subjects={subjectsToObject(subjects)}
                 onTaskChecked={checkTaskHandler}
             />
+                
+            <FloatingButton 
+                center
+                onClick={() => history.push('/settings')}
+            >
+                <FontAwesomeIcon icon={faPlus} />
+            </FloatingButton>
 
         </div>
     )
