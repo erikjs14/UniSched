@@ -94,10 +94,7 @@ const addSubjectLocally = (state: UserState, action: AddSubjectLocallyAC): UserS
 const updateSubjectLocally = (state: UserState, action: UpdateSubjectLocallyAC): UserState => {
     return updateObject(state, {
         shallowSubjects: state.shallowSubjects 
-            ? [
-                ...state.shallowSubjects.filter(sub => sub.id !== action.subject.id),
-                action.subject,
-            ]
+            ? state.shallowSubjects.map(sub => sub.id === action.subject.id ? action.subject : sub)
             : [action.subject],
     });
 };
