@@ -20,7 +20,7 @@ export default function(props: FloatingButtonProps): JSX.Element {
 
     if (props.center) {
         return (
-            <div className='util-center-content'>
+            <div className={'util-center-content ' + (props.className ? props.className : '')}>
                 {button}
             </div>
         );

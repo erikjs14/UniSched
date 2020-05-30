@@ -87,8 +87,9 @@ export default function() {
             <FloatingButton 
                 center
                 onClick={() => history.push('/settings')}
+                className='util-margin-bottom-medium' 
             >
-                <FontAwesomeIcon icon={faPlus} />
+                <FontAwesomeIcon style={{fontSize: '2rem'}} icon={faPlus} />
             </FloatingButton>
 
         </div>
