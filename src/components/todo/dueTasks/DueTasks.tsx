@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 import WeekdaySeperator from './weekdaySeperator/WeekdaySeperator';
+import Collapsible from '../../ui/collapsible/Collapsible';
 import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, TaskSemantic, containsDay, getSecondsFromDate } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, TaskSemantic, containsDay, endOf, getSecondsFromDate } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -71,25 +72,35 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                 
             >
                 <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''))}>
-                    <WeekdaySeperator
-                        date={tasksOneDay[0].dueAt}
-                        amount={tasksOneDay.length}
-                    />
-                    {tasksOneDay.map(task => (
-                        <DueTask
-                            key={task.taskId}
-                            taskSemantic={task}
-                            subjectDisplayName={props.subjects[task.subjectId].name}
-                            onCheck={() => {
-                                if (!taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)) {
-                                    setFadeTaskOut(prev => [...prev, [task.taskId, task.dueAt.getTime()]]);
-                                }
-                            }}
-                            fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
-                            onFadeOutComplete={() => props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt))}
-                            backgroundColor={props.subjects[task.subjectId].color}
-                        />
-                    ))}
+                    <Collapsible
+                        header={(
+                            <WeekdaySeperator
+                                date={tasksOneDay[0].dueAt}
+                                amount={tasksOneDay.length}
+                            />
+                        )}
+                        uncollapsed={endOf(new Date()).getTime() > tasksOneDay[0].dueAt.getTime()}
+                        noBorder
+                        fullWidthHeader
+                        headerClickable
+                    >
+                            
+                            {tasksOneDay.map(task => (
+                                <DueTask
+                                    key={task.taskId}
+                                    taskSemantic={task}
+                                    subjectDisplayName={props.subjects[task.subjectId].name}
+                                    onCheck={() => {
+                                        if (!taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)) {
+                                            setFadeTaskOut(prev => [...prev, [task.taskId, task.dueAt.getTime()]]);
+                                        }
+                                    }}
+                                    fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
+                                    onFadeOutComplete={() => props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt))}
+                                    backgroundColor={props.subjects[task.subjectId].color}
+                                />
+                            ))}
+                    </Collapsible>
                 </div>
             </AnimateHeight>
         );

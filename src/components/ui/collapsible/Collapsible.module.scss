@@ -1,4 +1,5 @@
 @import '../../../style/abstract/variables';
+@import '../../../style/abstract/mixins';
 
 .wrapper {
     position: relative;
@@ -21,6 +22,20 @@
             max-width: 80%;
             margin: auto;
 
+            &.fullWidthHeader {
+                position: relative;
+                max-width: unset;
+
+                .arrow {
+                    right: 1.5rem;
+
+                    @include respond(small-phone) {
+                        right: .8rem;
+                        top: 70%;
+                    }
+                }
+            }
+
             input:not(:placeholder-shown) {
                 cursor: text;
             }
@@ -34,7 +49,7 @@
         transition: opacity .3s;
     }
 
-    &::after {
+    &.borderBottom::after {
         content: '';
         display: block;
         height: 2px;
@@ -52,7 +67,7 @@
         
         .header {
 
-            .headerContent {
+            .headerContent:not(.headerClickable) {
                 pointer-events: none;
             }
         
@@ -61,7 +76,7 @@
             }
         }
 
-        &::after {
+        &.borderBottom::after {
             width: 40%;
             transition: width .5s ease-out;
             transition-delay: 0;
