@@ -31,9 +31,6 @@
 
         @include respond(phone) {
             margin-bottom: 1.5rem;
-        }
-
-        @include respond(small-phone) {
             flex-direction: column;
             span { margin-bottom: .7rem; }
         }
