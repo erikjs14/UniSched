@@ -2,7 +2,7 @@ import React from 'react';
 
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { useHistory } from 'react-router-dom';
-import SimpleSettingsRow from '../../components/ui/SimpleSettingsRow/SimpleSettingsRow';
+import SimpleSettingsRow from '../../components/settings/SimpleSettingsRow/SimpleSettingsRow';
 import CSS from './Settings.module.scss';
 import { toCss } from './../../util/util';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
