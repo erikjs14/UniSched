@@ -15,6 +15,8 @@ const {
     dayWrapper: s_dayWrapper,
     noTodo: s_noTodo,
     fadeOutMargin: s_fadeOutMargin,
+    noTodoToday: s_noTodoToday,
+    animMargin: s_animMargin,
 } = CSS;
 
 const taskContained = (taskId: string, seconds: number, array: [string, number][]): boolean => {
@@ -54,12 +56,30 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     // no tasks todo
     if (!semTasks || semTasks.length === 0) {
         return (
-            <div className={toCss(s_noTodo)}>
-                <FontAwesomeIcon icon={faSmileBeam} />
-                <h2>Nothing on your list right now. Yeah!!</h2>
-            </div>
+                <div className={toCss(s_noTodo)}>
+                    <FontAwesomeIcon icon={faSmileBeam} />
+                    <h2>Nothing on your list right now. Yeah!!</h2>
+                </div>
         )
     }
+
+    // if no tasks today or from past display that today all tasks are done
+    const todayView = (
+        <AnimateHeight
+            height={semTasks[0][0].dueAt.getTime() > endOf(new Date()).getTime() ? 'auto' : 0}
+            animateOpacity
+            duration={400}
+            animationStateClasses={{
+                staticHeightAuto: s_animMargin,
+            }}
+            easing='ease-in'
+        >
+            <div className={toCss(s_noTodoToday)}>
+                <FontAwesomeIcon icon={faSmileBeam} />
+                <h2>You have finished all tasks for today. Yeah!!</h2>
+            </div>
+        </AnimateHeight>
+    );
     
     const allTasks = semTasks.map(tasksOneDay => {
         const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
@@ -108,6 +128,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper)}>
+            {todayView}
             {allTasks}
         </div>
     );

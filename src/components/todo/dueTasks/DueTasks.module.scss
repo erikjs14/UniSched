@@ -10,6 +10,31 @@
     }
 }
 
+.noTodoToday {
+    display: flex;
+    color: $col-primary-light;
+    justify-content: space-around;
+    align-items: center;;
+    width: 60%;
+    margin: auto;
+
+    svg {
+        font-size: 3em;
+    }
+}
+.animMargin {
+    animation: animateMargin .2s forwards;
+    animation-timing-function: ease-out;
+}
+@keyframes animateMargin {
+    from {
+        margin: 0 auto;
+    }
+    to {
+        margin: 2rem auto;
+    }
+}
+
 .noTodo {
     animation: fadeIn .8s;
     display: flex;
