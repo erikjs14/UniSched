@@ -83,6 +83,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     const allTasks = semTasks.map(tasksOneDay => {
         const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
+        const dayInPast = tasksOneDay[0].dueAt.getTime() < endOf(new Date()).getTime();
         return (
             <AnimateHeight
                 key={tasksOneDay[0].dueAt.getTime()} 
@@ -97,6 +98,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                             <WeekdaySeperator
                                 date={tasksOneDay[0].dueAt}
                                 amount={tasksOneDay.length}
+                                withClock={dayInPast}
                             />
                         )}
                         uncollapsed={endOf(new Date()).getTime() > tasksOneDay[0].dueAt.getTime()}

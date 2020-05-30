@@ -16,6 +16,7 @@ export default function(props: WeekdaySeperatorProps): JSX.Element {
     return (
         <div className={toCss(s_wrapper)}>
             <h3 className={toCss(s_weekday)}>
+                {props.withClock ? <span role='img' aria-label='clock'> 🕑 </span> : null} 
                 {getWeekDay(props.date)}
             </h3>
             <span className={toCss(s_date)}>
