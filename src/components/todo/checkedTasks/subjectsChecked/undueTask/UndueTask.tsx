@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
 
-import CSS from './DueTask.module.scss';
-import { DueTaskProps } from './DueTask.d';
-import { toCss } from './../../../../util/util';
-import Input from '../../../ui/input/Input';
-import { findColorConfig } from './../../../../config/colorChoices';
+import CSS from './UndueTask.module.scss';
 import AnimateHeight from 'react-animate-height';
+import Input from '../../../../ui/input/Input';
+import { UndueTaskProps } from './UndueTask.d';
+import { findColorConfig } from '../../../../../config/colorChoices';
+import { toCss } from '../../../../../util/util';
 const {
     wrapper: s_wrapper,
     fadeOut: s_fadeOut,
     checkWrapper: s_checkWrapper,
-    titleSub: s_titleSub,
     titleTask: s_titleTask,
     dueAt: s_dueAt,
 } = CSS;
 
-export default React.memo(function(props: DueTaskProps): JSX.Element {
+export default function(props: UndueTaskProps): JSX.Element {
 
     const [fadingOut, setFadingOut] = useState(false);
-
+    
     const {fadeOut, onFadeOutComplete} = props;
     useEffect(() => {
         if (!fadingOut && fadeOut && onFadeOutComplete) {
@@ -35,6 +34,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
             height={props.fadeOut ? 0 : 'auto'}
             delay={1500}
             animateOpacity={true}
+            className={props.addCss ? props.addCss : undefined}
         >
             <div
                 className={toCss(s_wrapper, (props.fadeOut ? s_fadeOut : ''))}
@@ -51,8 +51,8 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                     <Input
                         elementType='checkbox'
                         label={props.taskSemantic.name}
-                        value={props.fadeOut || false}
-                        onChange={() => props.onCheck()}
+                        value={!props.fadeOut && true}
+                        onChange={() => props.onUncheck()}
                     />
                 </div>
 
@@ -60,15 +60,11 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                 {props.taskSemantic.name}
                 </span>
 
-                <span className={toCss(s_titleSub)}>
-                    {props.subjectDisplayName}
-                </span>
-
                 <span className={toCss(s_dueAt)}>
-                    Due at: {props.taskSemantic.dueString.slice(11)}
+                    Due at: {props.taskSemantic.dueString}
                 </span>
 
             </div>
         </AnimateHeight>
     );
-});
+}

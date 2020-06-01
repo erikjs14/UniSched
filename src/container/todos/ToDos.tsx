@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { TaskModelWithIdAndSubjectId, Timestamp } from '../../firebase/model';
-import { fetchTasks, saveTaskChecked } from './../../firebase/firestore';
+import { fetchTasks, saveTaskChecked, saveTaskUnchecked } from './../../firebase/firestore';
 import { useSelector } from 'react-redux';
 import { RootState } from '../..';
 import Loader from '../../components/ui/loader/Loader';
@@ -12,9 +12,10 @@ import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
 import { useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import CheckedTasks from '../../components/todo/checkedTasks/CheckedTasks';
 
-const getUpdatedTasks = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
-    return oldTasks.map(oldTask => {
+const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
+    const result = oldTasks.map(oldTask => {
         if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
             return oldTask;
         } else {
@@ -27,6 +28,20 @@ const getUpdatedTasks = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: str
             };
         }
     })
+    return result;
+}
+const getUpdatedTasksAfterUncheck = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToUncheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
+    const result =  oldTasks.map(oldTask => {
+        if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
+            return oldTask;
+        } else {
+            return {
+                ...oldTask,
+                timestampsDone: oldTask.timestampsDone.filter(ts => ts.seconds !== timestampToUncheck.seconds || ts.nanoseconds !== timestampToUncheck.nanoseconds),
+            };
+        }
+    })
+    return result;
 }
 
 export default function() {
@@ -62,7 +77,17 @@ export default function() {
         const timestampToCheck = getTimestampFromSeconds(timestampSeconds);
         saveTaskChecked(subjectId, taskId, timestampToCheck)
             .then(() => {
-                setTasks(prev => !prev ? null : getUpdatedTasks(prev, subjectId, taskId, timestampToCheck));
+                setTasks(prev => !prev ? null : getUpdatedTasksAfterCheck(prev, subjectId, taskId, timestampToCheck));
+            })
+            .catch(error => setError(true));
+    }, []);
+
+    const uncheckTaskHandler = useCallback((subjectId: string, taskId: string, timestampSeconds: number) => {
+        // called when animation to remove task ended
+        const timestampToUncheck = getTimestampFromSeconds(timestampSeconds);
+        saveTaskUnchecked(subjectId, taskId, timestampToUncheck)
+            .then(() => {
+                setTasks(prev => !prev ? null : getUpdatedTasksAfterUncheck(prev, subjectId, taskId, timestampToUncheck));
             })
             .catch(error => setError(true));
     }, []);
@@ -91,6 +116,12 @@ export default function() {
             >
                 <FontAwesomeIcon style={{fontSize: '2rem'}} icon={faPlus} />
             </FloatingButton>
+
+            <CheckedTasks
+                rawTasks={tasks}
+                subjects={subjectsToObject(subjects)}
+                onTaskUnchecked={uncheckTaskHandler}
+            />
 
         </div>
     )

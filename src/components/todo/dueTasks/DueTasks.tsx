@@ -6,7 +6,7 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, TaskSemantic, containsDay, endOf, getSecondsFromDate } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, getSecondsFromDate, allTasksOfOneDayContained, taskContained, sameDay } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,25 +18,6 @@ const {
     noTodoToday: s_noTodoToday,
     animMargin: s_animMargin,
 } = CSS;
-
-const taskContained = (taskId: string, seconds: number, array: [string, number][]): boolean => {
-    let ret = false;
-    array.forEach(([id, ts]) => {
-        if (id === taskId && ts === seconds) {
-            ret = true;
-        }
-    });
-    return ret;
-}
-
-const allTasksOfOneDayContained = (tasks: TaskSemantic[], toFadeOut: [string, number][]): boolean => {
-    for (const task of tasks) {
-        if (!toFadeOut.find(([id, ts]) => task.taskId === id && task.dueAt.getTime() === ts)) {
-            return false;
-        }
-    }
-    return true;
-}
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
 
@@ -90,7 +71,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                 height={dayContained ? 0 : 'auto'}
                 duration={400}
                 delay={1800}
-                
+                onAnimationEnd={params => params.newHeight === 0 ? setFadeDayOut(prev => prev.filter(d => !sameDay(d, tasksOneDay[0].dueAt))) : null}
             >
                 <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''))}>
                     <Collapsible
@@ -118,7 +99,10 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                         }
                                     }}
                                     fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
-                                    onFadeOutComplete={() => props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt))}
+                                    onFadeOutComplete={() => {
+                                        props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt));
+                                        setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
+                                    }}
                                     backgroundColor={props.subjects[task.subjectId].color}
                                 />
                             ))}

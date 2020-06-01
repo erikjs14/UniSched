@@ -1,0 +1,55 @@
+@import '../../../../../style/abstract/mixins';
+
+.wrapper {
+    position: relative;
+    width: 90%;
+    margin: 2rem auto 0;
+    border-radius: 1rem;
+    background-image: linear-gradient(to bottom right, rgba(#fff, 0) 30%, rgba(#fff, .2));
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-items: center;
+    padding: 1rem 5rem 1rem 7.5rem;
+
+    @include respond(phone) {
+        padding: 1rem 6rem 1rem 8rem;
+        grid-template-columns: 1fr;
+    }
+
+    @include respond(small-phone) {
+        padding: 1rem 3rem 1rem 7rem;
+    }
+    
+    .checkWrapper {
+        position: absolute;
+        left: 1.5rem;
+
+        &::before {
+            content: '';
+            @include absCenter;
+            display: block;
+            width: .1px;
+            height: .1px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 1em rgba(#fff, .7);
+        }
+    }
+
+    .titleTask {
+        text-transform: uppercase;
+        line-height: 1.5em;
+        font-weight: bold;
+
+        @include respond(tab-port) {
+            font-size: 1.15em;
+        }
+    }
+
+    .dueAt {
+        text-align: right;
+        @include respond(phone) {
+            text-align: left;
+        }
+    }
+}

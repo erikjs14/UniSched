@@ -56,7 +56,6 @@ export default function() {
         return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
-    console.log(examsConfig)
     return (
         <div>
             

@@ -1,0 +1,14 @@
+@import '../../../style/abstract/variables.scss';
+
+.wrapper {
+    max-width: 80%;
+    margin: 10rem auto 5rem;
+    font-size: .8em;
+
+    h3 {
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 2rem;
+        color: $col-primary-dark;
+    }
+}

@@ -42,7 +42,7 @@ export default function(): JSX.Element {
         const elements = subjects.map(subject => (
             <SimpleSettingsRow 
                 key={subject.id}
-                title={subject.name} 
+                title={subject.name}
                 bgColor={subject.color}
                 linkTo={createLink(subject.id)}
             />
