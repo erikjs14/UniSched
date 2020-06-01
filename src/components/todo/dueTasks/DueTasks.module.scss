@@ -15,11 +15,17 @@
     color: $col-primary-light;
     justify-content: space-around;
     align-items: center;;
-    width: 60%;
+    width: 80%;
     margin: auto;
 
     svg {
         font-size: 3em;
+    }
+
+    @include respond(tab-land) {
+        h2 {
+            max-width: 70%;
+        }
     }
 }
 .animMargin {
