@@ -130,6 +130,7 @@ export default React.memo(
                                 })
                                 .finally(() => {
                                     setWantDelete(null);
+                                    setDeleting(false);
                                 })
                         }
                     }
