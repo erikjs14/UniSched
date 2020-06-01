@@ -56,3 +56,9 @@ export const getTaskStartState = (): TaskModel => ({
     timestamps: [getTimestampFromDate(new Date())],
     timestampsDone: [],
 });
+
+export const TOASTER_SHOW_DURATION = 4;
+export const DEFAULT_TOASTER_CONFIG = {
+    id: 'unique',
+    duration: TOASTER_SHOW_DURATION,
+};

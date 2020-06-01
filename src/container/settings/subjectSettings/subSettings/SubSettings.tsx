@@ -23,6 +23,7 @@ export default React.memo(
         deleteData,
         saveChanges,
         remove,
+        hasEmptyTitle: stateHasEmptyTitle,
         data
     } = useSubjectData<M>(props.dataTypeId, props.subjectId, props.initialData || null);
 
@@ -45,9 +46,12 @@ export default React.memo(
     function isSaving(): boolean {
         return data.saving;
     }
+    function hasEmptyTitle(): boolean {
+        return stateHasEmptyTitle();
+    }
     useImperativeHandle(
         ref,
-        () => ({save, isSaving})
+        () => ({save, isSaving, hasEmptyTitle})
     );
 
     const addNewEventHandler = useCallback(() => {

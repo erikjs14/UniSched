@@ -1,18 +1,18 @@
-import { useReducer, useCallback, useState } from 'react';
-import { SubjectDataModel, ExamModel, TaskModel, EventModel, ModelWithId, ExamModelWithId, EventModelWithId, TaskModelWithId } from './../firebase/model';
+import { useReducer, useCallback, useState, useMemo } from 'react';
+import { SubjectDataModel, ExamModel, TaskModel, EventModel, ModelWithId, ExamModelWithId, EventModelWithId, TaskModelWithId, SubjectDataModelWithId } from './../firebase/model';
 import { fetchExams, fetchEvents, fetchTasks, fetchExam, fetchEvent, fetchTask, addExam, addTask, addEvent, updateExam, updateTask, updateEvent, deleteExam, deleteTask, deleteEvent } from './../firebase/firestore';
 import { removeKey } from './../util/util';
 
 export type DataTypeId = 'exam' | 'task' | 'event';
 
-const g_fetchAllData = (type: DataTypeId, subjectId: string): Promise<ModelWithId[]> => {
+const g_fetchAllData = (type: DataTypeId, subjectId: string): Promise<SubjectDataModelWithId[]> => {
     switch (type) {
         case 'exam':    return fetchExams(subjectId);
         case 'task':    return fetchTasks(subjectId);
         case 'event':   return fetchEvents(subjectId);
     }
 }
-const g_fetchData = (type: DataTypeId, subjectId: string, dataId: string): Promise<ModelWithId> => {
+const g_fetchData = (type: DataTypeId, subjectId: string, dataId: string): Promise<SubjectDataModelWithId> => {
     switch (type) {
         case 'exam':    return fetchExam(subjectId, dataId);
         case 'task':    return fetchTask(subjectId, dataId);
@@ -56,8 +56,9 @@ interface StateModel {
     loading:    boolean;
     saving: boolean;
     error:      string | null;
-    data: AllDataModel,
+    data: AllDataModel;
     dataChanged: Set<string>; // set of ids
+    hasEmptyTitle: boolean;
 }
 const initialState: StateModel = {
     loading: true,
@@ -65,6 +66,7 @@ const initialState: StateModel = {
     error: null,
     data: {},
     dataChanged: new Set(),
+    hasEmptyTitle: false,
 };
 
 interface ActionModel {
@@ -199,11 +201,19 @@ const setDataProperty = <T extends SubjectDataModel>(dataId: string, key: keyof 
     };
 }
 
+const hasEmptyTitle = (data: AllDataModel): boolean => {
+    for (const key in data) {
+        if (!data[key].type) return true;
+    }
+    return false;
+}
+
 const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionModel): StateModel => {
     
     let changedIds: Set<string>;
     let dataId: string;
     let data: SubjectDataModel;
+    let changedData: AllDataModel;
     switch (action.type) {
         case ACTION_START_FETCH_REQUEST: return {
             ...state,
@@ -226,36 +236,41 @@ const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionMo
             error: null,
             data: (action as unknown as SetAllDataActionModel).allData,
             dataChanged: new Set(),
+            hasEmptyTitle: hasEmptyTitle((action as unknown as SetAllDataActionModel).allData),
         };
         case ACTION_SET_DATA_AFTER_REQUEST: 
             dataId = (action as unknown as SetDataActionModel).dataId;
             data = (action as unknown as SetDataActionModel).data;
             changedIds = new Set(state.dataChanged);
             changedIds.delete(dataId);
+            changedData = {
+                ...state.data,
+                [dataId]: data,
+            };
             return {
                 ...state,
                 loading: false,
                 error: null,
-                data: {
-                    ...state.data,
-                    [dataId]: data,
-                },
+                data: changedData,
                 dataChanged: changedIds,
+                hasEmptyTitle: hasEmptyTitle(changedData),
             };
         case ACTION_ADD_DATA_AFTER_REQUEST:
             dataId = (action as unknown as AddDataActionModel).dataId;
             data = (action as unknown as AddDataActionModel).data;
             changedIds = new Set(state.dataChanged);
             changedIds.delete((action as unknown as AddDataActionModel).localId);
+            changedData = {
+                ...state.data,
+                [dataId]: data,
+            };
             return {
                 ...state,
                 saving: false,
                 error: null,
-                data: {
-                    ...state.data,
-                    [dataId]: data,
-                },
+                data: changedData,
                 dataChanged: changedIds,
+                hasEmptyTitle: hasEmptyTitle(changedData),
             }
         case ACTION_SET_ERROR_AFTER_REQUEST: return {
             ...state,
@@ -267,15 +282,17 @@ const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionMo
         case ACTION_REMOVE_DATA_AFTER_REQUEST: 
             changedIds = new Set(state.dataChanged);
             changedIds.delete((action as unknown as RemoveDataActionModel).dataId);
+            changedData = removeKey(
+                (action as unknown as RemoveDataActionModel).dataId,
+                state.data
+            ) as AllDataModel;
             return {
                 ...state,
                 error: null,
                 dataChanged: changedIds,
                 saving: false,
-                data: (removeKey(
-                    (action as unknown as RemoveDataActionModel).dataId,
-                    state.data
-                ) as AllDataModel),
+                data: changedData,
+                hasEmptyTitle: hasEmptyTitle(changedData),
             };
         case ACTION_SET_DATA_PROPERTY: 
             if (!state.data) return state;
@@ -284,42 +301,49 @@ const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionMo
             const value = (action as unknown as SetDataPropertyActionModel<SubjectDataModel>).value;
             changedIds = new Set(state.dataChanged);
             changedIds.add(dataId);
+
+            changedData = {
+                ...state.data,
+                [dataId]: {
+                    ...state.data[dataId],
+                    [key]: value,
+                }
+            };
             return {
                 ...state,
-                data: {
-                    ...state.data,
-                    [dataId]: {
-                        ...state.data[dataId],
-                        [key]: value,
-                    }
-                },
+                data: changedData,
                 dataChanged: changedIds,
+                hasEmptyTitle: hasEmptyTitle(changedData),
             };
         case ACTION_ADD_NEW:
             const addNewAction = (action as unknown as AddNewActionModel<T>);
             changedIds = new Set(state.dataChanged);
             const newId = getNewIdfor(addNewAction.count);
             changedIds.add(newId);
+            changedData = {
+                ...state.data,
+                [newId]: addNewAction.initialValue,
+            };
             return {
                 ...state,
                 dataChanged: changedIds,
-                data: {
-                    ...state.data,
-                    [newId]: addNewAction.initialValue,
-                },
+                data: changedData,
+                hasEmptyTitle: hasEmptyTitle(changedData),
             };
         case ACTION_REMOVE_DATUM:
             const removeAction = (action as unknown as RemoveDatumActionModel);
             changedIds = new Set(state.dataChanged);
             if (removeAction.dataId.startsWith('NEW_')) changedIds.delete(removeAction.dataId);
             else changedIds.add(removeAction.dataId);
+            changedData = removeKey(
+                removeAction.dataId,
+                state.data
+            ) as AllDataModel;
             return {
                 ...state,
                 dataChanged: changedIds,
-                data: removeKey(
-                    removeAction.dataId,
-                    state.data
-                ) as AllDataModel,
+                data: changedData,
+                hasEmptyTitle: hasEmptyTitle(changedData),
             };
         case ACTION_REPLACE_ID:
             const replaceAction = (action as unknown as ReplaceIdActionModel);
@@ -350,7 +374,7 @@ const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionMo
 }
 
 // ToDo find better way to type this (or implement this more efficiently)
-const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<ModelWithId>): AllDataModel => {
+const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDataModel>): AllDataModel => {
     const out: AllDataModel = {};
     
     switch (dataTypeId) {
@@ -446,14 +470,15 @@ const getNewIdfor = (count: number): string => {
 const useSubjectData = <T extends SubjectDataModel>(
     dataTypeId: DataTypeId,
     subjectId: string,
-    initialData: ModelWithId[] | null,
+    initialData: SubjectDataModel[] | null,
 ) => {
 
-    const initialStateWithData: StateModel = {
+    const initialStateWithData: StateModel = useMemo(() => ({
         ...initialState,
         data: initialData ? mapDataArrayToObject(dataTypeId, initialData) : {},
         loading: initialData ? false : true,
-    }
+        hasEmptyTitle: !initialData || initialData.length === 0 ? false : initialData.every(val => val.type) ? true : false, // check for empty title
+    }), [dataTypeId, initialData]);
 
     const [state, dispatch] = useReducer(reducer, initialStateWithData);
 
@@ -586,6 +611,8 @@ const useSubjectData = <T extends SubjectDataModel>(
 
     }, [dataTypeId, state.data, state.dataChanged, subjectId]);
 
+    const hasEmptyTitle = useCallback((): boolean => state.hasEmptyTitle, [state.hasEmptyTitle]);
+
     return {
         fetchAllData,
         fetchData,
@@ -596,6 +623,7 @@ const useSubjectData = <T extends SubjectDataModel>(
         updateValue,
         remove,
         saveChanges,
+        hasEmptyTitle,
         data: {
             loading: state.loading,
             saving: state.saving,

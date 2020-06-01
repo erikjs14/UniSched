@@ -14,7 +14,7 @@ import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './..
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
-import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState } from './../../../config/settingsConfig';
+import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/settings/examCard/ExamCard';
 import SubSettings from './subSettings/SubSettings';
@@ -25,6 +25,7 @@ import { removeSubjectLocally, addSubjectLocally } from '../../../store/actions'
 import { SubjectModel } from '../../../firebase/model';
 import { useDispatch } from 'react-redux';
 import { updateSubjectLocally } from '../../../store/actions/user';
+import { toaster } from 'evergreen-ui';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -66,14 +67,17 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const eventsRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
         isSaving: () => boolean;
+        hasEmptyTitle: () => boolean;
     }>();
     const examsRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
         isSaving: () => Boolean;
+        hasEmptyTitle: () => boolean;
     }>();
     const tasksRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
         isSaving: () => Boolean;
+        hasEmptyTitle: () => boolean;
     }>();
 
     useEffect(() => {
@@ -114,6 +118,22 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
  
 
     const saveHandler = useCallback(() => {
+        if (!state.subject) return;
+
+        // check if some title input are empty
+        if (!state.subject.name) {
+            toaster.warning('The subject title must not be empty!', DEFAULT_TOASTER_CONFIG);
+            return;
+        } else if (eventsRef.current?.hasEmptyTitle()) {
+            toaster.warning('You have an event with a non-empty title!', DEFAULT_TOASTER_CONFIG);
+            return;
+        } else if (examsRef.current?.hasEmptyTitle()) {
+            toaster.warning('You have an exam with a non-empty title!', DEFAULT_TOASTER_CONFIG);
+            return;
+        } else if (tasksRef.current?.hasEmptyTitle()) {
+            toaster.warning('You have a task with a non-empty title!', DEFAULT_TOASTER_CONFIG);
+            return;
+        }
 
         if (!props.new) {
             eventsRef.current?.save(undefined);
