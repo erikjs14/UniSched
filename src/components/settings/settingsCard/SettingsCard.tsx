@@ -23,6 +23,7 @@ export default function(props: PropsWithChildren<SettingsCardProps>): JSX.Elemen
                 value={props.headerValue}
                 onChange={newVal => props.onHeaderValueChange(newVal as string)}
                 label='Insert title here'
+                markWhenEmpty={props.markEmptyTitles}
             />
         </div>
     );

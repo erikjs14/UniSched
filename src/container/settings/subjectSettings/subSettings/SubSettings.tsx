@@ -30,6 +30,8 @@ export default React.memo(
     const [wantDelete, setWantDelete] = useState<string|null>(null);
     const [deleting, setDeleting] = useState(false);
 
+    const [markTitlesWhenEmpty, setMarkTitlesWhenEmpty] = useState(false);
+
     // fetch data after mount if not provided by initialData
     useEffect(() => {
         if (!props.initialData) fetchAllData();
@@ -49,9 +51,12 @@ export default React.memo(
     function hasEmptyTitle(): boolean {
         return stateHasEmptyTitle();
     }
+    function markEmptyTitles(val: boolean): void {
+        setMarkTitlesWhenEmpty(val);
+    }
     useImperativeHandle(
         ref,
-        () => ({save, isSaving, hasEmptyTitle})
+        () => ({save, isSaving, hasEmptyTitle, markEmptyTitles})
     );
 
     const addNewEventHandler = useCallback(() => {
@@ -80,6 +85,7 @@ export default React.memo(
             onChange={(key: keyof M, newVal) => valChangedHandler(dataItem.id, key, newVal)}
             onRemove={() => setWantDelete(dataItem.id)}
             new={dataItem.id.startsWith('NEW_')}
+            markEmptyTitles={markTitlesWhenEmpty}
         />
     ));
     

@@ -20,6 +20,7 @@ export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
             headerValue={props.data.type}
             onHeaderValueChange={newVal => props.onChange('type', newVal)}
             onRemoveClicked={props.onRemove}
+            markEmptyTitles={props.markEmptyTitles}
         >
 
                 <div className={toCss(s_row)}>

@@ -4,6 +4,7 @@ export interface SettingsCardProps {
     headerValue: string;
     onHeaderValueChange(newVal: string): void;
     onRemoveClicked: Function;
+    markEmptyTitles?: boolean;
 }
 
 export interface SubjectDataCardProps<M extends SubjectDataModel> {
@@ -11,4 +12,5 @@ export interface SubjectDataCardProps<M extends SubjectDataModel> {
     onChange<T>(key: keyof M, newVal: T | null): void;
     onRemove: Function;
     new?: boolean;
+    markEmptyTitles?: boolean;
 }

@@ -64,20 +64,25 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [tasksDataChanged, setTasksDataChanged] = useState(false);
     const [tasksSaveState, setTasksSaveState] = useState(false);
 
+    const [markSubTitleEmpty, setMarkSubTitleEmpty] = useState(false);
+
     const eventsRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
         isSaving: () => boolean;
         hasEmptyTitle: () => boolean;
+        markEmptyTitles: (val: boolean) => void;
     }>();
     const examsRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
         isSaving: () => Boolean;
         hasEmptyTitle: () => boolean;
+        markEmptyTitles: (val: boolean) => void;
     }>();
     const tasksRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
         isSaving: () => Boolean;
         hasEmptyTitle: () => boolean;
+        markEmptyTitles: (val: boolean) => void;
     }>();
 
     useEffect(() => {
@@ -121,6 +126,10 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
         if (!state.subject) return;
 
         // check if some title input are empty
+        eventsRef.current?.markEmptyTitles(true);
+        examsRef.current?.markEmptyTitles(true);
+        tasksRef.current?.markEmptyTitles(true);
+        setMarkSubTitleEmpty(true);
         if (!state.subject.name) {
             toaster.warning('The subject title must not be empty!', DEFAULT_TOASTER_CONFIG);
             return;
@@ -134,6 +143,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
             toaster.warning('You have a task with a non-empty title!', DEFAULT_TOASTER_CONFIG);
             return;
         }
+        eventsRef.current?.markEmptyTitles(false);
+        examsRef.current?.markEmptyTitles(false);
+        tasksRef.current?.markEmptyTitles(false);
 
         if (!props.new) {
             eventsRef.current?.save(undefined);
@@ -243,6 +255,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         label='Title'
                                         labelColor={state.subject?.color.newColor.textColor}
                                         labelLeft
+                                        markWhenEmpty={markSubTitleEmpty}
                                     />
                                     <div 
                                         className={toCss(s_trashIcon)}

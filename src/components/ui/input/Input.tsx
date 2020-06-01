@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CSS from './Input.module.scss';
 import { toCss, hex2rgba } from '../../../util/util';
 
@@ -13,6 +13,7 @@ const {
     checkWrapper: s_checkWrapper,
     disabled: s_disabled,
     minSize: s_minSize,
+    glowRed: s_glowRed,
 } = CSS;
 
 export interface InputProps<T> {
@@ -29,9 +30,12 @@ export interface InputProps<T> {
     labelLeft?: boolean;
     disabled?: boolean;
     minSize?: boolean;
+    markWhenEmpty?: boolean;
 }
 
 export default function(props: InputProps<string|boolean>): JSX.Element| null {
+
+    const [touched, setTouched] = useState(false);
 
     const style: {width?: string} = {}
     if (props.width) style.width = props.width+'rem';
@@ -50,8 +54,11 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                     <input 
                         {...props.elementConfig} 
                         value={props.value as string} 
-                        onChange={event => props.onChange(event.target.value)} 
-                        className={toCss(s_input, s_transparent)}
+                        onChange={event => {
+                            props.onChange(event.target.value);
+                            setTimeout(() => setTouched(true), 500);
+                        }}
+                        className={toCss(s_input, s_transparent, ((props.markWhenEmpty || touched) && (props.value as string)) === '' ? s_glowRed : '')}
                         style={{color: props.inputColor ? hex2rgba(props.inputColor) : 'inherit'}}
                         placeholder='invisible'
                     />

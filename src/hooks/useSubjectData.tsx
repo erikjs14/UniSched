@@ -203,7 +203,9 @@ const setDataProperty = <T extends SubjectDataModel>(dataId: string, key: keyof 
 
 const hasEmptyTitle = (data: AllDataModel): boolean => {
     for (const key in data) {
-        if (!data[key].type) return true;
+        if (!data[key].type) {
+            return true;
+        }
     }
     return false;
 }
@@ -477,7 +479,7 @@ const useSubjectData = <T extends SubjectDataModel>(
         ...initialState,
         data: initialData ? mapDataArrayToObject(dataTypeId, initialData) : {},
         loading: initialData ? false : true,
-        hasEmptyTitle: !initialData || initialData.length === 0 ? false : initialData.every(val => val.type) ? true : false, // check for empty title
+        hasEmptyTitle: !initialData || initialData.length === 0 ? false : initialData.every(val => val.type) ? false : true, // check for empty title
     }), [dataTypeId, initialData]);
 
     const [state, dispatch] = useReducer(reducer, initialStateWithData);
