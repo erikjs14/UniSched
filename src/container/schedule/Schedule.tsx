@@ -22,6 +22,7 @@ import { RootState } from '../..';
 import { getAllConfigFromEvents, getAllConfigFromExams } from '../../util/scheduleUtil';
 import { findColorConfig } from './../../config/colorChoices';
 import Input from '../../components/ui/input/Input';
+import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig';
 const {
     wrapperCalendar: s_wrapperCalendar,
     viewToggle: s_viewToggle,
@@ -130,6 +131,7 @@ export default function() {
                         id: 'unique',
                         duration: 2,
                     })}
+                    {...DEFAULT_SCHEDULE_CALENDAR_PROPS}
                 />
             </div>
 

@@ -5,7 +5,7 @@ import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
 import { TaskModel, IntervalOptions } from '../../../firebase/model';
 import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo } from './../../../util/timeUtil';
-import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/settingsConfig';
+import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
@@ -17,7 +17,7 @@ const {
 } = CSS;
 
 export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
-
+    
     const [inputTouched, setInputTouched] = useState(false);
 
     const { onChange } = props;

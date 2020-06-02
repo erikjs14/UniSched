@@ -18,6 +18,7 @@
     "@types/react-datepicker": "^2.11.0",
     "@types/react-transition-group": "^4.2.4",
     "@types/react-widgets-moment": "^4.0.1",
+    "date-fns": "^2.14.0",
     "evergreen-ui": "^4.27.4",
     "firebase": "^7.14.4",
     "firebase-tools": "^8.2.0",

@@ -5,7 +5,7 @@ import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
 import { Timestamp, ExamModel } from '../../../firebase/model';
 import { getDateFromSeconds, getTimestampFromDate } from './../../../util/timeUtil';
-import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/settingsConfig';
+import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';

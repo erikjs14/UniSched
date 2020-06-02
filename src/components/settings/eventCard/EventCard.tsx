@@ -6,7 +6,7 @@ import SettingsCard from '../settingsCard/SettingsCard';
 import Input from '../../ui/input/Input';
 import { Timestamp, IntervalType, IntervalOptions } from '../../../firebase/model';
 import { getDateFromSeconds, getTimestampFromDate, getFilterForInterval } from './../../../util/timeUtil';
-import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/settingsConfig';
+import { DATETIMEPICKER_DEFAULT_PROPS, DATEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from '../customDateInputUI/CustomDateInputUI';
 import { EventModel } from './../../../firebase/model';
@@ -78,6 +78,7 @@ export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
                         onChange={date => props.onChange<Timestamp>('endAt', getTimestampFromDate(date || new Date()))}
                         minDate={getDateFromSeconds(props.data.firstEnd.seconds)}
                         filterDate={getFilterForInterval(props.data.firstStart.seconds, props.data.interval)}
+                        {...DATEPICKER_DEFAULT_PROPS}
                     />
                 </div>
 

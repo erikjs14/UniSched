@@ -11,6 +11,7 @@ import { findColorConfig } from '../../config/colorChoices';
 
 import CSS from './Exams.module.scss';
 import { toCss } from '../../util/util';
+import { CALENDAR_DEFAULT_TIME_FORMAT } from '../../config/timeConfig';
 const {
     wrapperCalendar: s_wrapperCalendar,
     smallRow: s_smallRow,
@@ -68,6 +69,7 @@ export default function() {
                     nowIndicator
                     aspectRatio={calAspectRatio}
                     events={examsConfig}
+                    eventTimeFormat={CALENDAR_DEFAULT_TIME_FORMAT}
                 />
             </div>
 
