@@ -65,7 +65,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                 </span>
 
                 <span className={toCss(s_dueAt)}>
-                    Due at: {props.taskSemantic.dueString}
+                    {props.taskSemantic.dueString}
                 </span>
 
             </div>

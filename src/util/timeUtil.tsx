@@ -1,6 +1,6 @@
 import { Timestamp, TaskModel, IntervalType, TaskModelWithIdAndSubjectId } from './../firebase/model';
 import { getResult } from './util';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from './../config/timeConfig';
 
 export const containsTimestamp = (toCheck: Timestamp, array: Timestamp[]): boolean => {
@@ -68,6 +68,7 @@ export const getRelevantTimestamps = (timestamps: Timestamp[], timestampsDone: T
 
 export const formatDateOutput = (date: Date): string => format(date, DEFAULT_DATE_FORMAT);
 export const formatTimeOutput = (date: Date): string => format(date, DEFAULT_TIME_FORMAT);
+export const formatDistanceOutput = (date: Date): string => formatDistanceToNow(date, {addSuffix: true});
 
 export const sameDay = (d1: Date | null, d2: Date | null): boolean => {
     if (!d1 || !d2) return false;
@@ -122,7 +123,7 @@ export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]
                 taskId: task.id,
                 subjectId: task.subjectId,
                 checked: containsTimestamp(tstamp, task.timestampsDone),
-                dueString: formatTimeOutput(getDateFromTimestamp(tstamp)),
+                dueString: formatDistanceOutput(getDateFromTimestamp(tstamp)),
                 dueAt: getDateFromTimestamp(tstamp),
             }))
         )
