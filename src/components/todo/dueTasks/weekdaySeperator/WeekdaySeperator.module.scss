@@ -9,6 +9,7 @@
     grid-template-areas:
         "weekday date amount";
     padding: 1rem 10rem 1rem 3rem;
+    align-items: center;
 
     @include respond(small-phone) {
         padding: 1rem 3rem 1rem 3rem;
@@ -24,6 +25,11 @@
     
     .weekday {
         grid-area: weekday;
+        text-transform: capitalize;
+
+        &.today {
+            font-size: 1.5em;
+        }
     }
 
     .date {

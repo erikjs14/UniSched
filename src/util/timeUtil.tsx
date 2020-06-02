@@ -159,9 +159,6 @@ export const getUncheckedTaskSemanticsGroupedObject = (rawTasks: TaskModelWithId
     return out;
 }
 
-const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-export const getWeekDay = (date: Date): typeof days[number] => days[date.getDay()];
-
 export interface TaskSemantic {
     name: string;
     dueString: string;
@@ -418,4 +415,17 @@ export const allTasksOfOneDayContained = (tasks: TaskSemantic[], toFadeOut: [str
         }
     }
     return true;
+}
+
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+export const getWeekDay = (date: Date): typeof days[number] => days[date.getDay()];
+export const isToday = (date: Date): boolean => sameDay(new Date(), date);
+export const isYesterday = (date: Date): boolean => sameDay(new Date(new Date().getTime() - 1000*DAY_IN_SEC), date);
+export const isTomorrow = (date: Date): boolean => sameDay(new Date(new Date().getTime() + 1000*DAY_IN_SEC), date);
+
+export const getDayIdentifier = (date: Date): string => {
+    if (isToday(date)) return 'today';
+    else if (isTomorrow(date)) return 'tomorrow';
+    else if (isYesterday(date)) return 'yesterday';
+    else return getWeekDay(date);
 }
