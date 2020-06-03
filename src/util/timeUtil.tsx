@@ -156,7 +156,7 @@ export const getUncheckedTaskSemanticsGroupedObject = (rawTasks: TaskModelWithId
     const out: {[subjectId: string]: TaskSemantic[]} = {};
 
     for (const semPerSubject of getUncheckedTaskSemanticsGrouped(rawTasks)) {
-        out[semPerSubject[0].subjectId] = semPerSubject;
+        out[semPerSubject[0].subjectId] = semPerSubject.sort((ts1, ts2) => ts2.dueAt.getTime() - ts1.dueAt.getTime());
     }
 
     return out;
