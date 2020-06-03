@@ -295,7 +295,13 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
         interval: newConfig.interval,
     });
 
-    const timestampsDoneOut = timestampsDoneOld.filter(ts => containsTimestamp(ts, timestampsOut));
+    const shift = timestampsOld.length > 0 && timestampsOut.length > 0
+        ? timestampsOld[0].seconds - timestampsOut[0].seconds
+        : 0;
+
+    const timestampsDoneOut = timestampsDoneOld
+        .map(ts => getTimestampFromSeconds(ts.seconds - shift))
+        .filter(ts => containsTimestamp(ts, timestampsOut));
 
     // if only one timestamp is contained and interval it not 'once' --> add one extra timestamp
     if (newConfig.interval !== 'once' && timestampsOut.length === 1) {

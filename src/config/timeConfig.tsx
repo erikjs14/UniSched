@@ -83,9 +83,14 @@ export const CALENDAR_DEFAULT_COLUMN_HEADER_FORMATTER = isGerman
 export const DEFAULT_SCHEDULE_CALENDAR_PROPS = {
     slotLabelFormat: CALENDAR_DEFAULT_TIME_FORMAT,
     eventTimeFormat: CALENDAR_DEFAULT_TIME_FORMAT,
+    scrollTime: '09:00:00',
+    firstDay: 1,
     views: {
         week: {
-            columnHeaderText: CALENDAR_DEFAULT_COLUMN_HEADER_FORMATTER,
+            columnHeaderFormat: {
+                weekday: 'short'
+            },
+            // columnHeaderText: CALENDAR_DEFAULT_COLUMN_HEADER_FORMATTER,
         }
     }
 };
