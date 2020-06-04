@@ -230,6 +230,7 @@ export const getIntervalTypeFromSeconds = (secs: number): IntervalType => {
     switch (secs) {
         case 0: return 'once';
         case DAY_IN_SEC: return 'daily';
+        case 2*DAY_IN_SEC: return 'twice-daily';
         case WEEK_IN_SEC: return 'weekly';
         case BIWEEK_IN_SEC: return 'biweekly';
         default: throw new Error('Malformed timestamps.');
@@ -240,6 +241,7 @@ export const getSecondsFromIntervalType = (interval: IntervalType): number => {
     switch (interval) {
         case 'once': return 0;
         case 'daily': return DAY_IN_SEC;
+        case 'twice-daily': return 2*DAY_IN_SEC;
         case 'weekly': return WEEK_IN_SEC;
         case 'biweekly': return BIWEEK_IN_SEC;
         default: throw new Error('Prohibited by typescript');
@@ -381,13 +383,17 @@ export const getFilterForInterval = (startSecs: number, interval: IntervalType):
         const difference_s = Math.round((dateToCheck.getTime() - startDate.getTime()) / 1000);
 
         // check for range plus minus one hour due to daylight savings
-        switch (interval) {
-            case 'once':        return plusMinus(difference_s, 3600);
-            case 'daily':       return plusMinus(difference_s % DAY_IN_SEC, 3600);
-            case 'weekly':      return plusMinus(difference_s % WEEK_IN_SEC, 3600);
-            case 'biweekly':    return plusMinus(difference_s % BIWEEK_IN_SEC, 3600);
-            default: return true;
-        }
+        if (interval === 'once')
+            return plusMinus(difference_s, 3600);
+        else
+            return plusMinus(difference_s % getSecondsFromIntervalType(interval), 3600);
+        // switch (interval) {
+        //     case 'once':        return plusMinus(difference_s, 3600);
+        //     case 'daily':       return plusMinus(difference_s % DAY_IN_SEC, 3600);
+        //     case 'weekly':      return plusMinus(difference_s % WEEK_IN_SEC, 3600);
+        //     case 'biweekly':    return plusMinus(difference_s % BIWEEK_IN_SEC, 3600);
+        //     default: return true;
+        // }
     }
 }
 

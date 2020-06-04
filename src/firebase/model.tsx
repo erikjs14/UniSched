@@ -33,8 +33,8 @@ export interface SubjectDataModel extends BaseModel {
 
 export interface SubjectDataModelWithId extends SubjectDataModel, ModelWithId {}
 
-export const IntervalOptions = ['weekly', 'biweekly', 'daily', 'once'];
-export type IntervalType = typeof IntervalOptions[number]; //'weekly' | 'biweekly' | 'daily' | 'once';
+export const IntervalOptions = ['weekly', 'biweekly', 'daily', 'twice-daily', 'once'];
+export type IntervalType = typeof IntervalOptions[number]; //'weekly' | 'biweekly' | 'daily' | 'twice-daily' | 'once';
 export interface EventModel extends SubjectDataModel {
     firstStart: Timestamp;
     firstEnd: Timestamp;

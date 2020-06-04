@@ -59,7 +59,7 @@
         .intervalOptions {
             max-width: 65%;
 
-            @include respond(small-phone) {
+            @include respond(phone) {
                 max-width: initial;
             }
         }
