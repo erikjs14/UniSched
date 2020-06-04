@@ -8,6 +8,10 @@ import bird5 from '../../assets/img/bird5.jpeg';
 import bird6 from '../../assets/img/bird6.jpeg';
 import bird7 from '../../assets/img/bird7.jpeg';
 import bird8 from '../../assets/img/bird8.jpeg';
+import bird9 from '../../assets/img/bird9.jpeg';
+import bird10 from '../../assets/img/bird10.jpeg';
+import bird11 from '../../assets/img/bird11.jpeg';
+import bird12 from '../../assets/img/bird12.jpeg';
 
 import Sidebar from '../../components/navigation/sidebar/Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +37,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
     if (!displayName) displayName = 'User';
 
     const getRandomUserIconUrl = useCallback((maxNr: number) => {
-        const options = [cuteDog, bird1, bird2, bird3, bird4, bird5, bird6, bird7, bird8];
+        const options = [cuteDog, bird1, bird2, bird3, bird4, bird5, bird6, bird7, bird8, bird9, bird10, bird11, bird12];
         return options[(Math.floor(Math.random() * maxNr))];
     }, []);
 
@@ -44,7 +48,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl(9)}
+                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl(13)}
                 />
             </nav>
 
@@ -53,7 +57,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)}
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl(9)}
+                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl(13)}
                 />  
             </nav>
 
