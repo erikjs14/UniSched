@@ -1,4 +1,5 @@
 @import '../../../style/abstract/variables';
+@import '../../../style/abstract/mixins';
 
 .header {
     color: rgba($col-primary-dark, .4);
@@ -6,6 +7,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 5rem;
+    position: relative;
  
     .icon {
         font-size: 2em;
@@ -15,5 +17,30 @@
 
     .title {
         font-size: 4em;
+    }
+
+    .refresh {
+        font-size: 2em;
+        position: absolute;
+        right: 10rem;
+        bottom: -1em;
+        cursor: pointer;
+
+        @include respond(phone) {
+            display: none;
+        }
+
+        &.refreshing {
+            animation: rotateAnim 2.5s linear infinite;
+        }
+    }
+}
+
+@keyframes rotateAnim {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(360deg);
     }
 }

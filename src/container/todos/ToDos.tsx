@@ -51,26 +51,31 @@ export default function() {
     const [tasks, setTasks] = useState<TaskModelWithIdAndSubjectId[]|null>(null);
     const [error, setError] = useState(false);
 
+    const [refreshing, setRefreshing] = useState(false);
+
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
 
     // fetch all tasks
     useEffect(() => {
-        if (subjects && !tasks && !error) {
+        if ((subjects && !tasks && !error) || (subjects && refreshing)) {
             Promise.all(
                 subjects.map(sub => fetchTasks(sub.id))
             )
-                .then(tasksPerSubject => setTasks(
-                    tasksPerSubject.map(
-                        (tasks, idx) => tasks.map(
-                            task => (
-                                {...task, subjectId: subjects[idx].id}
+                .then(tasksPerSubject => {
+                    setTasks(
+                        tasksPerSubject.map(
+                            (tasks, idx) => tasks.map(
+                                task => (
+                                    {...task, subjectId: subjects[idx].id}
+                                )
                             )
-                        )
-                    ).flat()
-                ))
+                        ).flat()
+                    );
+                    setRefreshing(false);
+                })
                 .catch(err => setError(true));
         }
-    }, [error, subjects, tasks]);
+    }, [error, subjects, tasks, refreshing]);
 
     const checkTaskHandler = useCallback((subjectId: string, taskId: string, timestampSeconds: number): void => {
         // called when animation to remove task ended
@@ -101,7 +106,12 @@ export default function() {
     return (
         <div>
             
-            <SiteHeader type='todo' title='ToDo' />
+            <SiteHeader 
+                type='todo' 
+                title='ToDo'
+                onRefresh={() => setRefreshing(true)}
+                refreshing={refreshing}
+            />
 
             <DueTasks
                 dueTasks={tasks}
