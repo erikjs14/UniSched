@@ -1,0 +1,1 @@
+export const TIME_BEFORE_DATA_REFRESH_MS = 1000 * 60 * 5; //5 min

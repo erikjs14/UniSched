@@ -21,6 +21,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../..';
 import Input from '../../components/ui/input/Input';
 import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig'
+import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
 const {
     wrapperCalendar: s_wrapperCalendar,
     viewToggle: s_viewToggle,
@@ -48,15 +49,26 @@ export default function() {
         refreshing: examsRefreshing,
         error: examsError,
         config: examsConfig,
+        timestamp: examsTimestamp,
     } = useSelector((state: RootState) => state.data.exams);
     const {
         loading: eventsLoading,
         refreshing: eventsRefreshing,
         error: eventsError,
         config: eventsConfig,
+        timestamp: eventsTimestamp,
     } = useSelector((state: RootState) => state.data.events);
 
     const dispatch = useDispatch();
+
+    // when site stays open, refresh every x ms and clear interval when component is exited
+    useEffect(() => {
+        const id = setInterval(() => {
+            dispatch(actions.refreshEvents());
+            dispatch(actions.refreshExams());
+        }, TIME_BEFORE_DATA_REFRESH_MS);
+        return () => clearInterval(id);
+    }, [dispatch]);
 
     const refreshHandler = useCallback(() => {
         dispatch(actions.refreshEvents());
@@ -64,15 +76,15 @@ export default function() {
     }, [dispatch]);
 
     useEffect(() => {
-        if (subjects && !eventsConfig && !eventsError) {
+        if ((subjects && !eventsConfig && !eventsError) || (!eventsLoading && Date.now() - eventsTimestamp > TIME_BEFORE_DATA_REFRESH_MS)) {
             dispatch(actions.fetchEvents());
         }
-    }, [dispatch, eventsConfig, eventsError, subjects]);
+    }, [dispatch, eventsConfig, eventsError, eventsLoading, eventsTimestamp, subjects]);
     useEffect(() => {
-        if (subjects && !examsConfig && !examsError) {
+        if ((subjects && !examsConfig && !examsError) || (!examsLoading && Date.now() - examsTimestamp > TIME_BEFORE_DATA_REFRESH_MS)) {
             dispatch(actions.fetchExams());
         }
-    }, [dispatch, examsConfig, examsError, subjects]);
+    }, [dispatch, examsConfig, examsError, examsLoading, examsTimestamp, subjects]);
 
     if (eventsLoading || examsLoading) {
         return <Loader />;

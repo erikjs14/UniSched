@@ -6,6 +6,7 @@ export interface DataState {
         loading: boolean;
         refreshing: boolean;
         error: string | null;
+        timestamp: number; //ms !!!!!!!!!!!
     };
     exams: {
         dataPerSubject: ExamModelWithId[][] | null;
@@ -13,6 +14,7 @@ export interface DataState {
         loading: boolean;
         refreshing: boolean;
         error: string | null;
+        timestamp: number;
     };
     events: {
         dataPerSubject: EventModelWithId[] | null;
@@ -20,5 +22,6 @@ export interface DataState {
         loading: boolean;
         refreshing: boolean;
         error: string | null;
+        timestamp: number;
     }
 }

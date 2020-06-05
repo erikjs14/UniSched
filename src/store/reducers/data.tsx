@@ -13,6 +13,7 @@ const initialState: DataState = {
         loading: true,
         refreshing: false,
         error: null,
+        timestamp: 0,
     },
     exams: {
         dataPerSubject: null,
@@ -20,6 +21,7 @@ const initialState: DataState = {
         loading: true,
         refreshing: false,
         error: null,
+        timestamp: 0,
     },
     events: {
         dataPerSubject: null,
@@ -27,6 +29,7 @@ const initialState: DataState = {
         loading: true,
         refreshing: false,
         error: null,
+        timestamp: 0,
     }
 };
 
@@ -73,6 +76,7 @@ const fetchTasksSuccess = (state: DataState, action: FetchTasksSuccessAC): DataS
             refreshing: false,
             error: null,
             data: action.tasks,
+            timestamp: Date.now(),
         }),
     });
 };
@@ -128,6 +132,7 @@ const fetchExamsSuccess = (state: DataState, action: FetchExamsSuccessAC): DataS
             loading: false,
             refreshing: false,
             error: null,
+            timestamp: Date.now(),
         }),
     });
 };
@@ -168,6 +173,7 @@ const fetchEventsSuccess = (state: DataState, action: FetchEventsSuccessAC): Dat
             loading: false,
             refreshing: false,
             error: null,
+            timestamp: Date.now(),
         }),
     });
 };

@@ -10,6 +10,7 @@ import * as actions from '../../store/actions';
 import CSS from './Exams.module.scss';
 import { toCss } from '../../util/util';
 import { CALENDAR_DEFAULT_TIME_FORMAT } from '../../config/timeConfig';
+import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
 const {
     wrapperCalendar: s_wrapperCalendar,
 } = CSS;
@@ -22,19 +23,26 @@ export default function() {
         loading,
         refreshing,
         error,
-        config: examsConfig
+        config: examsConfig,
+        timestamp,
     } = useSelector((state: RootState) => state.data.exams);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
 
     const dispatch = useDispatch();
 
+    // when site stays open, refresh every x ms and clear interval when component is exited
+    useEffect(() => {
+        const id = setInterval(() => dispatch(actions.refreshExams()), TIME_BEFORE_DATA_REFRESH_MS);
+        return () => clearInterval(id);
+    }, [dispatch]);
+
     const refreshHandler = useCallback(() => dispatch(actions.refreshExams()), [dispatch]);
 
     useEffect(() => {
-        if (subjects && !examsConfig) {
+        if ((subjects && !examsConfig) || (!loading && Date.now() - timestamp > TIME_BEFORE_DATA_REFRESH_MS)) {
             dispatch(actions.fetchExams());
         }
-    }, [dispatch, examsConfig, subjects]);
+    }, [dispatch, examsConfig, loading, subjects, timestamp]);
 
     if (loading) {
         return <Loader />;
