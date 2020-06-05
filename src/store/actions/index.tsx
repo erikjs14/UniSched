@@ -23,9 +23,11 @@ export {
     checkTask,
     uncheckTask,
     fetchExams,
+    refreshExams,
     fetchExamsSuccess,
     fetchExamsFail,
     fetchEvents,
+    refreshEvents,
     fetchEventsSuccess,
     fetchEventsFail,
 } from './data';

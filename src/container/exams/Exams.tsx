@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import FullCalendar from '@fullcalendar/react';
 import Loader from '../../components/ui/loader/Loader';
@@ -20,12 +20,15 @@ export default function() {
     
     const {
         loading,
+        refreshing,
         error,
         config: examsConfig
     } = useSelector((state: RootState) => state.data.exams);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
 
     const dispatch = useDispatch();
+
+    const refreshHandler = useCallback(() => dispatch(actions.refreshExams()), [dispatch]);
 
     useEffect(() => {
         if (subjects && !examsConfig) {
@@ -42,7 +45,12 @@ export default function() {
     return (
         <div>
             
-            <SiteHeader type='exams' title='Exams' />
+            <SiteHeader 
+                type='exams' 
+                title='Exams' 
+                onRefresh={refreshHandler}
+                refreshing={refreshing} 
+            />
 
             <div className={toCss(s_wrapperCalendar)}>
                 <FullCalendar

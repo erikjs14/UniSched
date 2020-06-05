@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
 import { toaster } from 'evergreen-ui';
@@ -45,16 +45,23 @@ export default function() {
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const {
         loading: examsLoading,
+        refreshing: examsRefreshing,
         error: examsError,
         config: examsConfig,
     } = useSelector((state: RootState) => state.data.exams);
     const {
         loading: eventsLoading,
+        refreshing: eventsRefreshing,
         error: eventsError,
         config: eventsConfig,
     } = useSelector((state: RootState) => state.data.events);
 
     const dispatch = useDispatch();
+
+    const refreshHandler = useCallback(() => {
+        dispatch(actions.refreshEvents());
+        dispatch(actions.refreshExams());
+    }, [dispatch]);
 
     useEffect(() => {
         if (subjects && !eventsConfig && !eventsError) {
@@ -76,7 +83,12 @@ export default function() {
     return (
         <div>
             
-            <SiteHeader type='schedule' title='Schedule' />
+            <SiteHeader 
+                type='schedule' 
+                title='Schedule'
+                onRefresh={refreshHandler}
+                refreshing={eventsRefreshing || examsRefreshing} 
+            />
 
             <Input
                 elementType='select-visual'

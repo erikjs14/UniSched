@@ -19,7 +19,7 @@ export function* dataWatcher() {
         takeEvery([actionTypes.FETCH_TASKS, actionTypes.REFRESH_TASKS], dataSagas.fetchTasks),
         takeEvery(actionTypes.CHECK_TASK, dataSagas.checkTask),
         takeEvery(actionTypes.UNCHECK_TASK, dataSagas.uncheckTask),
-        takeEvery(actionTypes.FETCH_EXAMS, dataSagas.fetchExams),
-        takeEvery(actionTypes.FETCH_EVENTS, dataSagas.fetchEvents),
+        takeEvery([actionTypes.FETCH_EXAMS, actionTypes.REFRESH_EXAMS], dataSagas.fetchExams),
+        takeEvery([actionTypes.FETCH_EVENTS, actionTypes.REFRESH_EVENTS], dataSagas.fetchEvents),
     ])
 }

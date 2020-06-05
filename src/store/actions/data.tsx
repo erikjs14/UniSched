@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC } from './data.d';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC } from './data.d';
 import { TaskModelWithIdAndSubjectId, ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
 import { SubjectModelWithId } from './../../firebase/model';
@@ -69,6 +69,12 @@ export const fetchExams = (): FetchExamsAC => {
     };
 };
 
+export const refreshExams = (): RefreshExamsAC => {
+    return {
+        type: actionTypes.REFRESH_EXAMS,
+    };
+};
+
 export const fetchExamsSuccess = (examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]): FetchExamsSuccessAC => {
     return {
         type: actionTypes.FETCH_EXAMS_SUCCESS,
@@ -87,6 +93,12 @@ export const fetchExamsFail = (error: string): FetchExamsFailAC => {
 export const fetchEvents = (): FetchEventsAC => {
     return {
         type: actionTypes.FETCH_EVENTS,
+    };
+};
+
+export const refreshEvents = (): RefreshEventsAC => {
+    return {
+        type: actionTypes.REFRESH_EVENTS,
     };
 };
 

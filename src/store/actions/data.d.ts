@@ -23,9 +23,11 @@ export interface UncheckTaskAC extends BaseActionCreator {
 }
 
 export interface FetchExamsAC extends BaseActionCreator {}
+export interface RefreshExamsAC extends BaseActionCreator {}
 export interface FetchExamsSuccessAC extends BaseActionCreator {examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]}
 export interface FetchExamsFailAC extends BaseActionCreator {error: string}
 
 export interface FetchEventsAC extends BaseActionCreator {}
+export interface RefreshEventsAC extends BaseActionCreator {}
 export interface FetchEventsSuccessAC extends BaseActionCreator {eventsPerSubject: EventModelWithId[][], subjects: SubjectModelWithId[]}
 export interface FetchEventsFailAC extends BaseActionCreator {error: string}

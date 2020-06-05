@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { DataState } from './data.d';
-import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC } from '../actions/data.d';
+import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC } from '../actions/data.d';
 import { ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { getAllConfigFromExams, getAllConfigFromEvents } from '../../util/scheduleUtil';
 import { findColorConfig } from '../../config/colorChoices';
@@ -39,9 +39,11 @@ export default (state: DataState = initialState, action: BaseActionCreator) => {
         case actionTypes.SET_TASKS_LOCALLY: return setTasksLocally(state, action as SetTasksLocallyAC);
         case actionTypes.DATA_SET_ERROR: return dataSetError(state, action as DataSetErrorAC);
         case actionTypes.FETCH_EXAMS: return fetchExams(state, action as FetchExamsAC);
+        case actionTypes.REFRESH_EXAMS: return refreshExams(state, action as RefreshExamsAC);
         case actionTypes.FETCH_EXAMS_SUCCESS: return fetchExamsSuccess(state, action as FetchExamsSuccessAC);
         case actionTypes.FETCH_EXAMS_FAIL: return fetchExamsFail(state, action as FetchExamsFailAC);
         case actionTypes.FETCH_EVENTS: return fetchEvents(state, action as FetchEventsAC);
+        case actionTypes.REFRESH_EVENTS: return refreshEvents(state, action as RefreshEventsAC);
         case actionTypes.FETCH_EVENTS_SUCCESS: return fetchEventsSuccess(state, action as FetchEventsSuccessAC);
         case actionTypes.FETCH_EVENTS_FAIL: return fetchEventsFail(state, action as FetchEventsFailAC);
         default: return state;
@@ -110,6 +112,14 @@ const fetchExams = (state: DataState, action: FetchExamsAC): DataState => {
     });
 };
 
+const refreshExams = (state: DataState, action: RefreshExamsAC): DataState => {
+    return updateObject(state, {
+        exams: updateObject(state.exams, {
+            refreshing: true,
+        }),
+    });
+};
+
 const fetchExamsSuccess = (state: DataState, action: FetchExamsSuccessAC): DataState => {
     return updateObject(state, {
         exams: updateObject(state.exams, {
@@ -138,6 +148,14 @@ const fetchEvents = (state: DataState, action: FetchEventsAC): DataState => {
     return updateObject(state, {
         events: updateObject(state.events, {
             loading: true,
+        }),
+    });
+};
+
+const refreshEvents = (state: DataState, action: RefreshEventsAC): DataState => {
+    return updateObject(state, {
+        events: updateObject(state.events, {
+            refreshing: true,
         }),
     });
 };
