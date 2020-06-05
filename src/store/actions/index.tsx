@@ -8,4 +8,8 @@ export {
     fetchShallowSubjectsFail,
     removeSubjectLocally,
     addSubjectLocally,
+    setUserData,
+    fetchUserData,
+    postUserData,
+    addUserAndData,
 } from './user';

@@ -8,7 +8,7 @@ export interface BaseModel {}
 export interface Timestamp {seconds: number, nanoseconds: number}
 
 export interface UserModel extends BaseModel {
-
+    timeCreated: Timestamp | undefined;
 }
 export interface UserModelWithId extends UserModel, ModelWithId {}
 

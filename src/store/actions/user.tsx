@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes';
-import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC } from './user.d';
-import { SubjectModelWithId } from '../../firebase/model';
+import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC } from './user.d';
+import { SubjectModelWithId, Timestamp } from '../../firebase/model';
 
 export const setSignedIn = (user: firebase.User): SetSignedInAC => {
     return {
@@ -66,5 +66,32 @@ export const updateSubjectLocally = (subject: SubjectModelWithId): UpdateSubject
     return {
         type: actionTypes.UPDATE_SUBJECT_LOCALLY,
         subject,
+    };
+};
+
+export const fetchUserData = (): FetchUserDataAC => {
+    return {
+        type: actionTypes.FETCH_USER_DATA,
+    };
+};
+
+export const setUserData = (timeCreated: Timestamp): SetUserDataAC => {
+    return {
+        type: actionTypes.SET_USER_DATA,
+        timeCreated,
+    };
+};
+
+export const postUserData = (timeCreated: Timestamp): PostUserDataAC => {
+    return {
+        type: actionTypes.POST_USER_DATA,
+        timeCreated,
+    };
+};
+
+export const addUserAndData = (timeCreated: Timestamp): AddUserAndDataAC => {
+    return {
+        type: actionTypes.ADD_USER_AND_DATA,
+        timeCreated,
     };
 };

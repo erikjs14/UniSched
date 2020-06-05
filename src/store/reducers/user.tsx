@@ -1,11 +1,12 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
-import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC } from '../actions/user.d';
-import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC } from './../actions/user.d';
+import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC } from '../actions/user.d';
+import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC, AddUserAndDataAC } from './../actions/user.d';
 
 const initialState: UserState = {
     username: null,
+    timeCreated: undefined,
     userImgUrl: null,
     globalLoading: true,
     shallowSubjects: null,
@@ -24,6 +25,10 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
         case actionTypes.REMOVE_SUBJECT_LOCALLY: return removeSubjectLocally(state, action as RemoveSubjectLocallyAC);
         case actionTypes.ADD_SUBJECT_LOCALLY: return addSubjectLocally(state, action as AddSubjectLocallyAC);
         case actionTypes.UPDATE_SUBJECT_LOCALLY: return updateSubjectLocally(state, action as UpdateSubjectLocallyAC);
+        case actionTypes.SET_USER_DATA: return setUserData(state, action as SetUserDataAC);
+        case actionTypes.FETCH_USER_DATA: return fetchUserData(state, action as FetchUserDataAC);
+        case actionTypes.POST_USER_DATA: return postUserData(state, action as PostUserDataAC);
+        case actionTypes.ADD_USER_AND_DATA: return addUserAndData(state, action as AddUserAndDataAC);
         default: return state;
     }
 }
@@ -96,5 +101,29 @@ const updateSubjectLocally = (state: UserState, action: UpdateSubjectLocallyAC):
         shallowSubjects: state.shallowSubjects 
             ? state.shallowSubjects.map(sub => sub.id === action.subject.id ? action.subject : sub)
             : [action.subject],
+    });
+};
+
+const fetchUserData = (state: UserState, action: FetchUserDataAC): UserState => {
+    return updateObject(state, {
+        
+    });
+};
+
+const postUserData = (state: UserState, action: PostUserDataAC): UserState => {
+    return updateObject(state, {
+        
+    });
+};
+
+const setUserData = (state: UserState, action: SetUserDataAC): UserState => {
+    return updateObject(state, {
+        timeCreated: action.timeCreated,
+    });
+};
+
+const addUserAndData = (state: UserState, action: AddUserAndDataAC): UserState => {
+    return updateObject(state, {
+        
     });
 };

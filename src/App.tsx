@@ -27,6 +27,7 @@ function App() {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
+                dispatch(actions.fetchUserData());
                 dispatch(actions.setSignedIn(user))
                 dispatch(actions.fetchShallowSubjects());
             } else {

@@ -54,6 +54,7 @@ export const fetchUser = async (): Promise<models.UserModelWithId> => {
     const docWithId: DocDataWithId = await fetchDocument(user_ref());
     return {
         id: docWithId.id,
+        timeCreated: docWithId.data?.timeCreated,
     };
 }
 
@@ -177,6 +178,10 @@ const addDoc = async <T extends models.BaseModel>(colRef: ColRef, data: T): Prom
     return docRef.id;
 }
 
+export const addUser = async (user: models.UserModel): Promise<void> => {
+    return await user_ref().set(user);
+}
+
 export const addSubject = async (subject: models.SubjectModel): Promise<string> => {
     return await addDoc(subjects_ref(), subject);
 }
@@ -201,6 +206,10 @@ const updateDoc = async <T extends models.BaseModel, D extends keyof T>(docRef: 
 
 export const updateSubject = async <D extends keyof models.SubjectModel>(subjectId: string, subject: Pick<models.SubjectModel, D>): Promise<void> => {
     await updateDoc(subject_ref(subjectId), subject);
+}
+
+export const updateUser = async <D extends keyof models.UserModel>(data: Pick<models.UserModel, D>): Promise<void> => {
+    await updateDoc(user_ref(), data);
 }
 
 export const updateExam = async <D extends keyof models.ExamModel>(subjectId: string, id: string, exam: Pick<models.ExamModel, D>): Promise<void> => {

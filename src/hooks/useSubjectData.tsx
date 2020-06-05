@@ -323,8 +323,8 @@ const reducer = <T extends SubjectDataModel>(state: StateModel, action: ActionMo
             const newId = getNewIdfor(addNewAction.count);
             changedIds.add(newId);
             changedData = {
-                ...state.data,
                 [newId]: addNewAction.initialValue,
+                ...state.data,
             };
             return {
                 ...state,
