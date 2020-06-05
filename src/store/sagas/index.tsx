@@ -1,4 +1,5 @@
 import * as userSagas from './user';
+import * as dataSagas from './data';
 import * as actionTypes from '../actions/actionTypes';
 
 import { all, takeEvery } from 'redux-saga/effects';
@@ -11,4 +12,12 @@ export function* userWatcher() {
         takeEvery(actionTypes.POST_USER_DATA, userSagas.postUserData),
         takeEvery(actionTypes.ADD_USER_AND_DATA, userSagas.addUserAndData)
     ]);
+}
+
+export function* dataWatcher() {
+    yield all([
+        takeEvery([actionTypes.FETCH_TASKS, actionTypes.REFRESH_TASKS], dataSagas.fetchTasks),
+        takeEvery(actionTypes.CHECK_TASK, dataSagas.checkTask),
+        takeEvery(actionTypes.UNCHECK_TASK, dataSagas.uncheckTask),
+    ])
 }

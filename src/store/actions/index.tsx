@@ -13,3 +13,13 @@ export {
     postUserData,
     addUserAndData,
 } from './user';
+export {
+    fetchTasks,
+    refreshTasks,
+    fetchTasksSuccess,
+    fetchTasksFail,
+    dataSetError,
+    setTasksLocally,
+    checkTask,
+    uncheckTask,
+} from './data';

@@ -1,106 +1,53 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
-import { TaskModelWithIdAndSubjectId, Timestamp } from '../../firebase/model';
-import { fetchTasks, saveTaskChecked, saveTaskUnchecked } from './../../firebase/firestore';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../..';
 import Loader from '../../components/ui/loader/Loader';
 import DueTasks from '../../components/todo/dueTasks/DueTasks';
 import { subjectsToObject } from '../../util/util';
-import { getTimestampFromSeconds } from './../../util/timeUtil';
 import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
 import { useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CheckedTasks from '../../components/todo/checkedTasks/CheckedTasks';
-
-const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
-    const result = oldTasks.map(oldTask => {
-        if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
-            return oldTask;
-        } else {
-            return {
-                ...oldTask,
-                timestampsDone: [
-                    ...oldTask.timestampsDone,
-                    timestampToCheck,
-                ],
-            };
-        }
-    })
-    return result;
-}
-const getUpdatedTasksAfterUncheck = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToUncheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
-    const result =  oldTasks.map(oldTask => {
-        if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
-            return oldTask;
-        } else {
-            return {
-                ...oldTask,
-                timestampsDone: oldTask.timestampsDone.filter(ts => ts.seconds !== timestampToUncheck.seconds || ts.nanoseconds !== timestampToUncheck.nanoseconds),
-            };
-        }
-    })
-    return result;
-}
+import * as actions from '../../store/actions';
 
 export default function() {
 
     const history = useHistory();
 
-    const [tasks, setTasks] = useState<TaskModelWithIdAndSubjectId[]|null>(null);
-    const [error, setError] = useState(false);
-
-    const [refreshing, setRefreshing] = useState(false);
-
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
+    const {
+        loading,
+        refreshing,
+        error,
+        data: tasks,
+    } = useSelector((state: RootState) => state.data.tasks);
+    const dispatch = useDispatch();
 
     // fetch all tasks
     useEffect(() => {
-        if ((subjects && !tasks && !error) || (subjects && refreshing)) {
-            Promise.all(
-                subjects.map(sub => fetchTasks(sub.id))
-            )
-                .then(tasksPerSubject => {
-                    setTasks(
-                        tasksPerSubject.map(
-                            (tasks, idx) => tasks.map(
-                                task => (
-                                    {...task, subjectId: subjects[idx].id}
-                                )
-                            )
-                        ).flat()
-                    );
-                    setRefreshing(false);
-                })
-                .catch(err => setError(true));
+        if (subjects && !tasks && !error) {
+            dispatch(actions.fetchTasks());
         }
-    }, [error, subjects, tasks, refreshing]);
+    }, [error, subjects, tasks, dispatch]);
 
     const checkTaskHandler = useCallback((subjectId: string, taskId: string, timestampSeconds: number): void => {
         // called when animation to remove task ended
-        const timestampToCheck = getTimestampFromSeconds(timestampSeconds);
-        saveTaskChecked(subjectId, taskId, timestampToCheck)
-            .then(() => {
-                setTasks(prev => !prev ? null : getUpdatedTasksAfterCheck(prev, subjectId, taskId, timestampToCheck));
-            })
-            .catch(error => setError(true));
-    }, []);
+        dispatch(actions.checkTask(subjectId, taskId, timestampSeconds));
+    }, [dispatch]);
 
     const uncheckTaskHandler = useCallback((subjectId: string, taskId: string, timestampSeconds: number) => {
         // called when animation to remove task ended
-        const timestampToUncheck = getTimestampFromSeconds(timestampSeconds);
-        saveTaskUnchecked(subjectId, taskId, timestampToUncheck)
-            .then(() => {
-                setTasks(prev => !prev ? null : getUpdatedTasksAfterUncheck(prev, subjectId, taskId, timestampToUncheck));
-            })
-            .catch(error => setError(true));
-    }, []);
+        dispatch(actions.uncheckTask(subjectId, taskId, timestampSeconds));
+    }, [dispatch]);
 
-    if (error) {
-        return <h2>An unexpected error has occurred. Try reloading the page.</h2>
-    } else if (!tasks || !subjects) {
+    const refreshHandler = useCallback(() => dispatch(actions.refreshTasks()), [dispatch]);
+
+    if (loading) {
         return <Loader />;
+    } else if (error || !tasks || !subjects) {
+        return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
     return (
@@ -109,7 +56,7 @@ export default function() {
             <SiteHeader 
                 type='todo' 
                 title='ToDo'
-                onRefresh={() => setRefreshing(true)}
+                onRefresh={refreshHandler}
                 refreshing={refreshing}
             />
 

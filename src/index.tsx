@@ -13,7 +13,8 @@ import './style/override.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import userReducer from './store/reducers/user';
-import { userWatcher } from './store/sagas';
+import dataReducer from './store/reducers/data';
+import { userWatcher, dataWatcher } from './store/sagas';
 
 declare global {
     interface Window {
@@ -25,6 +26,7 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
     user: userReducer,
+    data: dataReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
@@ -35,6 +37,7 @@ const store = createStore(rootReducer, composeEnhancer(
 ));
 
 sagaMiddleware.run(userWatcher);
+sagaMiddleware.run(dataWatcher);
 
 ReactDOM.render(
     <React.StrictMode>

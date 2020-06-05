@@ -116,6 +116,7 @@ export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): TaskSe
 export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
     
+    console.log(rawTasks)
     rawTasks.forEach(task => {
         out.push(
             getRelevantTimestamps(task.timestamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
