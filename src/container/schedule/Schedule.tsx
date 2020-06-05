@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
 import { toaster } from 'evergreen-ui';
+import * as actions from '../../store/actions';
 
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -16,13 +17,10 @@ import '@fullcalendar/list/main.css';
 import { toCss } from './../../util/util';
 
 import CSS from './Schedule.module.scss';
-import { fetchEvents, fetchExams } from './../../firebase/firestore';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../..';
-import { getAllConfigFromEvents, getAllConfigFromExams } from '../../util/scheduleUtil';
-import { findColorConfig } from './../../config/colorChoices';
 import Input from '../../components/ui/input/Input';
-import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig';
+import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig'
 const {
     wrapperCalendar: s_wrapperCalendar,
     viewToggle: s_viewToggle,
@@ -44,63 +42,35 @@ export default function() {
         calRef.current?.getApi().changeView(calendarView);
     }, [calendarView]);
 
-    const [eventsConfig, setEventsConfig] = useState<object[]|null>(null);
-    const [examsConfig, setExamsConfig] = useState<object[]|null>(null);
-    const [error, setError] = useState(false);
-
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
+    const {
+        loading: examsLoading,
+        error: examsError,
+        config: examsConfig,
+    } = useSelector((state: RootState) => state.data.exams);
+    const {
+        loading: eventsLoading,
+        error: eventsError,
+        config: eventsConfig,
+    } = useSelector((state: RootState) => state.data.events);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        if (subjects && !eventsConfig && !error) {
-            Promise.all(
-                subjects.map(sub => fetchEvents(sub.id))
-            )
-            .then(eventsPerSubject => {
-                let newEventsConfig: object[] = [];
-                eventsPerSubject.forEach((events, idx) => {
-                    newEventsConfig = [
-                        ...newEventsConfig,
-                        ...getAllConfigFromEvents(events).map(conf => ({
-                            ...conf,
-                            title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
-                            backgroundColor: findColorConfig(subjects[idx].color).value,
-                        })),
-                    ];
-                });
-                setEventsConfig(newEventsConfig);
-            })
-            .catch(error => {
-                setError(true);
-            })
+        if (subjects && !eventsConfig && !eventsError) {
+            dispatch(actions.fetchEvents());
         }
-    }, [error, eventsConfig, subjects]);
+    }, [dispatch, eventsConfig, eventsError, subjects]);
     useEffect(() => {
-        if (subjects && !examsConfig && !error) {
-            Promise.all(
-                subjects.map(sub => fetchExams(sub.id))
-            )
-            .then(examsPerSubject => {
-                let newExamsConfig: object[] = [];
-                examsPerSubject.forEach((exams, idx) => {
-                    newExamsConfig = [
-                        ...newExamsConfig,
-                        ...getAllConfigFromExams(exams).map(conf => ({
-                            ...conf,
-                            title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
-                            backgroundColor: findColorConfig(subjects[idx].color).value,
-                        })),
-                    ];
-                });
-                setExamsConfig(newExamsConfig);
-            })
-            .catch(error => setError(true));
+        if (subjects && !examsConfig && !examsError) {
+            dispatch(actions.fetchExams());
         }
-    }, [error, examsConfig, subjects]);
+    }, [dispatch, examsConfig, examsError, subjects]);
 
-    if (error) {
-        return <h2>An unexpected error has occurred. Try reloading the page.</h2>
-    } else if (!eventsConfig || !examsConfig) {
+    if (eventsLoading || examsLoading) {
         return <Loader />;
+    } else if (eventsError || examsError || !eventsConfig || !examsConfig) {
+        return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
     return (

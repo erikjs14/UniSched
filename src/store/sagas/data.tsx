@@ -1,7 +1,7 @@
 import { put, all, select } from 'redux-saga/effects';
 import * as actions from '../actions';
-import { SubjectModelWithId, TaskModelWithId, TaskModelWithIdAndSubjectId, Timestamp, ExamModelWithId } from '../../firebase/model';
-import { fetchTasks as fetchTasks_firestore, fetchExams as fetchExams_firestore, saveTaskUnchecked } from '../../firebase/firestore';
+import { SubjectModelWithId, TaskModelWithId, TaskModelWithIdAndSubjectId, Timestamp, ExamModelWithId, EventModelWithId } from '../../firebase/model';
+import { fetchTasks as fetchTasks_firestore, fetchExams as fetchExams_firestore, fetchEvents as fetchEvents_firestore, saveTaskUnchecked } from '../../firebase/firestore';
 import { CheckTaskAC, UncheckTaskAC } from './../actions/data.d';
 import { getTimestampFromSeconds } from '../../util/timeUtil';
 import { saveTaskChecked } from './../../firebase/firestore';
@@ -19,6 +19,23 @@ export function* fetchExams() {
             yield put(actions.fetchExamsSuccess(examsPerSubject, subjects));
         } catch (error) {
             yield put(actions.fetchExamsFail(error.message || 'Something went wrong'));
+        }
+    }
+}
+
+export function* fetchEvents() {
+    const subjects: SubjectModelWithId[] | null = yield select(state => state.user.shallowSubjects);
+
+    if (subjects === null) {
+        yield put(actions.fetchEventsFail('Subjects not set'));
+    } else {
+        try {
+            const eventsPerSubject: EventModelWithId[][] = yield all(
+                subjects.map(sub => fetchEvents_firestore(sub.id))
+            );
+            yield put(actions.fetchEventsSuccess(eventsPerSubject, subjects));
+        } catch (error) {
+            yield put(actions.fetchEventsFail(error.message || 'Something went wrong'));
         }
     }
 }

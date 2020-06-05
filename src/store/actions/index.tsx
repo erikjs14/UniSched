@@ -25,4 +25,7 @@ export {
     fetchExams,
     fetchExamsSuccess,
     fetchExamsFail,
+    fetchEvents,
+    fetchEventsSuccess,
+    fetchEventsFail,
 } from './data';
