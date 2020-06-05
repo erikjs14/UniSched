@@ -1,5 +1,5 @@
 import { useReducer, useCallback, useState, useMemo } from 'react';
-import { SubjectDataModel, ExamModel, TaskModel, EventModel, ModelWithId, ExamModelWithId, EventModelWithId, TaskModelWithId, SubjectDataModelWithId } from './../firebase/model';
+import { SubjectDataModel, ExamModel, TaskModel, EventModel, ExamModelWithId, EventModelWithId, TaskModelWithId, SubjectDataModelWithId } from './../firebase/model';
 import { fetchExams, fetchEvents, fetchTasks, fetchExam, fetchEvent, fetchTask, addExam, addTask, addEvent, updateExam, updateTask, updateEvent, deleteExam, deleteTask, deleteEvent } from './../firebase/firestore';
 import { removeKey } from './../util/util';
 
@@ -389,6 +389,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     firstEnd: event.firstEnd,
                     endAt: event.endAt,
                     interval: event.interval,
+                    timeCreated: event.timeCreated,
                 };
                 out[event.id] = data;
             });
@@ -399,6 +400,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                 const data: ExamModel = {
                     type: exam.type,
                     start: exam.start,
+                    timeCreated: exam.timeCreated,
                 };
                 out[exam.id] = data;
             });
@@ -410,6 +412,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     type: task.type,
                     timestamps: task.timestamps,
                     timestampsDone: task.timestampsDone,
+                    timeCreated: task.timeCreated,
                 };
                 out[task.id] = data;
             });
@@ -419,8 +422,8 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
     return out;
 }
 
-const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel): Array<ModelWithId> => {
-    const out: Array<ModelWithId> = [];
+const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel): Array<SubjectDataModelWithId> => {
+    const out: Array<SubjectDataModelWithId> = [];
 
     switch (dataTypeId) {
         case 'event':
@@ -433,6 +436,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                     firstEnd: datum.firstEnd,
                     endAt: datum.endAt,
                     interval: datum.interval,
+                    timeCreated: datum.timeCreated,
                 };
                 out.push(data);
             }
@@ -444,6 +448,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                     id,
                     type: datum.type,
                     start: datum.start,
+                    timeCreated: datum.timeCreated,
                 };
                 out.push(data);
             }
@@ -456,13 +461,19 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                     type: datum.type,
                     timestamps: datum.timestamps,
                     timestampsDone: datum.timestampsDone,
+                    timeCreated: datum.timeCreated,
                 };
                 out.push(data);
             }
             break;
     }
-
-    return out;
+    
+    return out.sort((d1, d2) => (
+        d1.timeCreated && !d2.timeCreated ? 1
+            : d2.timeCreated && !d1.timeCreated ? -1
+                : !d1.timeCreated || !d2.timeCreated ? 0
+                    : d2.timeCreated.seconds - d1.timeCreated.seconds
+    ));
 }
 
 const getNewIdfor = (count: number): string => {

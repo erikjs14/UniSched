@@ -4,11 +4,12 @@ export interface ModelWithId {
     id: string;
 }
 
-export interface BaseModel {}
+export interface BaseModel {
+    timeCreated: Timestamp | undefined;
+}
 export interface Timestamp {seconds: number, nanoseconds: number}
 
 export interface UserModel extends BaseModel {
-    timeCreated: Timestamp | undefined;
 }
 export interface UserModelWithId extends UserModel, ModelWithId {}
 
@@ -18,10 +19,7 @@ export interface SubjectModel extends BaseModel {
 }
 export interface SubjectModelWithId extends SubjectModel, ModelWithId {}
 
-export interface DeepSubjectModel {
-    id: string,
-    color: string,
-    name: string,
+export interface DeepSubjectModel extends SubjectModelWithId{
     tasks: TaskModelWithId[],
     exams: ExamModelWithId[],
     events: EventModelWithId[],

@@ -26,6 +26,7 @@ import { SubjectModel } from '../../../firebase/model';
 import { useDispatch } from 'react-redux';
 import { updateSubjectLocally } from '../../../store/actions/user';
 import { toaster } from 'evergreen-ui';
+import { getTimestampFromDate } from '../../../util/timeUtil';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -94,6 +95,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         id: data.id,
                         name: data.name,
                         color: data.color,
+                        timeCreated: data.timeCreated,
                     }, {
                         exams: data.exams,
                         events: data.events,
@@ -159,6 +161,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 const sub: SubjectModel = {
                     name: state.subject.name,
                     color: state.subject.color.newColor.name,
+                    timeCreated: getTimestampFromDate(new Date()),
                 };
                 addSubject(sub)
                     .then(id => {
@@ -190,6 +193,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                             id: state.subject.id,
                             name: state.subject.name,
                             color: state.subject.color.newColor.name,
+                            timeCreated: state.subject.timeCreated,
                         }));
                     }
                     dispatch(setSaved());

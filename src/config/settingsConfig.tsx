@@ -18,6 +18,7 @@ export const EVENTS_START_STATE: EventModel = {
     },
     interval: 'weekly',
     type: '',
+    timeCreated: undefined,
 };
 
 export const EXAM_START_STATE: ExamModel = {
@@ -26,17 +27,20 @@ export const EXAM_START_STATE: ExamModel = {
         seconds: Math.round(nowAtDefault.getTime() / 1000 + 60 * 60 * 24), 
         nanoseconds: 0
     },
+    timeCreated: undefined,
 }
 
 export const TASK_START_STATE: TaskModel = {
     type: '',
     timestamps: [],
     timestampsDone: [],
+    timeCreated: undefined,
 }
 export const getTaskStartState = (): TaskModel => ({
     type: '',
     timestamps: [getTimestampFromDate(new Date())],
     timestampsDone: [],
+    timeCreated: undefined,
 });
 
 export const TOASTER_SHOW_DURATION = 4;

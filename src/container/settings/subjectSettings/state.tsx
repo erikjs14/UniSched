@@ -1,4 +1,4 @@
-import { SubjectModelWithId, EventModelWithId, ExamModelWithId, TaskModelWithId } from './../../../firebase/model';
+import { SubjectModelWithId, EventModelWithId, ExamModelWithId, TaskModelWithId, Timestamp } from './../../../firebase/model';
 import { Color, findColorConfig, defaultColorConfig } from './../../../config/colorChoices';
 
 interface ColorConfig {
@@ -15,6 +15,7 @@ interface StateModel {
         id: string;
         name: string;
         color: ColorConfig;
+        timeCreated: Timestamp | undefined;
         changed: boolean;
     } | null;
     initialData: DataModel | null;
@@ -114,6 +115,7 @@ export const initialStateNew: StateModel = {
         },
         changed: false,
         id: '',
+        timeCreated: undefined,
     },
     initialData: {
         events: [],

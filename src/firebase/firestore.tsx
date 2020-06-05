@@ -9,10 +9,13 @@ const subjects_ref = () => user_ref().collection(fields.SUBJECTS_COL);
 const subjects_q_by_name = () => user_ref().collection(fields.SUBJECTS_COL).orderBy('name');
 const subject_ref = (subjectId: string) => subjects_ref().doc(subjectId);
 const exams_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.EXAMS_COL);
+const exams_q_by_timestamp = (subjectId: string) => exams_ref(subjectId).orderBy('timeCreated', 'desc');
 const exam_ref = (subjectId: string, examId: string) => exams_ref(subjectId).doc(examId);
 const events_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.EVENTS_COL);
+const events_q_by_timestamp = (subjectId: string) => events_ref(subjectId).orderBy('timeCreated', 'desc');
 const event_ref = (subjectId: string, eventId: string) => events_ref(subjectId).doc(eventId);
 const tasks_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.TASKS_COL);
+const tasks_q_by_timestamp = (subjectId: string) => tasks_ref(subjectId).orderBy('timeCreated', 'desc');
 const task_ref = (subjectId: string, taskId: string) => tasks_ref(subjectId).doc(taskId);
 
 type QSnap = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
@@ -66,6 +69,7 @@ export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[
         id: dataWithId.id,
         color: dataWithId.data?.color,
         name: dataWithId.data?.name,
+        timeCreated: dataWithId.data?.timeCreated,
     }));
 
     return subjects;
@@ -77,6 +81,7 @@ export const fetchSubject = async (subjectId: string): Promise<models.SubjectMod
         id: docWithId.id,
         color: docWithId.data?.color,
         name: docWithId.data?.name,
+        timeCreated: docWithId.data?.timeCreated,
     };
 }
 
@@ -98,13 +103,14 @@ export const fetchSubjectDeep = async (subjectId: string): Promise<models.DeepSu
 }
 
 export const fetchExams = async (subjectId: string): Promise<models.ExamModelWithId[]> => {
-    const data: DocDataWithId[] = await fetchCollection(exams_ref(subjectId));
+    const data: DocDataWithId[] = await fetchCollection(exams_q_by_timestamp(subjectId));
     const exams: models.ExamModelWithId[] = [];
 
     data.forEach(dataWithId => exams.push({
         id: dataWithId.id,
         start: dataWithId.data?.start,
         type: dataWithId.data?.type,
+        timeCreated: dataWithId.data?.timeCreated,
     }));
 
     return exams;
@@ -116,11 +122,12 @@ export const fetchExam = async (subjectId: string, examId: string): Promise<mode
         id: docWithId.id,
         start: docWithId.data?.start,
         type: docWithId.data?.type,
+        timeCreated: docWithId.data?.timeCreated,
     };
 }
 
 export const fetchEvents = async (subjectId: string): Promise<models.EventModelWithId[]> => {
-    const data: DocDataWithId[] = await fetchCollection(events_ref(subjectId));
+    const data: DocDataWithId[] = await fetchCollection(events_q_by_timestamp(subjectId));
     const events: models.EventModelWithId[] = [];
 
     data.forEach(dataWithId => events.push({
@@ -130,6 +137,7 @@ export const fetchEvents = async (subjectId: string): Promise<models.EventModelW
         endAt: dataWithId.data?.endAt,
         interval: dataWithId.data?.interval,
         type: dataWithId.data?.type,
+        timeCreated: dataWithId.data?.timeCreated,
     }));
 
     return events;
@@ -144,11 +152,12 @@ export const fetchEvent = async (subjectId: string, eventId: string): Promise<mo
         endAt: docWithId.data?.endAt,
         interval: docWithId.data?.interval,
         type: docWithId.data?.type,
+        timeCreated: docWithId.data?.timeCreated,
     };
 }
 
 export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWithId[]> => {
-    const data: DocDataWithId[] = await fetchCollection(tasks_ref(subjectId));
+    const data: DocDataWithId[] = await fetchCollection(tasks_q_by_timestamp(subjectId));
     const tasks: models.TaskModelWithId[] = [];
 
     data.forEach(dataWithId => tasks.push({
@@ -156,6 +165,7 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
         timestamps: dataWithId.data?.timestamps,
         timestampsDone: dataWithId.data?.timestampsDone,
         type: dataWithId.data?.type,
+        timeCreated: dataWithId.data?.timeCreated,
     }));
 
     return tasks;
@@ -168,6 +178,7 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
         timestamps: docWithId.data?.timestamps,
         timestampsDone: docWithId.data?.timestampsDone,
         type: docWithId.data?.type,
+        timeCreated: docWithId.data?.timeCreated,
     };
 }
 

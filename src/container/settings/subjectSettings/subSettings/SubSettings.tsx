@@ -7,6 +7,7 @@ import SettingsCards from '../../../../components/settings/SettingsCards';
 import { Dialog } from 'evergreen-ui';
 import { SubjectDataModelWithId, SubjectDataModel } from './../../../../firebase/model';
 import { removeKey } from '../../../../util/util';
+import { getTimestampFromDate } from '../../../../util/timeUtil';
 
 export default React.memo(
     forwardRef(
@@ -60,7 +61,10 @@ export default React.memo(
     );
 
     const addNewEventHandler = useCallback(() => {
-        addNewDatum(props.dataStartState);
+        addNewDatum({
+            ...props.dataStartState,
+            timeCreated: getTimestampFromDate(new Date()),
+        });
         props.onDataChanged();
     }, [addNewDatum, props]);
 
