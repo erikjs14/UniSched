@@ -23,3 +23,7 @@ export const SET_TASKS_LOCALLY = 'SET_TASKS_LOCALLY';
 export const CHECK_TASK = 'CHECK_TASK';
 export const UNCHECK_TASK = 'UNCHECK_TASK';
 export const DATA_SET_ERROR = 'DATA_SET_ERROR';
+
+export const FETCH_EXAMS = 'FETCH_EXAMS';
+export const FETCH_EXAMS_SUCCESS = 'FETCH_EXAMS_SUCCESS';
+export const FETCH_EXAMS_FAIL = 'FETCH_EXAMS_FAIL';

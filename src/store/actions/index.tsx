@@ -22,4 +22,7 @@ export {
     setTasksLocally,
     checkTask,
     uncheckTask,
+    fetchExams,
+    fetchExamsSuccess,
+    fetchExamsFail,
 } from './data';

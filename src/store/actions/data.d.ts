@@ -1,4 +1,6 @@
 import { DataState } from './../reducers/data.d';
+import { ExamModelWithId } from '../../firebase/model';
+import { SubjectModelWithId } from './../../firebase/model';
 
 export interface BaseActionCreator {type: string}
 
@@ -19,3 +21,7 @@ export interface UncheckTaskAC extends BaseActionCreator {
     taskId: string; 
     timestampSeconds: number;
 }
+
+export interface FetchExamsAC extends BaseActionCreator {}
+export interface FetchExamsSuccessAC extends BaseActionCreator {examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]}
+export interface FetchExamsFailAC extends BaseActionCreator {error: string}

@@ -1,16 +1,26 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { DataState } from './data.d';
-import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC } from '../actions/data.d';
-import { FetchTasksSuccessAC, RefreshTasksAC } from './../actions/data.d';
+import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC } from '../actions/data.d';
+import { ExamModelWithId } from '../../firebase/model';
+import { getAllConfigFromExams } from '../../util/scheduleUtil';
+import { findColorConfig } from '../../config/colorChoices';
+import { SubjectModelWithId } from './../../firebase/model';
 
 const initialState: DataState = {
     tasks: {
         data: null,
-        loading: false,
+        loading: true,
         refreshing: false,
         error: null,
     },
+    exams: {
+        dataPerSubject: null,
+        config: null,
+        loading: true,
+        refreshing: false,
+        error: null,
+    }
 };
 
 export default (state: DataState = initialState, action: BaseActionCreator) => {
@@ -21,6 +31,9 @@ export default (state: DataState = initialState, action: BaseActionCreator) => {
         case actionTypes.FETCH_TASKS_FAIL: return fetchTasksFail(state, action as FetchTasksFailAC);
         case actionTypes.SET_TASKS_LOCALLY: return setTasksLocally(state, action as SetTasksLocallyAC);
         case actionTypes.DATA_SET_ERROR: return dataSetError(state, action as DataSetErrorAC);
+        case actionTypes.FETCH_EXAMS: return fetchExams(state, action as FetchExamsAC);
+        case actionTypes.FETCH_EXAMS_SUCCESS: return fetchExamsSuccess(state, action as FetchExamsSuccessAC);
+        case actionTypes.FETCH_EXAMS_FAIL: return fetchExamsFail(state, action as FetchExamsFailAC);
         default: return state;
     }
 }
@@ -78,3 +91,52 @@ const dataSetError = (state: DataState, action: DataSetErrorAC): DataState => {
         })
     });
 };
+
+const fetchExams = (state: DataState, action: FetchExamsAC): DataState => {
+    return updateObject(state, {
+        exams: updateObject(state.exams, {
+            loading: true,
+        }),
+    });
+};
+
+const fetchExamsSuccess = (state: DataState, action: FetchExamsSuccessAC): DataState => {
+    return updateObject(state, {
+        exams: updateObject(state.exams, {
+            data: action.examsPerSubject,
+            config: mapExamsPerSubjectToConfig(action.examsPerSubject, action.subjects),
+            loading: false,
+            refreshing: false,
+            error: null,
+        }),
+    });
+};
+
+const fetchExamsFail = (state: DataState, action: FetchExamsFailAC): DataState => {
+    return updateObject(state, {
+        exams: updateObject(state.exams, {
+            data: null,
+            config: null,
+            loading: false,
+            refreshing: false,
+            error: action.error,
+        }),
+    });
+};
+
+
+const mapExamsPerSubjectToConfig = (examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]): object[] => {
+    let newExamsConfig: object[] = [];
+    examsPerSubject.forEach((exams, idx) => {
+        newExamsConfig = [
+            ...newExamsConfig,
+            ...getAllConfigFromExams(exams).map(conf => ({
+                ...conf,
+                title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
+                backgroundColor: findColorConfig(subjects[idx].color).value,
+                end: '', // unset end
+            })),
+        ];
+    });
+    return newExamsConfig;
+}

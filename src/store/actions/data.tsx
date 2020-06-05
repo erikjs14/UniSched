@@ -1,7 +1,8 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC } from './data.d';
-import { TaskModelWithIdAndSubjectId } from '../../firebase/model';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC } from './data.d';
+import { TaskModelWithIdAndSubjectId, ExamModelWithId } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
+import { SubjectModelWithId } from './../../firebase/model';
 
 export const fetchTasks = (): FetchTasksAC => {
     return {
@@ -59,5 +60,26 @@ export const setTasksLocally = (tasks: TaskModelWithIdAndSubjectId[]): SetTasksL
     return {
         type: actionTypes.SET_TASKS_LOCALLY,
         tasks,
+    };
+};
+
+export const fetchExams = (): FetchExamsAC => {
+    return {
+        type: actionTypes.FETCH_EXAMS,
+    };
+};
+
+export const fetchExamsSuccess = (examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]): FetchExamsSuccessAC => {
+    return {
+        type: actionTypes.FETCH_EXAMS_SUCCESS,
+        examsPerSubject,
+        subjects,
+    };
+};
+
+export const fetchExamsFail = (error: string): FetchExamsFailAC => {
+    return {
+        type: actionTypes.FETCH_EXAMS_FAIL,
+        error,
     };
 };
