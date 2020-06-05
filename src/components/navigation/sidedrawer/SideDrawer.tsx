@@ -21,7 +21,7 @@ const {
     logoutArea: s_logoutArea,
 } = CSS;
 
-export default function(props: SideDrawerProps): JSX.Element {
+export default React.memo(function(props: SideDrawerProps): JSX.Element {
 
     const dispatch = useDispatch();
 
@@ -63,4 +63,4 @@ export default function(props: SideDrawerProps): JSX.Element {
             </div>
         </div>
     )
-}
+});

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, Fragment, useCallback } from 'react';
+import React, { PropsWithChildren, Fragment, useMemo } from 'react';
 import cuteDog from '../../assets/img/cute_dog.jpg';
 import bird1 from '../../assets/img/bird1.jpeg';
 import bird2 from '../../assets/img/bird2.jpeg';
@@ -36,9 +36,9 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
     let [displayName, imgUrl] = useSelector((state: RootState) => [state.user.username, state.user.userImgUrl]);
     if (!displayName) displayName = 'User';
 
-    const getRandomUserIconUrl = useCallback((maxNr: number) => {
+    const randomUserIconUrl = useMemo(() => {
         const options = [cuteDog, bird1, bird2, bird3, bird4, bird5, bird6, bird7, bird8, bird9, bird10, bird11, bird12];
-        return options[(Math.floor(Math.random() * maxNr))];
+        return options[(Math.floor(Math.random() * 13))];
     }, []);
 
     return (
@@ -48,7 +48,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl(13)}
+                    imgUrl={imgUrl ? imgUrl : randomUserIconUrl}
                 />
             </nav>
 
@@ -57,8 +57,8 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)}
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : getRandomUserIconUrl(13)}
-                />  
+                    imgUrl={imgUrl ? imgUrl : randomUserIconUrl}
+                />
             </nav>
 
             <main className={toCss(s_main)}>

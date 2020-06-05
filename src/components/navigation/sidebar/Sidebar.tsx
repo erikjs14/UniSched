@@ -19,7 +19,7 @@ const {
     clock: s_clock,
 } = CSS;
 
-export default function(props: SidebarProps): JSX.Element {
+export default React.memo(function(props: SidebarProps): JSX.Element {
 
     const dispatch = useDispatch();
 
@@ -47,4 +47,4 @@ export default function(props: SidebarProps): JSX.Element {
             </div>
         </div>
     )
-}
+});
