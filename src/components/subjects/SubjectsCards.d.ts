@@ -1,6 +1,6 @@
 import { IconType } from '../../config/globalTypes';
 
-export interface SettingsCardsProps {
+export interface SubjectsCardsProps {
     title: string;
     onAddNew: Function;
     icon?: IconType;

@@ -1,0 +1,21 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1em;
+    
+    .name {
+
+        .info {
+            margin: 0 2rem;
+            height: .8em;
+        }
+    }
+
+    .input {
+        margin: 1rem 0;
+    }
+}

@@ -1,74 +1,41 @@
-import React from 'react';
-
-import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
-import { useHistory } from 'react-router-dom';
-import SimpleSettingsRow from '../../components/settings/SimpleSettingsRow/SimpleSettingsRow';
-import CSS from './Settings.module.scss';
-import { toCss } from './../../util/util';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ICON_SETTINGS_TYPE } from './../../config/globalTypes.d';
-import { useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../..';
-const {
-    container: s_container,
-    subjects: s_subjects,
-    wrapper: s_wrapper,
-    noElementsText: s_noElementsText,
-    addBtn: s_addBtn,
-} = CSS;
+import PreferenceRows from '../../components/settings/PreferenceRows';
+import * as actions from '../../store/actions';
+
+import { PREFERENCES_CONFIG, PreferenceId, PreferenceVal } from '../../config/userPreferences';
+import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
+import { ICON_SETTINGS_ALT } from './../../config/globalTypes.d';
+
 
 export default function(): JSX.Element {
 
-    const history = useHistory();
+    const preferences = useSelector((state: RootState) => state.user.preferences);
+    const error = useSelector((state: RootState) => state.user.preferenceError);
+    const dispatch = useDispatch();
 
-    const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
-
-    let content;
-    if (!subjects || subjects.length === 0) { 
-        
-        content = (
-            <div className={toCss(s_wrapper)}>
-                <span className={toCss(s_noElementsText)}>
-                    It looks as if you haven't saved any subjects yet. <br />
-                    Do it now!
-                </span>
-                <FloatingButton onClick={() => history.push('/settings/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
-            </div>
-        );
-
-    } else {
-        const elements = subjects.map(subject => (
-            <SimpleSettingsRow 
-                key={subject.id}
-                title={subject.name}
-                bgColor={subject.color}
-                linkTo={createLink(subject.id)}
-            />
-        ));
-        content = (
-            <div className={toCss(s_subjects)}>
-                {elements}
-                <div className={toCss(s_addBtn)}>
-                    <FloatingButton onClick={() => history.push('/settings/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
-                </div>
-            </div>
-        )
-    }
-
+    const preferenceChangedHandler = useCallback((id: PreferenceId, value: PreferenceVal) => {
+        dispatch(actions.setUserPreference(id, value));
+    }, [dispatch]);
+    
     return (
-        <div className={toCss(s_container)}>
+        <div>
             
-            <SiteHeader type={ICON_SETTINGS_TYPE} title='Settings' />
+            <SiteHeader
+                title='Settings'
+                type={ICON_SETTINGS_ALT}
+            />
 
-            {content}
+            {error || preferences === null ? <h3>Something went wrong. Try refreshing the page.</h3>
+                : (
+                    <PreferenceRows
+                        preferences={preferences}
+                        preferenceConfigs={PREFERENCES_CONFIG}
+                        onChange={preferenceChangedHandler}
+                    />
+                )}
 
         </div>
-    )
-
-}
-
-const createLink = (subjectId: string): string => {
-    return `/settings/${subjectId}`;
+    );
 }

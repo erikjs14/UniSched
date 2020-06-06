@@ -4,10 +4,10 @@ import * as actionTypes from '../actions/actionTypes';
 
 import firebase from 'firebase';
 import { fetchSubjectsShallow, updateUser, addUser } from '../../firebase/firestore';
-import { fetchUser } from './../../firebase/firestore';
+import { fetchUser, updatePreference } from './../../firebase/firestore';
 import { getTimestampFromSeconds, getTimestampFromDate } from '../../util/timeUtil';
 import { getSecondsFromDate } from './../../util/timeUtil';
-import { PostUserDataAC, AddUserAndDataAC } from '../actions/user.d';
+import { PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC } from '../actions/user.d';
 
 export function* signOut() {
     try {
@@ -32,7 +32,7 @@ export function* fetchUserData() {
         yield take(actionTypes.USER_SET_SIGNED_IN);
         const data = yield fetchUser();
         if (data.timeCreated) {
-            yield put(actions.setUserData(data.timeCreated));
+            yield put(actions.setUserData(data.timeCreated, data.preferences));
         } else {
             yield put(actions.postUserData(getTimestampFromSeconds(getSecondsFromDate(new Date()))));
         }        
@@ -51,7 +51,15 @@ export function* postUserData(action: PostUserDataAC) {
 export function* addUserAndData(action: AddUserAndDataAC) {
     try {
         const timeCreated = action.timeCreated;
-        yield addUser({timeCreated});
-        yield put(actions.setUserData(timeCreated));
+        yield addUser({timeCreated, preferences: {}});
+        yield put(actions.setUserData(timeCreated, {}));
     } catch (error) {}
+}
+
+export function* setUserPreference(action: SetUserPreferenceAC) {
+    try {
+        yield updatePreference(action.id, action.value);
+    } catch (error) {
+        yield put(actions.setUserPreferenceFail('Something went wrong'));
+    }
 }

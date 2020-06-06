@@ -1,4 +1,5 @@
 /******** Data model used in firestore db **********/
+import { PreferencesState } from './../config/userPreferences';
 
 export interface ModelWithId {
     id: string;
@@ -10,6 +11,7 @@ export interface BaseModel {
 export interface Timestamp {seconds: number, nanoseconds: number}
 
 export interface UserModel extends BaseModel {
+    preferences: PreferencesState | null;
 }
 export interface UserModelWithId extends UserModel, ModelWithId {}
 

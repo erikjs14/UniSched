@@ -12,6 +12,8 @@ export {
     fetchUserData,
     postUserData,
     addUserAndData,
+    setUserPreference,
+    setUserPreferenceFail,
 } from './user';
 export {
     fetchTasks,

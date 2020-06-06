@@ -3,7 +3,7 @@ import Loader from '../../../../components/ui/loader/Loader';
 
 import { SubSettingsProps } from './SubSettings.d';
 import useSubjectData from './../../../../hooks/useSubjectData';
-import SettingsCards from '../../../../components/settings/SettingsCards';
+import SettingsCards from '../../../../components/subjects/SubjectsCards';
 import { Dialog } from 'evergreen-ui';
 import { SubjectDataModelWithId, SubjectDataModel } from './../../../../firebase/model';
 import { removeKey } from '../../../../util/util';
@@ -86,7 +86,7 @@ export default React.memo(
         <Card
             key={dataItem.id}
             data={removeKey('id', dataItem) as M}
-            onChange={(key: keyof M, newVal) => valChangedHandler(dataItem.id, key, newVal)}
+            onChange={(key: keyof M, newVal: any) => valChangedHandler(dataItem.id, key, newVal)}
             onRemove={() => setWantDelete(dataItem.id)}
             new={dataItem.id.startsWith('NEW_')}
             markEmptyTitles={markTitlesWhenEmpty}

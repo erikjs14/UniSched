@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
-import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC } from '../actions/user.d';
+import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC } from '../actions/user.d';
 import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC, AddUserAndDataAC } from './../actions/user.d';
 
 const initialState: UserState = {
@@ -11,6 +11,8 @@ const initialState: UserState = {
     globalLoading: true,
     shallowSubjects: null,
     error: null,
+    preferences: null,
+    preferenceError: null,
 };
 
 export default (state: UserState = initialState, action: BaseActionCreator) => {
@@ -29,6 +31,8 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
         case actionTypes.FETCH_USER_DATA: return fetchUserData(state, action as FetchUserDataAC);
         case actionTypes.POST_USER_DATA: return postUserData(state, action as PostUserDataAC);
         case actionTypes.ADD_USER_AND_DATA: return addUserAndData(state, action as AddUserAndDataAC);
+        case actionTypes.SET_USER_PREFERENCE: return setUserPreference(state, action as SetUserPreferenceAC);
+        case actionTypes.SET_USER_PREFERENCE_FAIL: return setUserPreferenceFail(state, action as SetUserPreferenceFailAC);
         default: return state;
     }
 }
@@ -119,11 +123,26 @@ const postUserData = (state: UserState, action: PostUserDataAC): UserState => {
 const setUserData = (state: UserState, action: SetUserDataAC): UserState => {
     return updateObject(state, {
         timeCreated: action.timeCreated,
+        preferences: action.preferences,
     });
 };
 
 const addUserAndData = (state: UserState, action: AddUserAndDataAC): UserState => {
     return updateObject(state, {
         
+    });
+};
+
+const setUserPreference = (state: UserState, action: SetUserPreferenceAC): UserState => {
+    return updateObject(state, {
+        preferences: updateObject(state.preferences || {}, {
+            [action.id]: action.value,
+        }),
+    });
+};
+
+const setUserPreferenceFail = (state: UserState, action: SetUserPreferenceFailAC): UserState => {
+    return updateObject(state, {
+        preferenceError: action.error,
     });
 };

@@ -16,11 +16,11 @@ import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
 import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
-import ExamCard from '../../../components/settings/examCard/ExamCard';
+import ExamCard from '../../../components/subjects/examCard/ExamCard';
 import SubSettings from './subSettings/SubSettings';
 import { ICON_SCHEDULE_TYPE } from './../../../config/globalTypes.d';
-import EventCard from '../../../components/settings/eventCard/EventCard';
-import TaskCard from '../../../components/settings/taskCard/TaskCard';
+import EventCard from '../../../components/subjects/eventCard/EventCard';
+import TaskCard from '../../../components/subjects/taskCard/TaskCard';
 import { removeSubjectLocally, addSubjectLocally } from '../../../store/actions';
 import { SubjectModel } from '../../../firebase/model';
 import { useDispatch } from 'react-redux';
@@ -169,7 +169,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         examsRef.current?.save(id);
                         tasksRef.current?.save(id);
 
-                        history.replace(`/settings/${id}`);
+                        history.replace(`/subjects/${id}`);
                         dispatchToStore(addSubjectLocally({
                             ...sub,
                             id
@@ -247,7 +247,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 <FontAwesomeIcon 
                                     icon={faArrowLeft} 
                                     className={toCss(s_backArrow)}
-                                    onClick={() => history.push('/settings')}
+                                    onClick={() => history.push('/subjects')}
                                 />
 
                                 <div className={toCss(s_header)}>
@@ -369,13 +369,13 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         setDeleting(true);
 
                                         if (props.new) {
-                                            history.push('/settings');
+                                            history.push('/subjects');
                                         } else {
                                             deleteSubject(state.subject.id)
                                                 .then(() => {
                                                     close();
                                                     dispatchToStore(removeSubjectLocally(state.subject?.id || ''))
-                                                    history.push('/settings');
+                                                    history.push('/subjects');
                                                 })
                                                 .catch(error => {
                                                     dispatch(setError(error.message));

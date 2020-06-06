@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import CSS from './SubjectChecked.module.scss';
 import { SubjectCheckedProps } from './SubjectChecked.d';
-import SimpleSettingsRow from '../../../settings/SimpleSettingsRow/SimpleSettingsRow';
+import SimpleSettingsRow from '../../../subjects/SimpleSettingsRow/SimpleSettingsRow';
 import Collapsible from '../../../ui/collapsible/Collapsible';
 import UndueTask from './undueTask/UndueTask';
 import { taskContained, getSecondsFromDate } from '../../../../util/timeUtil';

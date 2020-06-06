@@ -2,10 +2,10 @@ import React, { PropsWithChildren } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import CSS from './SettingsCards.module.scss';
-import { SettingsCardsProps } from './SettingsCards.d';
-import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
-import { toCss } from './../../util/util';
+import CSS from './SubjectsCards.module.scss';
+import { SubjectsCardsProps } from './SubjectsCards.d';
+import FloatingButton from '../ui/floatingButton/FloatingButton';
+import { toCss } from '../../util/util';
 import { mapToIcon } from '../../config/iconConfig';
 const {
     wrapper: s_wrapper,
@@ -15,7 +15,7 @@ const {
     icon: s_icon,
 } = CSS;
 
-export default function(props: PropsWithChildren<SettingsCardsProps>): JSX.Element {
+export default function(props: PropsWithChildren<SubjectsCardsProps>): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper)}>

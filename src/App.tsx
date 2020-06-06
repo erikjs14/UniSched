@@ -10,12 +10,13 @@ import LandingPage from './container/landingPage/LandingPage';
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
 import ToDos from './container/todos/ToDos';
 import Schedule from './container/schedule/Schedule';
-import Settings from './container/settings/Settings';
+import Subjects from './container/subjects/Subjects';
 import Exams from './container/exams/Exams';
 import Auth from './container/auth/Auth';
+import Settings from './container/settings/Settings';
 import * as actions from './store/actions';
 import { RootState } from '.';
-import SubjectSettings from "./container/settings/subjectSettings/SubjectSettings";
+import SubjectSettings from "./container/subjects/subjectSettings/SubjectSettings";
 import Layout from './hoc/layout/Layout';
 
 
@@ -50,9 +51,10 @@ function App() {
             <ProtectedRoute exact path='/todo' render={() => <Layout><ToDos/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/schedule' render={() => <Layout><Schedule/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/exams' render={() => <Layout><Exams/></Layout>} orElse='/auth' />
+            <ProtectedRoute exact path='/subjects' render={() => <Layout><Subjects/></Layout>} orElse='/auth' />
+            <ProtectedRoute exact path='/subjects/new' render={() => <Layout><SubjectSettings new /></Layout>} orElse='/auth' />
+            <ProtectedRoute path='/subjects/:id' render={(props) => <Layout><SubjectSettings subjectId={props.match.params.id}/></Layout>} orElse='/auth' />
             <ProtectedRoute exact path='/settings' render={() => <Layout><Settings/></Layout>} orElse='/auth' />
-            <ProtectedRoute exact path='/settings/new' render={() => <Layout><SubjectSettings new /></Layout>} orElse='/auth' />
-            <ProtectedRoute path='/settings/:id' render={(props) => <Layout><SubjectSettings subjectId={props.match.params.id}/></Layout>} orElse='/auth' />
 
             <Redirect to='/' />
         </Switch>

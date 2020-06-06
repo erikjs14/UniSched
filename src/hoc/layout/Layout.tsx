@@ -23,6 +23,7 @@ import { RootState } from '../../index';
 import CSS from './Layout.module.scss';
 import { toCss } from './../../util/util';
 import SideDrawer from '../../components/navigation/sidedrawer/SideDrawer';
+import { PREF_ID_ACTIVATE_RANDOM_AVATAR } from '../../config/userPreferences';
 const {
     navDesktop: s_navDesktop,
     navMobile: s_navMobile,
@@ -32,6 +33,7 @@ const {
 export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     const dispatch = useDispatch();
+    const useRandomAvatar = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ACTIVATE_RANDOM_AVATAR]);
 
     let [displayName, imgUrl] = useSelector((state: RootState) => [state.user.username, state.user.userImgUrl]);
     if (!displayName) displayName = 'User';
@@ -48,7 +50,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : randomUserIconUrl}
+                    imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
                 />
             </nav>
 
@@ -57,7 +59,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)}
                     displayName={displayName}
-                    imgUrl={imgUrl ? imgUrl : randomUserIconUrl}
+                    imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
                 />
             </nav>
 

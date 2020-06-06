@@ -1,4 +1,6 @@
 import { SubjectModelWithId, Timestamp } from './../../firebase/model';
+import { PreferenceId } from '../../config/userPreferences';
+import { PreferencesState } from './../../config/userPreferences';
 
 export interface BaseActionCreator {type: string}
 
@@ -7,7 +9,7 @@ export interface SetSignedOutAC extends BaseActionCreator {}
 export interface StartSignOutAC extends BaseActionCreator {}
 export interface SignOutFailAC extends BaseActionCreator {error: string}
 export interface FetchUserDataAC extends BaseActionCreator {}
-export interface SetUserDataAC extends BaseActionCreator {timeCreated: Timestamp}
+export interface SetUserDataAC extends BaseActionCreator {timeCreated: Timestamp, preferences: PreferencesState}
 export interface PostUserDataAC extends BaseActionCreator {timeCreated: Timestamp};
 export interface AddUserAndDataAC extends BaseActionCreator {timeCreated: Timestamp};
 
@@ -18,3 +20,6 @@ export interface FetchShallowSubjectsFailAC extends BaseActionCreator {error: st
 export interface RemoveSubjectLocallyAC extends BaseActionCreator {id: string}
 export interface AddSubjectLocallyAC extends BaseActionCreator {subject: SubjectModelWithId}
 export interface UpdateSubjectLocallyAC extends BaseActionCreator {subject: SubjectModelWithId}
+
+export interface SetUserPreferenceAC extends BaseActionCreator {id: PreferenceId; value: any}
+export interface SetUserPreferenceFailAC extends BaseActionCreator {error: string}

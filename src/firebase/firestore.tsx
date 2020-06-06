@@ -2,6 +2,7 @@ import firebase from 'firebase/app';
 import { db } from './firebase';
 import * as models from './model';
 import * as fields from './fields';
+import { PreferenceId } from '../config/userPreferences';
 
 const users_ref = db.collection(fields.USER_COL);
 const user_ref = () => users_ref.doc(firebase.auth().currentUser?.uid);
@@ -17,6 +18,7 @@ const event_ref = (subjectId: string, eventId: string) => events_ref(subjectId).
 const tasks_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.TASKS_COL);
 const tasks_q_by_timestamp = (subjectId: string) => tasks_ref(subjectId).orderBy('timeCreated', 'desc');
 const task_ref = (subjectId: string, taskId: string) => tasks_ref(subjectId).doc(taskId);
+
 
 type QSnap = firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>;
 type DocSnap = firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>;
@@ -58,6 +60,7 @@ export const fetchUser = async (): Promise<models.UserModelWithId> => {
     return {
         id: docWithId.id,
         timeCreated: docWithId.data?.timeCreated,
+        preferences: docWithId.data?.preferences,
     };
 }
 
@@ -217,6 +220,13 @@ const updateDoc = async <T extends models.BaseModel, D extends keyof T>(docRef: 
 
 export const updateSubject = async <D extends keyof models.SubjectModel>(subjectId: string, subject: Pick<models.SubjectModel, D>): Promise<void> => {
     await updateDoc(subject_ref(subjectId), subject);
+}
+
+export const updatePreference = async (id: PreferenceId, value: any): Promise<void> => {
+    const fullId = `preferences.${id}`;
+    await user_ref().update({
+        [fullId]: value,
+    })
 }
 
 export const updateUser = async <D extends keyof models.UserModel>(data: Pick<models.UserModel, D>): Promise<void> => {

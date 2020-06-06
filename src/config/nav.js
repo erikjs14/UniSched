@@ -12,7 +12,11 @@ export default [
         link: '/exams',
     },
     {
-        label: 'Settings',
-        link: '/settings',
+        label: 'Subjects',
+        link: '/subjects',
     },
+    {
+        label: 'Settings',
+        link: '/settings'
+    }
 ];

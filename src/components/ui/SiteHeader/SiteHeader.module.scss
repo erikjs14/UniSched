@@ -17,6 +17,10 @@
 
     .title {
         font-size: 4em;
+
+        @include respond(small-phone) {
+            font-size: 2.5em;
+        }
     }
 
     .refresh {

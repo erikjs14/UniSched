@@ -1,6 +1,8 @@
 import * as actionTypes from './actionTypes';
-import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC } from './user.d';
+import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC } from './user.d';
 import { SubjectModelWithId, Timestamp } from '../../firebase/model';
+import { PreferenceId } from '../../config/userPreferences';
+import { PreferencesState } from './../../config/userPreferences';
 
 export const setSignedIn = (user: firebase.User): SetSignedInAC => {
     return {
@@ -75,10 +77,11 @@ export const fetchUserData = (): FetchUserDataAC => {
     };
 };
 
-export const setUserData = (timeCreated: Timestamp): SetUserDataAC => {
+export const setUserData = (timeCreated: Timestamp, preferences: PreferencesState): SetUserDataAC => {
     return {
         type: actionTypes.SET_USER_DATA,
         timeCreated,
+        preferences,
     };
 };
 
@@ -93,5 +96,20 @@ export const addUserAndData = (timeCreated: Timestamp): AddUserAndDataAC => {
     return {
         type: actionTypes.ADD_USER_AND_DATA,
         timeCreated,
+    };
+};
+
+export const setUserPreference = (id: PreferenceId, value: any): SetUserPreferenceAC => {
+    return {
+        type: actionTypes.SET_USER_PREFERENCE,
+        id,
+        value,
+    };
+};
+
+export const setUserPreferenceFail = (error: string): SetUserPreferenceFailAC => {
+    return {
+        type: actionTypes.SET_USER_PREFERENCE_FAIL,
+        error,
     };
 };

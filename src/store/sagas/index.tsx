@@ -10,7 +10,8 @@ export function* userWatcher() {
         takeEvery(actionTypes.FETCH_SHALLOW_SUBJECTS, userSagas.fetchShallowSubjects),
         takeEvery(actionTypes.FETCH_USER_DATA, userSagas.fetchUserData),
         takeEvery(actionTypes.POST_USER_DATA, userSagas.postUserData),
-        takeEvery(actionTypes.ADD_USER_AND_DATA, userSagas.addUserAndData)
+        takeEvery(actionTypes.ADD_USER_AND_DATA, userSagas.addUserAndData),
+        takeEvery(actionTypes.SET_USER_PREFERENCE, userSagas.setUserPreference),
     ]);
 }
 
