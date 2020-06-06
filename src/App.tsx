@@ -13,8 +13,9 @@ import * as actions from './store/actions';
 import { RootState } from '.';
 import SubjectSettings from "./container/subjects/subjectSettings/SubjectSettings";
 import Layout from './hoc/layout/Layout';
+import AnimatedSwitch from './hoc/AnimatedRoutes/AnimatedSwitch';
 
-const ToDos     = React.lazy(() => import('./container/schedule/Schedule'));
+const ToDos     = React.lazy(() => import('./container/todos/ToDos'));
 const Schedule  = React.lazy(() => import('./container/schedule/Schedule'));
 const Subjects  = React.lazy(() => import('./container/subjects/Subjects'));
 const Exams     = React.lazy(() => import('./container/exams/Exams'));
@@ -58,7 +59,7 @@ function App() {
                 <Route path='/' render={() => (
                     <Layout>
                         <Suspense fallback={<Loader />}>
-                            <Switch>
+                            <AnimatedSwitch>
                                 <ProtectedRoute exact path='/todo'       component={ToDos}       orElse='/auth' />
                                 <ProtectedRoute exact path='/schedule'   component={Schedule}    orElse='/auth' />
                                 <ProtectedRoute exact path='/exams'      component={Exams}       orElse='/auth' />
@@ -68,7 +69,7 @@ function App() {
                                 <ProtectedRoute exact path='/settings'   component={Settings}    orElse='/auth' />
 
                                 <Redirect to='/' />
-                            </Switch>
+                            </AnimatedSwitch>
                         </Suspense>
                     </Layout>
                 )} />
