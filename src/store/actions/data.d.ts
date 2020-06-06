@@ -31,3 +31,5 @@ export interface FetchEventsAC extends BaseActionCreator {}
 export interface RefreshEventsAC extends BaseActionCreator {}
 export interface FetchEventsSuccessAC extends BaseActionCreator {eventsPerSubject: EventModelWithId[][], subjects: SubjectModelWithId[]}
 export interface FetchEventsFailAC extends BaseActionCreator {error: string}
+
+export interface ForceRefreshAC extends BaseActionCreator {dataTypeId: DataTypeId}

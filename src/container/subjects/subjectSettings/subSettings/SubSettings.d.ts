@@ -9,6 +9,7 @@ export interface SubSettingsProps<T extends SubjectDataModel, TId extends Subjec
     iconType: IconType;
     areaTitle: string;
     cardComponent: (props: SubjectDataCardProps<SubjectDataModel>) => JSX.Element;
+    // onSavedAfterChanges: Function;
 }
 
 export interface SubjectDataSettingsProps<TId extends SubjectDataModelWithId> {

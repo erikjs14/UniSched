@@ -21,7 +21,7 @@ import SubSettings from './subSettings/SubSettings';
 import { ICON_SCHEDULE_TYPE } from './../../../config/globalTypes.d';
 import EventCard from '../../../components/subjects/eventCard/EventCard';
 import TaskCard from '../../../components/subjects/taskCard/TaskCard';
-import { removeSubjectLocally, addSubjectLocally } from '../../../store/actions';
+import { removeSubjectLocally, addSubjectLocally, forceRefresh } from '../../../store/actions';
 import { SubjectModel } from '../../../firebase/model';
 import { useDispatch } from 'react-redux';
 import { updateSubjectLocally } from '../../../store/actions/user';
@@ -149,10 +149,22 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
         examsRef.current?.markEmptyTitles(false);
         tasksRef.current?.markEmptyTitles(false);
 
+        const saveSubData = (id: string | undefined) => {
+            if(eventsDataChanged){
+                eventsRef.current?.save(id);
+                dispatchToStore(forceRefresh('event'));
+            } 
+            if(examsDataChanged) {
+                examsRef.current?.save(id);
+                dispatchToStore(forceRefresh('exam'));
+            } 
+            if(tasksDataChanged) {
+                tasksRef.current?.save(id);
+                dispatchToStore(forceRefresh('task'));
+            }
+        }
         if (!props.new) {
-            eventsRef.current?.save(undefined);
-            examsRef.current?.save(undefined);
-            tasksRef.current?.save(undefined);
+            saveSubData(undefined);
         }
 
         if (state.subject?.changed) {
@@ -165,10 +177,8 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 };
                 addSubject(sub)
                     .then(id => {
-                        eventsRef.current?.save(id);
-                        examsRef.current?.save(id);
-                        tasksRef.current?.save(id);
-
+                        saveSubData(id);
+                        
                         history.replace(`/subjects/${id}`);
                         dispatchToStore(addSubjectLocally({
                             ...sub,
@@ -202,7 +212,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 })
             }
         }
-    }, [dispatch, dispatchToStore, history, props.new, state.subject]);
+    }, [dispatch, dispatchToStore, eventsDataChanged, examsDataChanged, history, props.new, state.subject, tasksDataChanged]);
 
     if (state.loading) {
         return <Loader />;

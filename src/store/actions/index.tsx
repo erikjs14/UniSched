@@ -32,4 +32,5 @@ export {
     refreshEvents,
     fetchEventsSuccess,
     fetchEventsFail,
+    forceRefresh,
 } from './data';

@@ -1,8 +1,9 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC } from './data.d';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC } from './data.d';
 import { TaskModelWithIdAndSubjectId, ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
 import { SubjectModelWithId } from './../../firebase/model';
+import { DataTypeId } from '../../hooks/useSubjectData';
 
 export const fetchTasks = (): FetchTasksAC => {
     return {
@@ -114,5 +115,12 @@ export const fetchEventsFail = (error: string): FetchEventsFailAC => {
     return {
         type: actionTypes.FETCH_EVENTS_FAIL,
         error,
+    };
+};
+
+export const forceRefresh = (dataTypeId: DataTypeId): ForceRefreshAC => {
+    return {
+        type: actionTypes.FORCE_REFRESH,
+        dataTypeId,
     };
 };

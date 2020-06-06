@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { DataState } from './data.d';
-import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC } from '../actions/data.d';
+import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC } from '../actions/data.d';
 import { ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { getAllConfigFromExams, getAllConfigFromEvents } from '../../util/scheduleUtil';
 import { findColorConfig } from '../../config/colorChoices';
@@ -49,6 +49,7 @@ export default (state: DataState = initialState, action: BaseActionCreator) => {
         case actionTypes.REFRESH_EVENTS: return refreshEvents(state, action as RefreshEventsAC);
         case actionTypes.FETCH_EVENTS_SUCCESS: return fetchEventsSuccess(state, action as FetchEventsSuccessAC);
         case actionTypes.FETCH_EVENTS_FAIL: return fetchEventsFail(state, action as FetchEventsFailAC);
+        case actionTypes.FORCE_REFRESH: return forceRefresh(state, action as ForceRefreshAC);
         default: return state;
     }
 }
@@ -186,6 +187,15 @@ const fetchEventsFail = (state: DataState, action: FetchEventsFailAC): DataState
             loading: false,
             refreshing: false,
             error: action.error,
+        }),
+    });
+};
+
+const forceRefresh = (state: DataState, action: ForceRefreshAC): DataState => {
+    const dataField: keyof DataState = action.dataTypeId+'s' as keyof DataState;
+    return updateObject(state, {
+        [dataField]: updateObject(state[dataField], {
+            timestamp: 0,
         }),
     });
 };
