@@ -1,0 +1,67 @@
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    position: relative;
+    padding: 5rem;
+    padding-bottom: 22vw;
+    @include respond(tab-land) {padding: 3rem 2rem inherit;}
+    @include respond(phone) {padding-bottom: 66vw;}
+    @include respond(small-phone) {padding-bottom: 75vw;}
+    color: white;
+    background: rgb(34,40,49);
+    background: linear-gradient(140deg, rgba(34,40,49,1) 0%, rgba(48,71,94,1) 28%, rgba(133,163,193,1) 100%);
+    .wave {
+        z-index: 10;
+        position: absolute;
+        bottom: 0;
+        margin: 0 -2.5rem;
+    }
+
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    @include respond(phone) {align-content: flex-start;}
+    .showcase {
+        flex-grow: 1;
+        flex-basis: 50%;
+        // flex: 1 0 50%;
+        max-width: 50%;
+        @include respond(phone) {max-width: unset;}
+    }
+
+    .ctaArea {
+        flex-grow: 1;
+        flex-basis: 50%;
+        // flex: 1 0 50%;
+        @include respond(phone) {order: -1; min-width: 100vw; margin-bottom: 4rem;}
+        text-align: center;
+        // height: 60%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+
+        h1 {
+            font-size: 8rem;
+            @include respond(tab-port) {font-size: 6rem;}
+            @include respond(small-phone) {font-size: 4.5rem;}
+            text-transform: uppercase;
+            transform: rotate(-3deg);
+        }
+
+        .nameBrand {
+            align-self: flex-end;
+            display: flex;
+            align-items: flex-end;
+            padding-right: 20%;
+            margin-bottom: 10%;
+
+            .by {
+                padding: 0 2rem .5rem 0;
+                font-size: 1.3em;
+                font-style: italic;
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+@import '../../../style/abstract/variables';
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 0 3rem;
+    
+    a.btn {
+
+        &:link,
+        &:visited {
+            text-decoration: none;
+            color: inherit;
+            outline: none;
+            font-size: 3rem;
+            text-transform: capitalize;
+            letter-spacing: 2px;
+            padding: 0 1em;
+            line-height: 1.8em;
+            border-radius: 2rem;
+            box-shadow: 0 3px 8px rgba(#000, .3);
+            background-color: $col-secondary-dark;
+            transform: scale(1) rotate(0);
+
+            transition: all .2s;
+        }
+
+        &:active {
+            transform: scale(.975) rotate(0) translateY(1px);
+            box-shadow: 0 2px 5px rgba(#000, .3);
+        }
+
+        &:hover:not(:active) {
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 0 5px 10px rgba(#000, .4);
+        }
+    }
+
+    p {
+        margin-left: 2rem;
+        font-size: 2em;
+        font-weight: bold;
+    }
+}

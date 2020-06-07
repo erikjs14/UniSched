@@ -1,0 +1,49 @@
+$text-col: #000;
+$text-col-white: #fff;
+$bg-col: #333;
+
+.wrapper {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: .25em .5em;
+    color: $text-col;
+    text-transform: lowercase;
+    text-align: left;
+
+    .first {
+
+    }
+
+    .last {
+        position: relative;
+        padding-left: .8em;
+
+        &::before {
+            content: '';
+            display: block;
+            background-color: rgba($text-col, .75);
+            position: absolute;
+            left: .2em;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.5px;
+            height: 1em;
+        }
+    }
+
+    &.whiteText {
+        color: $text-col-white;
+        .last::before {
+            background-color: rgba($text-col-white, .75);
+        }
+    }
+
+    &.withBg {
+        background-color: $bg-col;
+        border-radius: 2px;
+        color: $text-col-white;
+        .last::before {
+            background-color: rgba($text-col-white, .75);
+        }
+    }
+}

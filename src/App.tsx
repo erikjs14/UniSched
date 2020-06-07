@@ -7,7 +7,7 @@ import firebase from 'firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from './components/ui/loader/Loader';
 
-import LandingPage from './container/landingPage/LandingPage';
+import LandingPage from './landingPage/landingPage';
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
 import * as actions from './store/actions';
 import { RootState } from '.';
