@@ -10,7 +10,7 @@
     color: white;
     background: rgb(34,40,49);
     background: linear-gradient(140deg, rgba(34,40,49,1) 0%, rgba(48,71,94,1) 28%, rgba(133,163,193,1) 100%);
-    .wave {
+    .waveTop {
         z-index: 10;
         position: absolute;
         bottom: 0;
@@ -64,4 +64,22 @@
             }
         }
     }
+}
+
+.slogan {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: -.8em;
+    position: relative;
+    z-index: 1000;
+    @include respond(phone) {
+        font-size: 1.5em;
+        margin-bottom: unset;
+    }
+}
+
+.waveBottom {
+    transform: rotate(180deg);
+    position: relative;
+    z-index: 100;
 }
