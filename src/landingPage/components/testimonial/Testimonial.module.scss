@@ -1,0 +1,35 @@
+@import '../../../style/abstract/variables';
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    position: relative;
+    width: 85rem;
+    max-width: 90vw;
+    background-color: $col-primary-light;
+    color: $col-primary-light-text;
+    border-radius: 5px;
+    margin: 5rem auto;
+    padding: 4rem 8rem;
+    font-size: 1.1em;
+
+    .quote {
+        position: absolute;
+        top: 2rem;
+        left: 1.5rem;
+        font-size: 5rem;
+        color: rgba($col-primary-light-text, .8);
+    }
+
+    .body {
+
+    }
+
+    .from {
+        margin-left: 2rem;
+        margin-top: 2rem;
+
+        &::before {
+            content: '- ';
+        }
+    }
+}

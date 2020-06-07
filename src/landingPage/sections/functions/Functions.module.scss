@@ -3,11 +3,12 @@
 
 .wrapper {
     margin: -13vw auto 0;
-    padding: calc(13vw + 5rem) 3rem 10rem;
+    padding: calc(13vw + 5rem) 3rem 25rem;
     position: relative;
     background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
         url(../../assets/img/desk_from_above.jpg);
     background-size: cover;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 10rem));
 
     .cards {
         max-width: 100rem;
