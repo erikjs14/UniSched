@@ -11,6 +11,11 @@ import CSS from './Exams.module.scss';
 import { toCss } from '../../util/util';
 import { CALENDAR_DEFAULT_TIME_FORMAT } from '../../config/timeConfig';
 import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
+
+//calendar styles
+import '@fullcalendar/core/main.css';
+import '@fullcalendar/list/main.css';
+
 const {
     wrapperCalendar: s_wrapperCalendar,
 } = CSS;
