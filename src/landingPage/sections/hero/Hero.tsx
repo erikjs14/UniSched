@@ -1,9 +1,5 @@
 import React, { Fragment } from 'react';
 
-import laptopUrl from '../../assets/img/subjects_macbook.png';
-import tabletUrl from '../../assets/img/subjects_ipad_port.png';
-import phoneUrl from '../../assets/img/subjects_iphone.png';
-
 import CSS from './Hero.module.scss';
 import { HeroProps } from './Hero.d';
 import { toCss } from '../../../util/util';
@@ -13,6 +9,7 @@ import NameBrand from '../../components/nameBrand/NameBrand';
 import CtaButton from '../../components/ctaButton/CtaButton';
 import DeviceComposition from '../../components/deviceComposition/DeviceComposition';
 import { Link } from 'react-router-dom';
+import { laptopPngSet, laptopSizes, laptopWebpSet, laptopFallback, phonePngSet, phoneSizes, phoneWebpSet, phoneFallback, tabletPngSet, tabletSizes, tabletWebpSet, tabletFallback } from './Img';
 const {
     wrapper: s_wrapper,
     waveTop: s_waveTop,
@@ -26,6 +23,8 @@ const {
     login: s_login,
 } = CSS;
 
+
+
 export default function(props: HeroProps): JSX.Element {
     
     return (
@@ -35,11 +34,14 @@ export default function(props: HeroProps): JSX.Element {
                 <div className={toCss(s_showcase)} >
 
                     <DeviceComposition
-                        laptopUrl={laptopUrl}
+                        laptopPngSet={laptopPngSet} laptopWebpSet={laptopWebpSet} laptopFallback={laptopFallback}
+                        laptopSizes={laptopSizes}
                         laptopAlt='Screenshot taken from the subject view in the todo webapp for university education on a laptop.'
-                        tabletUrl={tabletUrl}
+                        tabletPngSet={tabletPngSet} tabletWebpSet={tabletWebpSet} tabletFallback={tabletFallback}
+                        tabletSizes={tabletSizes}
                         tabletAlt='Screenshot taken from the subject view in the todo webapp for university education on a tablet.'
-                        phoneUrl={phoneUrl}
+                        phonePngSet={phonePngSet} phoneWebpSet={phoneWebpSet} phoneFallback={phoneFallback}
+                        phoneSizes={phoneSizes}
                         phoneAlt='Screenshot taken from the subject view in the todo webapp for university education on a phone.'
                     />
 

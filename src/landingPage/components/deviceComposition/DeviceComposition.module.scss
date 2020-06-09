@@ -8,6 +8,13 @@
 
     .device {
         position: absolute;
+        display: flex;
+
+        img {
+            object-fit: cover;
+            height: auto;
+            width: 100%;
+        }
       
         &.laptop {
             left: 0;

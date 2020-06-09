@@ -1,8 +1,22 @@
+interface UrlSet {
+    
+}
 export interface DeviceCompositionProps {
-    laptopUrl: string;
+    laptopPngSet: string;
+    laptopWebpSet: string;
+    laptopFallback: string;
+    laptopSizes: string;
     laptopAlt: string;
-    tabletUrl: string;
+
+    tabletPngSet: string;
+    tabletWebpSet: string;
+    tabletFallback: string;
+    tabletSizes: string;
     tabletAlt: string;
-    phoneUrl: string;
+
+    phonePngSet: string;
+    phoneWebpSet: string;
+    phoneFallback: string;
+    phoneSizes: string;
     phoneAlt: string;
 }

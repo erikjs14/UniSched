@@ -25,7 +25,8 @@ import tabPortSubjectSettingsBlue from '../../assets/img/gallery/tab-port-subjec
 import tabPortTodo from '../../assets/img/gallery/tab-port-todo.png';
 
 import CSS from './Showcase.module.scss';
-import orderVideoUrl from '../../assets/video/order.mp4';
+import orderVideoMp4Url from '../../assets/video/order.mp4';
+import orderVideoWebmUrl from '../../assets/video/order.webm';
 import { ShowcaseProps } from './Showcase.d';
 import { toCss } from '../../../util/util';
 import Case from '../../components/case/Case';
@@ -87,7 +88,8 @@ export default function(props: ShowcaseProps): JSX.Element {
             >
                 <div className={toCss(s_orderVideo)} >
                     <video autoPlay muted loop>
-                        <source src={orderVideoUrl} type='video/mp4' />
+                        <source src={orderVideoMp4Url} type='video/mp4' />
+                        <source src={orderVideoWebmUrl} type='video/webm' />
                     </video>
                 </div>
             </Case>

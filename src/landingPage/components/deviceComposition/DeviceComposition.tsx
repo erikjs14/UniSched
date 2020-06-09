@@ -16,23 +16,56 @@ export default function(props: DeviceCompositionProps): JSX.Element {
     return (
         <div className={toCss(s_wrapper)} >
             
-            <img
-                src={props.laptopUrl}
-                alt={props.laptopAlt}
-                className={toCss(s_device, s_laptop)} 
-            />
+            <picture className={toCss(s_device, s_laptop)}>
+                <source
+                    srcSet={props.laptopWebpSet}
+                    sizes={props.laptopSizes}
+                    type='image/webp'
+                />
+                <source
+                    srcSet={props.laptopPngSet}
+                    sizes={props.laptopSizes}
+                    type='image/png'
+                />
+                <img
+                    src={props.laptopFallback}
+                    alt={props.laptopAlt}
+                />
+            </picture>
+        
+            <picture className={toCss(s_device, s_tablet)}>
+                <source
+                    srcSet={props.tabletWebpSet}
+                    sizes={props.tabletSizes}
+                    type='image/webp'
+                />
+                <source
+                    srcSet={props.tabletPngSet}
+                    sizes={props.tabletSizes}
+                    type='image/png'
+                />
+                <img
+                    src={props.tabletFallback}
+                    alt={props.tabletAlt}
+                />
+            </picture>
 
-            <img
-                src={props.tabletUrl}
-                alt={props.tabletAlt}
-                className={toCss(s_device, s_tablet)} 
-            />
-
-            <img
-                src={props.phoneUrl}
-                alt={props.phoneAlt}
-                className={toCss(s_device, s_phone)} 
-            />
+            <picture className={toCss(s_device, s_phone)}>
+                <source
+                    srcSet={props.phoneWebpSet}
+                    sizes={props.phoneSizes}
+                    type='image/webp'
+                />
+                <source
+                    srcSet={props.phonePngSet}
+                    sizes={props.phoneSizes}
+                    type='image/png'
+                />
+                <img
+                    src={props.phoneFallback}
+                    alt={props.phoneAlt}
+                />
+            </picture>
 
         </div>
     );
