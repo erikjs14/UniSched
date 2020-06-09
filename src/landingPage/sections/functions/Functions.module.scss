@@ -21,12 +21,12 @@
         .card {
             width: 25%;
             @include respond(phone) { 
-                width: 65%;
+                width: 75%;
                 &:not(:last-child) {
                     margin-bottom: 3rem;
                 }
             }
-            @include respond(small-phone) { width: 80%;}
+            @include respond(small-phone) { width: 90%;}
         }
     }
 }

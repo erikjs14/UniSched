@@ -12,6 +12,7 @@ import {ReactComponent as Wave2} from '../../assets/svg/wave2.svg';
 import NameBrand from '../../components/nameBrand/NameBrand';
 import CtaButton from '../../components/ctaButton/CtaButton';
 import DeviceComposition from '../../components/deviceComposition/DeviceComposition';
+import { Link } from 'react-router-dom';
 const {
     wrapper: s_wrapper,
     waveTop: s_waveTop,
@@ -21,6 +22,8 @@ const {
     nameBrand: s_nameBrand,
     by: s_by,
     slogan: s_slogan,
+    ctaBtn: s_ctaBtn,
+    login: s_login,
 } = CSS;
 
 export default function(props: HeroProps): JSX.Element {
@@ -50,11 +53,14 @@ export default function(props: HeroProps): JSX.Element {
                         </div>
                         <NameBrand first='erik' last='schake' withBg/>
                     </div>
-                    <CtaButton
-                        linkTo='/auth'
-                    >
-                        Sign Up
-                    </CtaButton>
+                    <div className={toCss(s_ctaBtn)} >
+                        <CtaButton
+                            linkTo='/auth'
+                        >
+                            Sign Up
+                        </CtaButton>
+                    </div>                
+                    <p className={toCss(s_login)} >Or <Link to='/auth'>&nbsp; login &crarr;</Link></p>    
                 </div> 
 
                 <Wave1 className={toCss(s_waveTop)} />

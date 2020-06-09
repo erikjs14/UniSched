@@ -13,8 +13,8 @@ export default function(props: TestimonialsProps): JSX.Element {
     return (
         <section className={toCss(s_wrapper)}>
             <Testimonial
-                quote='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,'                
-                from='Larry Bird'
+                quote='At first, I was suspicious given the colorful design. It seemed a little playful instead of useful. But now I absolutely love it. Seeing the color immediately lets me think of the specific subject. Never before have I been so organized. My life is better now.'
+                from='Very satisfied anonymous user'
             />
         </section> 
     );

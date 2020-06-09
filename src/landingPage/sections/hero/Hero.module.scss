@@ -4,7 +4,7 @@
 .wrapper {
     position: relative;
     padding: 5rem;
-    padding-bottom: 22vw;
+    padding-bottom: 15vw;
     @include respond(tab-land) {padding: 3rem 2rem inherit;}
     @include respond(phone) {padding-bottom: 66vw;}
     @include respond(small-phone) {padding-bottom: 75vw;}
@@ -62,6 +62,21 @@
                 padding: 0 2rem .5rem 0;
                 font-size: 1.3em;
                 font-style: italic;
+            }
+        }
+
+        .ctaBtn {
+            font-size: 3rem;
+        }
+
+        .login a {
+            outline: none;
+            text-decoration: none;
+            color: inherit;
+            font-size: 1.3em;
+
+            &:hover {
+                color: rgba(#fff, .5);
             }
         }
     }
