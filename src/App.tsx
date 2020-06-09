@@ -7,7 +7,6 @@ import firebase from 'firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from './components/ui/loader/Loader';
 
-import LandingPage from './landingPage/landingPage';
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
 import * as actions from './store/actions';
 import { RootState } from '.';
@@ -15,6 +14,7 @@ import SubjectSettings from "./container/subjects/subjectSettings/SubjectSetting
 import Layout from './hoc/layout/Layout';
 import AnimatedSwitch from './hoc/AnimatedRoutes/AnimatedSwitch';
 
+const LandingPage    = React.lazy(() => import('./landingPage/landingPage'));
 const Tos            = React.lazy(() => import('./legal/Tos'));
 const Imprint        = React.lazy(() => import('./legal/Imprint'));
 const PrivacyPolicy  = React.lazy(() => import('./legal/PrivacyPolicy'));
@@ -34,7 +34,6 @@ function App() {
     // set listener once
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
-            console.log('now')
             if (user) {
                 dispatch(actions.fetchUserData());
                 dispatch(actions.setSignedIn(user))
