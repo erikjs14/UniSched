@@ -52,7 +52,8 @@
         row-gap: 1rem;
         padding: 1.5rem;
 
-        grid-template: repeat(8, 10vw) / repeat(8, 1fr);
+        grid-template: repeat(8, 1fr) / repeat(8, 1fr);
+        @include respond(phone) { grid-template: repeat(8, 10vw) / repeat(8, 1fr);}
 
         &.colorful {
 
