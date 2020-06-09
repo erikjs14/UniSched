@@ -17,4 +17,27 @@
     background-color: $col-primary-dark;
     color: $col-primary-dark-text;
     padding: 5rem 3rem 2rem;
+
+    a:link,
+    a:visited,
+    a:active {
+        display: inline-block;
+        text-decoration: none;
+        color: inherit;
+        font-size: 1.15em;
+        outline: none;
+        padding: 1rem 2rem;
+        border-radius: 3px;
+        transition: all .3s ease-out;
+
+        &:not(:last-child) {
+            margin-right: 3rem;
+        }
+    }
+
+    a:hover {
+        background-color: rgba(#fff, .05);
+        transform: translateY(-3px) rotate(1deg) scale(1.05);
+        transform-origin: center;
+    }
 }

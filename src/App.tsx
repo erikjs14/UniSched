@@ -14,6 +14,9 @@ import { RootState } from '.';
 import SubjectSettings from "./container/subjects/subjectSettings/SubjectSettings";
 import Layout from './hoc/layout/Layout';
 import AnimatedSwitch from './hoc/AnimatedRoutes/AnimatedSwitch';
+import Imprint from './legal/Imprint';
+import Tos from './legal/Tos';
+import PrivacyPolicy from './legal/PrivacyPolicy';
 
 const ToDos     = React.lazy(() => import('./container/todos/ToDos'));
 const Schedule  = React.lazy(() => import('./container/schedule/Schedule'));
@@ -53,7 +56,10 @@ function App() {
             <Switch>
                 {/* Non-protected routes */}
                 <AntiProtectedRoute exact path='/' component={LandingPage} orElse='/todo' />
-                <Route exact path='/auth' component={Auth} orElse='/todo' />
+                <Route exact path='/auth' component={Auth} />
+                <Route exact path='/legal-details' component={Imprint} />
+                <Route exact path='/tos' component={Tos} />
+                <Route exact path='/privacy' component={PrivacyPolicy} />
 
                 {/* Any other routes */}
                 <Route path='/' render={() => (

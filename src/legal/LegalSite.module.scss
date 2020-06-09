@@ -1,0 +1,45 @@
+@import '../style/abstract/mixins';
+@import '../style/abstract/variables';
+
+.header {
+    position: relative;
+    display: block;
+    padding: 5vw 5rem 10vw;
+    // padding-bottom: 15vw;
+    @include respond(tab-land) {padding: 3rem 2rem inherit;}
+    @include respond(phone) {padding-bottom: 66vw;}
+    @include respond(small-phone) {padding-bottom: 75vw;}
+    color: white;
+    font-size: 5rem;
+    font-weight: bold;
+    background: rgb(34,40,49);
+    background: $hero-gradient;
+    text-align: center;
+
+    .wave {
+        z-index: 10;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}
+
+.main {
+    max-width: 100rem;
+    margin: 5rem auto;
+
+    h2, h3, h4, h5, h6 {
+        margin-bottom: 2rem;
+    }
+    p {
+        margin: 1rem 0;
+    }
+
+    ul li {
+        margin-left: 3rem;
+    }
+    ul {
+        margin: 1rem 0;
+    }
+}
