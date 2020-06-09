@@ -14,9 +14,10 @@ import { RootState } from '.';
 import SubjectSettings from "./container/subjects/subjectSettings/SubjectSettings";
 import Layout from './hoc/layout/Layout';
 import AnimatedSwitch from './hoc/AnimatedRoutes/AnimatedSwitch';
-import Imprint from './legal/Imprint';
-import Tos from './legal/Tos';
-import PrivacyPolicy from './legal/PrivacyPolicy';
+
+const Tos            = React.lazy(() => import('./legal/Tos'));
+const Imprint        = React.lazy(() => import('./legal/Imprint'));
+const PrivacyPolicy  = React.lazy(() => import('./legal/PrivacyPolicy'));
 
 const ToDos     = React.lazy(() => import('./container/todos/ToDos'));
 const Schedule  = React.lazy(() => import('./container/schedule/Schedule'));
@@ -33,6 +34,7 @@ function App() {
     // set listener once
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
+            console.log('now')
             if (user) {
                 dispatch(actions.fetchUserData());
                 dispatch(actions.setSignedIn(user))
