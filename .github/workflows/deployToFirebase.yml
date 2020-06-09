@@ -34,22 +34,19 @@ jobs:
           FILE_NAME: firebase.json
           FILE_DATA: ${{ secrets.FIREBASE_JSON }}
       - name: Add imprint
-        working-directory: ./src/legal
         uses: finnp/create-file-action@1.0.0
         env:
-          FILE_NAME: Imprint.tsx
+          FILE_NAME: ./src/legal/Imprint.tsx
           FILE_DATA: ${{ secrets.IMPRINT_COMPONENT }}
       - name: Add tos
-        working-directory: ./src/legal
         uses: finnp/create-file-action@1.0.0
         env:
-          FILE_NAME: Tos.tsx
+          FILE_NAME: ./src/legal/Tos.tsx
           FILE_DATA: ${{ secrets.TOS_COMPONENT }}
       - name: Add privacy policy
-        working-directory: ./src/legal
         uses: finnp/create-file-action@1.0.0
         env:
-          FILE_NAME: PrivacyPolicy.tsx
+          FILE_NAME: ./src/legal/PrivacyPolicy.tsx
           FILE_DATA: ${{ secrets.PRIVACY_COMPONENT }}
       - name: Install Dependencies
         run: yarn install
