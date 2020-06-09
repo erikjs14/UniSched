@@ -1,0 +1,32 @@
+@import '../../../style/abstract/variables';
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    margin: -13vw auto 0;
+    padding: calc(13vw + 5rem) 3rem 25rem;
+    position: relative;
+    background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
+        url(../../assets/img/desk_from_above.jpg);
+    background-size: cover;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 10rem));
+
+    .cards {
+        max-width: 100rem;
+        margin: auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        @include respond(phone) { flex-wrap: wrap;}
+
+        .card {
+            width: 25%;
+            @include respond(phone) { 
+                width: 75%;
+                &:not(:last-child) {
+                    margin-bottom: 3rem;
+                }
+            }
+            @include respond(small-phone) { width: 90%;}
+        }
+    }
+}

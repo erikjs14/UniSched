@@ -29,3 +29,7 @@ firebase.json
 .firebase
 
 publish.bat
+
+/src/legal/Imprint.tsx
+/src/legal/Tos.tsx
+/src/legal/PrivacyPolicy.tsx

@@ -1,0 +1,30 @@
+@import '../../../style/abstract/variables';
+
+.wrapper {
+    background-color: rgba($col-secondary-light, .75);
+    color: $col-primary-dark;
+    border-radius: 3px;
+    box-shadow: $bs-above-white;
+    text-align: center;
+    padding: 2rem 3rem;
+
+    transition: all .2s;
+    &:hover {
+        transform: translateY(-5px) scale(1.03);
+        box-shadow: $bs-above-hover-white;
+    }
+
+    .icon {
+        color: $col-primary-light;
+        font-size: 3.5rem;
+    }
+
+    .header {
+        font-size: 2.5rem;
+        margin: 1.5rem 0 1rem;
+    }
+
+    .body {
+        font-size: 1.2em;
+    }
+}

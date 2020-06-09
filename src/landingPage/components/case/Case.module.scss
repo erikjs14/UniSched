@@ -1,0 +1,39 @@
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    height: 50vw;
+    @include respond(phone) { 
+        flex-wrap: wrap;
+        height: auto;
+    }
+
+    .imgArea {
+        position: relative;
+        flex: 50%;
+        @include respond(phone) { flex: 100%;}
+    }
+
+    .textArea {
+        flex: 50%;
+        @include respond(phone) { flex: 100%;}
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        @include respond(phone) { 
+            order: -1;
+            margin-bottom: 3rem;
+        }
+    }
+
+    &.left {
+        .textArea {
+            order: -1;
+        }
+    }
+}

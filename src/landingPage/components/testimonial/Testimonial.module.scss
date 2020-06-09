@@ -1,0 +1,63 @@
+@import '../../../style/abstract/variables';
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    position: relative;
+    width: 85rem;
+    max-width: 90vw;
+    background-color: $col-primary-light;
+    color: $col-primary-light-text;
+    border-radius: 5px;
+    margin: 5rem auto;
+    padding: 4rem 8rem;
+    font-size: 1.1em;
+    box-shadow: $default-box-shadow;
+    overflow: hidden;
+
+    .quote {
+        position: absolute;
+        top: 2rem;
+        left: 1.5rem;
+        font-size: 5rem;
+        color: rgba($col-primary-light-text, .8);
+    }
+
+    .body {
+
+    }
+
+    .from {
+        margin-left: 2rem;
+        margin-top: 2rem;
+
+        &::before {
+            content: '- ';
+        }
+    }
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: -5rem;
+        left: -5rem;
+        width: 0;
+        height: 0;
+        box-shadow: 0 0 25px 15px rgba(#fff, .5);
+        background-color: #fff;
+        border-radius: 50%;
+    }
+
+    &:hover::before {
+        animation: animateBg 8s ease-in-out forwards;
+    }
+}
+
+@keyframes animateBg {
+    0% {
+        transform: translate(0, 0);
+    }
+    80%, 100% {
+        transform: translate(100rem, 35rem);
+    }
+}

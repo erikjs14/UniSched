@@ -1,0 +1,42 @@
+@import '../../../style/abstract/mixins';
+
+.wrapper {
+    position: relative;
+    width: 80%;
+    @include respond(small-phone) { width: 100%;}
+    margin: auto;
+
+    .device {
+        position: absolute;
+      
+        &.laptop {
+            left: 0;
+            top: 7.5rem;
+            width: 70%;
+            z-index: 20;
+            @include respond(small-phone) {
+                top: 5rem;
+            }
+        }
+
+        &.tablet {
+            right: 10%;
+            top: 0;
+            width: 35%;
+            @include respond(small-phone) {
+                right: 15%;
+            }
+        }
+
+        &.phone {
+            right: 0;
+            top: 12.5rem;
+            width: 20%;
+            z-index: 30;
+            @include respond(small-phone) {
+                top: 9rem;
+                right: 15%;
+            }
+        }  
+    }
+}
