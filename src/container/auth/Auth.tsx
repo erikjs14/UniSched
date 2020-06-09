@@ -13,6 +13,7 @@ const {
     authUI: s_authUI,
     authDescr: s_authDescr,
     authHeader: s_authHeader,
+    heading: s_heading,
 } = CSS;  
 
 export default function() {
@@ -33,7 +34,8 @@ export default function() {
                 ? <Button onClick={() => logout(dispatch)} fontSize='2.5rem'>Sign out</Button>
                 : (
                     <Fragment>
-                        <h1 className={toCss(s_authHeader)}>Sign in or Register</h1>
+                        <h1 className={toCss(s_heading)} >Unisched</h1>
+                        <h2 className={toCss(s_authHeader)}>Sign in or Register</h2>
                         <div className={toCss('util-card', 'util-bg-light')} >
                             <p className={s_authDescr}>Choose one of the following providers:</p>
                             <div id="firebase-auth-container" className={s_authUI}></div>
