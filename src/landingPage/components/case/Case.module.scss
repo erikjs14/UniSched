@@ -2,10 +2,10 @@
     display: flex;
     justify-content: stretch;
     align-items: stretch;
-    height: 30rem;
+    height: 50rem;
 
     .imgArea {
-        background-color: red;
+        position: relative;
         flex: 1;
     }
 

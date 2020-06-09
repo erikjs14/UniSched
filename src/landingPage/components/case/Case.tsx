@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 import CSS from './Case.module.scss';
 import { CaseProps } from './Case.d';
@@ -10,12 +10,12 @@ const {
     left: s_left,
 } = CSS;
 
-export default function(props: CaseProps): JSX.Element {
+export default function(props: PropsWithChildren<CaseProps>): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper, (props.left ? s_left : ''))} >
             <div className={toCss(s_imgArea)} >
-                
+                {props.children}
             </div>
             <div className={toCss(s_textArea)} >
                 {props.text}
