@@ -1,0 +1,18 @@
+@import '../../../style/abstract/variables';
+
+.wrapper {
+    background-color: $col-secondary-light;
+    padding-top: 7rem;
+    padding-bottom: 10rem;
+
+     h4 {
+         text-align: center;
+         font-size: 5rem;
+         font-weight: bold;
+         margin: 0 0 3rem;
+     }
+
+     .ctaBtn {
+         margin: 10rem auto 0;
+     }
+}

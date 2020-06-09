@@ -1,0 +1,26 @@
+.wrapper {
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
+    height: 30rem;
+
+    .imgArea {
+        background-color: red;
+        flex: 1;
+    }
+
+    .textArea {
+        flex: 1;
+        font-size: 5rem;
+        font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &.left {
+        .textArea {
+            order: -1;
+        }
+    }
+}

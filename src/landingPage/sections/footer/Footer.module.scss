@@ -1,0 +1,20 @@
+@import '../../../style/abstract/variables';
+
+.wave {
+    margin-top: -10rem;
+    background-color: $col-secondary-light;
+}
+.wave path {
+    fill: $col-primary-dark;
+    position: relative;
+    z-index: 100;
+}
+
+.wrapper {
+    position: relative;
+    z-index: 100;
+    margin-top: -1rem;
+    background-color: $col-primary-dark;
+    color: $col-primary-dark-text;
+    padding: 5rem 3rem 2rem;
+}

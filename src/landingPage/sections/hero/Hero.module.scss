@@ -1,4 +1,5 @@
 @import '../../../style/abstract/mixins';
+@import '../../../style/abstract/variables';
 
 .wrapper {
     position: relative;
@@ -9,7 +10,7 @@
     @include respond(small-phone) {padding-bottom: 75vw;}
     color: white;
     background: rgb(34,40,49);
-    background: linear-gradient(140deg, rgba(34,40,49,1) 0%, rgba(48,71,94,1) 28%, rgba(133,163,193,1) 100%);
+    background: $hero-gradient;
     .waveTop {
         z-index: 10;
         position: absolute;

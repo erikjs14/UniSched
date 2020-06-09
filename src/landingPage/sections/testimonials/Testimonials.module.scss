@@ -1,4 +1,6 @@
 .wrapper {
     padding-bottom: 10rem;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 10rem));
+    background-color: #fff;
+    margin-bottom: -10rem;
 }
