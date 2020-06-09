@@ -8,15 +8,21 @@ import { logout } from '../../store/actions/dispatcher';
 
 import CSS from './Auth.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router-dom';
 const {
     wrapper: s_wrapper,
     authUI: s_authUI,
     authDescr: s_authDescr,
     authHeader: s_authHeader,
     heading: s_heading,
+    home: s_home,
 } = CSS;  
 
 export default function() {
+
+    const history = useHistory();
 
     const loading = useSelector((state: RootState) => state.user.globalLoading);
     const isAuthenticated = useSelector((state: RootState) => state.user.username !== null);
@@ -34,6 +40,7 @@ export default function() {
                 ? <Button onClick={() => logout(dispatch)} fontSize='2.5rem'>Sign out</Button>
                 : (
                     <Fragment>
+                        <FontAwesomeIcon icon={faHome} className={toCss(s_home)} onClick={() => history.push('/')} />
                         <h1 className={toCss(s_heading)} >Unisched</h1>
                         <h2 className={toCss(s_authHeader)}>Sign in or Register</h2>
                         <div className={toCss('util-card', 'util-bg-light')} >

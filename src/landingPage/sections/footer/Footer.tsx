@@ -4,10 +4,11 @@ import {ReactComponent as Wave} from '../../assets/svg/wave1.svg';
 import CSS from './Footer.module.scss';
 import { FooterProps } from './Footer.d';
 import { toCss } from '../../../util/util';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 const {
     wrapper: s_wrapper,
     wave: s_wave,
+    active: s_active,
 } = CSS;
 
 export default function(props: FooterProps): JSX.Element {
@@ -16,11 +17,11 @@ export default function(props: FooterProps): JSX.Element {
         <Fragment>
             <Wave className={toCss(s_wave)} style={{backgroundColor: props.transparentBg ? 'transparent' : undefined}} /> 
             <footer className={toCss(s_wrapper)}>
-                <Link to='/'>Home</Link>
-                <Link to='/auth'>Login/Signup</Link>
-                <Link to='/legal-details'>Legal Details</Link>
-                <Link to='/tos'>Terms of Service</Link>
-                <Link to='/privacy'>Privacy Policy</Link>
+                <NavLink activeClassName={s_active} exact to='/'>Home</NavLink>
+                <NavLink activeClassName={s_active} exact to='/auth'>Login/Signup</NavLink>
+                <NavLink activeClassName={s_active} exact to='/legal-details#'>Legal Details</NavLink>
+                <NavLink activeClassName={s_active} exact to='/tos'>Terms of Service</NavLink>
+                <NavLink activeClassName={s_active} exact to='/privacy'>Privacy Policy</NavLink>
             </footer>
         </Fragment>
     );

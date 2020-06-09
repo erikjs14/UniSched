@@ -17,7 +17,7 @@ export const showAuthUI = (identifier: string | Element): void => {
             firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         ],
         tosUrl: '/tos',
-        privacyPolicyUrl: '/privacyPolicy',
+        privacyPolicyUrl: '/privacy',
     });
 }
 

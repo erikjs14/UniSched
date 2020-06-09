@@ -14,13 +14,24 @@
 
     background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .2), rgba($col-primary-light, .05));
 
-    h1 {
+    .home {
+        color: $col-primary-light;
+        position: fixed;
+        top: 2rem;
+        left: 2rem;
+        font-size: 3rem;
+        cursor: pointer;
+    }
+
+    .heading {
         background-image: linear-gradient(rgba($col-primary-dark, 1), rgba($col-primary-light, 1));
         color: transparent;
         background-clip: text;
         -webkit-background-clip: text;
         padding: 1rem;
         font-size: 12rem;
+        @include respond(phone) { font-size: 8rem;}
+        @include respond(small-phone) { font-size: 6rem;}
         transform: rotate(-3deg);
     }
 

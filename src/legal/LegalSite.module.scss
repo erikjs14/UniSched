@@ -5,16 +5,24 @@
     position: relative;
     display: block;
     padding: 5vw 5rem 10vw;
-    // padding-bottom: 15vw;
     @include respond(tab-land) {padding: 3rem 2rem inherit;}
-    @include respond(phone) {padding-bottom: 66vw;}
-    @include respond(small-phone) {padding-bottom: 75vw;}
     color: white;
     font-size: 5rem;
+    @include respond(phone) { font-size: 3rem;}
+    @include respond(small-phone) { font-size: 2rem;}
     font-weight: bold;
     background: rgb(34,40,49);
     background: $hero-gradient;
     text-align: center;
+
+    .home {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        font-size: 3rem;
+        cursor: pointer;
+        color: rgba(#fff, .9);
+    }
 
     .wave {
         z-index: 10;
@@ -26,7 +34,7 @@
 }
 
 .main {
-    max-width: 100rem;
+    max-width: #{"min(100rem, 85vw)"};
     margin: 5rem auto;
 
     h2, h3, h4, h5, h6 {
