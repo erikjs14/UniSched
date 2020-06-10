@@ -8,11 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from './components/ui/loader/Loader';
 
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
-import * as actions from './store/actions';
+import {fetchUserData, setSignedIn, fetchShallowSubjects, setSignedOut} from './store/actions';
 import { RootState } from '.';
-import SubjectSettings from "./container/subjects/subjectSettings/SubjectSettings";
-import Layout from './hoc/layout/Layout';
-import AnimatedSwitch from './hoc/AnimatedRoutes/AnimatedSwitch';
+
+const Layout = React.lazy(() => import('./hoc/layout/Layout'));
+const AnimatedSwitch = React.lazy(() => import('./hoc/AnimatedRoutes/AnimatedSwitch'));
 
 const LandingPage    = React.lazy(() => import('./landingPage/landingPage'));
 const Tos            = React.lazy(() => import('./legal/Tos'));
@@ -25,6 +25,7 @@ const Subjects  = React.lazy(() => import('./container/subjects/Subjects'));
 const Exams     = React.lazy(() => import('./container/exams/Exams'));
 const Auth      = React.lazy(() => import('./container/auth/Auth'));
 const Settings  = React.lazy(() => import('./container/settings/Settings'));
+const SubjectSettings  = React.lazy(() => import('./container/subjects/subjectSettings/SubjectSettings'));
 
 
 function App() {
@@ -35,11 +36,11 @@ function App() {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
-                dispatch(actions.fetchUserData());
-                dispatch(actions.setSignedIn(user))
-                dispatch(actions.fetchShallowSubjects());
+                dispatch(fetchUserData());
+                dispatch(setSignedIn(user))
+                dispatch(fetchShallowSubjects());
             } else {
-                dispatch(actions.setSignedOut());
+                dispatch(setSignedOut());
             }
         })
     }, [dispatch]);
@@ -64,21 +65,21 @@ function App() {
 
                 {/* Any other routes */}
                 <Route path='/' render={() => (
-                    <Layout>
-                        <Suspense fallback={<Loader />}>
-                            <AnimatedSwitch>
-                                <ProtectedRoute exact path='/todo'       component={ToDos}       orElse='/auth' />
-                                <ProtectedRoute exact path='/schedule'   component={Schedule}    orElse='/auth' />
-                                <ProtectedRoute exact path='/exams'      component={Exams}       orElse='/auth' />
-                                <ProtectedRoute exact path='/subjects'   component={Subjects}    orElse='/auth' />
-                                <ProtectedRoute exact path='/subjects/new' render={() => <SubjectSettings new />} orElse='/auth' />
-                                <ProtectedRoute       path='/subjects/:id' render={(props) => <SubjectSettings subjectId={props.match.params.id}/>} orElse='/auth' />
-                                <ProtectedRoute exact path='/settings'   component={Settings}    orElse='/auth' />
+                    <Suspense fallback={<Loader />}>
+                        <Layout>
+                                <AnimatedSwitch>
+                                    <ProtectedRoute exact path='/todo'       component={ToDos}       orElse='/auth' />
+                                    <ProtectedRoute exact path='/schedule'   component={Schedule}    orElse='/auth' />
+                                    <ProtectedRoute exact path='/exams'      component={Exams}       orElse='/auth' />
+                                    <ProtectedRoute exact path='/subjects'   component={Subjects}    orElse='/auth' />
+                                    <ProtectedRoute exact path='/subjects/new' render={() => <SubjectSettings new />} orElse='/auth' />
+                                    <ProtectedRoute       path='/subjects/:id' render={(props) => <SubjectSettings subjectId={props.match.params.id}/>} orElse='/auth' />
+                                    <ProtectedRoute exact path='/settings'   component={Settings}    orElse='/auth' />
 
-                                <Redirect to='/' />
-                            </AnimatedSwitch>
-                        </Suspense>
-                    </Layout>
+                                    <Redirect to='/' />
+                                </AnimatedSwitch>
+                        </Layout>
+                    </Suspense>
                 )} />
             </Switch>
         </Suspense>
