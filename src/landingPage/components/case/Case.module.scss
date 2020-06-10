@@ -14,6 +14,11 @@
         position: relative;
         flex: 50%;
         @include respond(phone) { flex: 100%;}
+
+        &.minHeight {
+            height: 80vw;
+            margin: 0 1rem;
+        }
     }
 
     .textArea {

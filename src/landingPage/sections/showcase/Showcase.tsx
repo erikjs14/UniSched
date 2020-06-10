@@ -64,7 +64,8 @@ export default function(props: ShowcaseProps): JSX.Element {
             </Case>
 
             <Case
-                text='And Order?'    
+                text='And Order?'   
+                minHeight 
             >
                 <div className={toCss(s_orderVideo)} >
                     <video autoPlay muted loop>
