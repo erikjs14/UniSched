@@ -107,22 +107,22 @@ import item7_800_webp from '../../assets/img/gallery/tab-land-todo/tab-land-todo
 
 
 export const g1item7PngSet = `
-    ${item7_75} 75vw,
-    ${item7_278} 278vw,
-    ${item7_414} 414vw,
-    ${item7_529} 529vw,
-    ${item7_624} 624vw,
-    ${item7_714} 714vw,
-    ${item7_800} 800vw,
+    ${item7_75} 75w,
+    ${item7_278} 278w,
+    ${item7_414} 414w,
+    ${item7_529} 529w,
+    ${item7_624} 624w,
+    ${item7_714} 714w,
+    ${item7_800} 800w,
 `;
 export const g1item7WebpSet = `
-    ${item7_75_webp} 75vw,
-    ${item7_278_webp} 278vw,
-    ${item7_414_webp} 414vw,
-    ${item7_529_webp} 529vw,
-    ${item7_624_webp} 624vw,
-    ${item7_714_webp} 714vw,
-    ${item7_800_webp} 800vw,
+    ${item7_75_webp} 75w,
+    ${item7_278_webp} 278w,
+    ${item7_414_webp} 414w,
+    ${item7_529_webp} 529w,
+    ${item7_624_webp} 624w,
+    ${item7_714_webp} 714w,
+    ${item7_800_webp} 800w,
 `;
 export const g1item7Fallback = item7_714;
 export const g1item7Sizes = `
@@ -137,22 +137,22 @@ export const g1item7 = {
 };
 
 export const g1item5PngSet = `
-    ${item5_100} 100vw,
-    ${item5_371} 371vw,
-    ${item5_542} 542vw,
-    ${item5_672} 672vw,
-    ${item5_798} 798vw,
-    ${item5_909} 909vw,
-    ${item5_1000} 1000vw,
+    ${item5_100} 100w,
+    ${item5_371} 371w,
+    ${item5_542} 542w,
+    ${item5_672} 672w,
+    ${item5_798} 798w,
+    ${item5_909} 909w,
+    ${item5_1000} 1000w,
 `;
 export const g1item5WebpSet = `
-    ${item5_100_webp} 100vw,
-    ${item5_371_webp} 371vw,
-    ${item5_542_webp} 542vw,
-    ${item5_672_webp} 672vw,
-    ${item5_798_webp} 798vw,
-    ${item5_909_webp} 909vw,
-    ${item5_1000_webp} 1000vw,
+    ${item5_100_webp} 100w,
+    ${item5_371_webp} 371w,
+    ${item5_542_webp} 542w,
+    ${item5_672_webp} 672w,
+    ${item5_798_webp} 798w,
+    ${item5_909_webp} 909w,
+    ${item5_1000_webp} 1000w,
 `;
 export const g1item5Fallback = item5_798;
 export const g1item5Sizes = `
@@ -167,20 +167,20 @@ export const g1item5 = {
 };
 
 export const g1item4PngSet = `
-    ${item4_50} 50vw,
-    ${item4_233} 233vw,
-    ${item4_347} 347vw,
-    ${item4_441} 441vw,
-    ${item4_526} 526vw,
-    ${item4_600} 600vw,
+    ${item4_50} 50w,
+    ${item4_233} 233w,
+    ${item4_347} 347w,
+    ${item4_441} 441w,
+    ${item4_526} 526w,
+    ${item4_600} 600w,
 `;
 export const g1item4WebpSet = `
-    ${item4_50_webp} 50vw,
-    ${item4_233_webp} 233vw,
-    ${item4_347_webp} 347vw,
-    ${item4_441_webp} 441vw,
-    ${item4_526_webp} 526vw,
-    ${item4_600_webp} 600vw,
+    ${item4_50_webp} 50w,
+    ${item4_233_webp} 233w,
+    ${item4_347_webp} 347w,
+    ${item4_441_webp} 441w,
+    ${item4_526_webp} 526w,
+    ${item4_600_webp} 600w,
 `;
 export const g1item4Fallback = item4_526;
 export const g1item4Sizes = `
@@ -195,28 +195,28 @@ export const g1item4 = {
 };
 
 export const g1item3PngSet = `
-    ${item3_50} 50vw,
-    ${item3_265} 265vw,
-    ${item3_400} 400vw,
-    ${item3_510} 510vw,
-    ${item3_608} 608vw,
-    ${item3_697} 697vw,
-    ${item3_780} 780vw,
-    ${item3_858} 858vw,
-    ${item3_932} 932vw,
-    ${item3_1000} 1000vw,
+    ${item3_50} 50w,
+    ${item3_265} 265w,
+    ${item3_400} 400w,
+    ${item3_510} 510w,
+    ${item3_608} 608w,
+    ${item3_697} 697w,
+    ${item3_780} 780w,
+    ${item3_858} 858w,
+    ${item3_932} 932w,
+    ${item3_1000} 1000w,
 `;
 export const g1item3WebpSet = `
-    ${item3_50_webp} 50vw,
-    ${item3_265_webp} 265vw,
-    ${item3_400_webp} 400vw,
-    ${item3_510_webp} 510vw,
-    ${item3_608_webp} 608vw,
-    ${item3_697_webp} 697vw,
-    ${item3_780_webp} 780vw,
-    ${item3_858_webp} 858vw,
-    ${item3_932_webp} 932vw,
-    ${item3_1000_webp} 1000vw,
+    ${item3_50_webp} 50w,
+    ${item3_265_webp} 265w,
+    ${item3_400_webp} 400w,
+    ${item3_510_webp} 510w,
+    ${item3_608_webp} 608w,
+    ${item3_697_webp} 697w,
+    ${item3_780_webp} 780w,
+    ${item3_858_webp} 858w,
+    ${item3_932_webp} 932w,
+    ${item3_1000_webp} 1000w,
 `;
 export const g1item3Fallback = item3_780;
 export const g1item3Sizes = `
@@ -231,22 +231,22 @@ export const g1item3 = {
 };
 
 export const g1item2PngSet = `
-    ${item2_100} 100vw,
-    ${item2_157} 157vw,
-    ${item2_204} 204vw,
-    ${item2_247} 247vw,
-    ${item2_283} 283vw,
-    ${item2_319} 319vw,
-    ${item2_353} 353vw,
+    ${item2_100} 100w,
+    ${item2_157} 157w,
+    ${item2_204} 204w,
+    ${item2_247} 247w,
+    ${item2_283} 283w,
+    ${item2_319} 319w,
+    ${item2_353} 353w,
 `;
 export const g1item2WebpSet = `
-    ${item2_100_webp} 100vw,
-    ${item2_157_webp} 157vw,
-    ${item2_204_webp} 204vw,
-    ${item2_247_webp} 247vw,
-    ${item2_283_webp} 283vw,
-    ${item2_319_webp} 319vw,
-    ${item2_353_webp} 353vw,
+    ${item2_100_webp} 100w,
+    ${item2_157_webp} 157w,
+    ${item2_204_webp} 204w,
+    ${item2_247_webp} 247w,
+    ${item2_283_webp} 283w,
+    ${item2_319_webp} 319w,
+    ${item2_353_webp} 353w,
 `;
 export const g1item2Fallback = item2_319;
 export const g1item2Sizes = `
@@ -261,22 +261,22 @@ export const g1item2 = {
 };
 
 export const g1item6PngSet = `
-    ${item6_100} 100vw,
-    ${item6_237} 237vw,
-    ${item6_346} 346vw,
-    ${item6_426} 426vw,
-    ${item6_501} 501vw,
-    ${item6_590} 590vw,
-    ${item6_634} 634vw,
+    ${item6_100} 100w,
+    ${item6_237} 237w,
+    ${item6_346} 346w,
+    ${item6_426} 426w,
+    ${item6_501} 501w,
+    ${item6_590} 590w,
+    ${item6_634} 634w,
 `;
 export const g1item6WebpSet = `
-    ${item6_100_webp} 100vw,
-    ${item6_237_webp} 237vw,
-    ${item6_346_webp} 346vw,
-    ${item6_426_webp} 426vw,
-    ${item6_501_webp} 501vw,
-    ${item6_590_webp} 590vw,
-    ${item6_634_webp} 634vw,
+    ${item6_100_webp} 100w,
+    ${item6_237_webp} 237w,
+    ${item6_346_webp} 346w,
+    ${item6_426_webp} 426w,
+    ${item6_501_webp} 501w,
+    ${item6_590_webp} 590w,
+    ${item6_634_webp} 634w,
 `;
 export const g1item6Fallback = item6_501;
 export const g1item6Sizes = `
@@ -291,24 +291,24 @@ export const g1item6 = {
 };
 
 export const g1item1PngSet = `
-    ${laptopSubjects_100} 100vw,
-    ${laptopSubjects_235} 235vw,
-    ${laptopSubjects_335} 335vw,
-    ${laptopSubjects_428} 428vw,
-    ${laptopSubjects_519} 519vw,
-    ${laptopSubjects_592} 592vw,
+    ${laptopSubjects_100} 100w,
+    ${laptopSubjects_235} 235w,
+    ${laptopSubjects_335} 335w,
+    ${laptopSubjects_428} 428w,
+    ${laptopSubjects_519} 519w,
+    ${laptopSubjects_592} 592w,
 `;
 export const g1item1WebpSet = `
-    ${laptopSubjects_100_webp} 100vw,
-    ${laptopSubjects_235_webp} 235vw,
-    ${laptopSubjects_335_webp} 335vw,
-    ${laptopSubjects_428_webp} 428vw,
-    ${laptopSubjects_519_webp} 519vw,
-    ${laptopSubjects_592_webp} 592vw,
+    ${laptopSubjects_100_webp} 100w,
+    ${laptopSubjects_235_webp} 235w,
+    ${laptopSubjects_335_webp} 335w,
+    ${laptopSubjects_428_webp} 428w,
+    ${laptopSubjects_519_webp} 519w,
+    ${laptopSubjects_592_webp} 592w,
 `;
 export const g1item1Fallback = laptopSubjects_519;
 export const g1item1Sizes = `
-    (min-width: 601px) 20vw,
+    (min-width: 601px) 18vw,
     40vw
 `;
 export const g1item1 = {

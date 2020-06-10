@@ -93,7 +93,7 @@ export const g2item5WebpSet = `
 `;
 export const g2item5Fallback = item5_549;
 export const g2item5Sizes = `
-    (min-width: 601px) 15vw,
+    (min-width: 601px) 13vw,
     25vw
 `;
 export const g2item5 = {
@@ -123,7 +123,7 @@ export const g2item4WebpSet = `
 `;
 export const g2item4Fallback = item4_537;
 export const g2item4Sizes = `
-    (min-width: 601px) 15vw,
+    (min-width: 601px) 13vw,
     25vw
 `;
 export const g2item4 = {
@@ -153,7 +153,7 @@ export const g2item2WebpSet = `
 `;
 export const g2item2Fallback = item2_248;
 export const g2item2Sizes = `
-    (min-width: 601px) 15vw,
+    (min-width: 601px) 13vw,
     25vw
 `;
 export const g2item2 = {
@@ -183,7 +183,7 @@ export const g2item1WebpSet = `
 `;
 export const g2item1Fallback = item1_246;
 export const g2item1Sizes = `
-    (min-width: 601px) 15vw,
+    (min-width: 601px) 13vw,
     25vw
 `;
 export const g2item1 = {
