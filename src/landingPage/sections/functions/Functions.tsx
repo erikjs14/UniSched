@@ -15,30 +15,33 @@ const {
 export default function(props: FunctionsProps): JSX.Element {
     
     return (
-        <section className={toCss(s_wrapper)}>
-            <LazyLoadComponent>
-                <div className={toCss(s_cards)} >
-                    
-                    <FunctionCard
-                        icon={faCheckCircle}
-                        header='ToDo'
-                        text='Organize all work that needs to be done. Set deadlines, repeating tasks and check tasks satisfyingly.'
-                        addCss={toCss(s_card)}
-                    />
-                    <FunctionCard
-                        icon={faCalendarAlt}
-                        header='Schedule'
-                        text='Add events, such as lectures, exercises or whatever else is happening once, or repeatedly.'
-                        addCss={toCss(s_card)}
-                    />
-                    <FunctionCard
-                        icon={faFeather}
-                        header='Exams'
-                        text='Save all your future exams in one place and always know when which exam is going to happen.'
-                        addCss={toCss(s_card)}
-                    />
-                </div>
-            </LazyLoadComponent>
-        </section>
+        <LazyLoadComponent>
+            <section className={toCss(s_wrapper)}>
+
+                    <h2>Functionality</h2>
+                
+                    <div className={toCss(s_cards)} >
+                        
+                        <FunctionCard
+                            icon={faCheckCircle}
+                            header='ToDo'
+                            text="Organize all work that needs to be done. Set deadlines, repeating tasks and start planning your days the right way. With style. It's easy."
+                            addCss={toCss(s_card)}
+                        />
+                        <FunctionCard
+                            icon={faCalendarAlt}
+                            header='Schedule'
+                            text='Add events, such as lectures, exercises or whatever else is happening once, or repeatedly. View them in a structured schedule view.'
+                            addCss={toCss(s_card)}
+                        />
+                        <FunctionCard
+                            icon={faFeather}
+                            header='Exams'
+                            text='Save all your future exams in one place and always know when which exam is going to happen. Start to organize your exam preparation.'
+                            addCss={toCss(s_card)}
+                        />
+                    </div>
+            </section>
+        </LazyLoadComponent>
     );
 }

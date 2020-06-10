@@ -19,7 +19,7 @@ export default function(props: PropsWithChildren<CaseProps>): JSX.Element {
                 {props.children}
             </div>
             <div className={toCss(s_textArea)} >
-                {props.text}
+                <strong>{props.text}</strong>
             </div>
         </div>
     );

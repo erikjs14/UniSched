@@ -18,7 +18,7 @@ export default function(props: TestimonialProps): JSX.Element {
         <div className={toCss(s_wrapper)}>
             <FontAwesomeIcon icon={faQuoteLeft} className={toCss(s_quote)} /> 
             <p className={toCss(s_body)} >{props.quote}</p>
-            <aside className={toCss(s_from)} >{props.from}</aside>
+            <strong className={toCss(s_from)} >{props.from}</strong>
         </div>
     );
 }

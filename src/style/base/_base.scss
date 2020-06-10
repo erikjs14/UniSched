@@ -34,3 +34,10 @@ body {
 h1 {
     font-family: 'Kaushan Script', cursive;
 }
+
+h2 {
+    font-size: 6rem;
+    @include respond(phone) { font-size: 4rem;}
+    @include respond(small-phone) { font-size: 3rem;}
+    text-align: center;
+}

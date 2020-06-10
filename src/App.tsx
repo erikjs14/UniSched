@@ -6,6 +6,7 @@ import './firebase/firebase'; // init firebase
 import firebase from 'firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from './components/ui/loader/Loader';
+import { Helmet } from 'react-helmet';
 
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
 import {fetchUserData, setSignedIn, fetchShallowSubjects, setSignedOut} from './store/actions';
@@ -87,8 +88,64 @@ function App() {
         </Suspense>
     );
 
+    const helmet = (
+        <Switch>
+            <Route exact path='/'>
+                <Helmet>
+                    <title>UniSched - Stay organized!</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/tos'>
+                <Helmet>
+                    <title>UniSched - Terms of Service</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/privacy'>
+                <Helmet>
+                    <title>UniSched - Privacy Policy</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/legal-details'>
+                <Helmet>
+                    <title>UniSched - Legal Details</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/todo'>
+                <Helmet>
+                    <title>ToDos - Keep up with all your tasks!</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/schedule'>
+                <Helmet>
+                    <title>Schedule - Always know when what is happening</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/exams'>
+                <Helmet>
+                    <title>Exams - Study hard</title>
+                </Helmet>
+            </Route>
+            <Route exact path='/subjects'>
+                <Helmet>
+                    <title>Subjects - Overview</title>
+                </Helmet>
+            </Route>
+            <Route path='/subjects'>
+                <Helmet>
+                    <title>Edit Subject</title>
+                </Helmet>
+            </Route>
+            <Route path='/settings'>
+                <Helmet>
+                    <title>Settings - UniSched</title>
+                </Helmet>
+            </Route>
+        </Switch>
+    );
+
     return (
         <div className="App">
+            {helmet}
             {routes}
         </div>
     );

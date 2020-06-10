@@ -21,7 +21,7 @@
             line-height: 1.8em;
             border-radius: 2rem;
             box-shadow: 0 3px 8px rgba(#000, .3);
-            background-color: $col-secondary-dark;
+            background-color: $col-cta;
             transform: scale(1) rotate(0);
 
             transition: all .2s;
@@ -40,7 +40,7 @@
 
     p {
         margin-left: 2rem;
-        font-size: 2em;
+        font-size: 1.5em;
         font-weight: normal;
     }
 }

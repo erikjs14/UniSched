@@ -67,7 +67,7 @@ export default function(props: HeroProps): JSX.Element {
 
                 <Wave1 className={toCss(s_waveTop)} />
             </header>
-            <h2 className={toCss(s_slogan)} >The best tool to get organized!</h2>
+            <strong className={toCss(s_slogan)} >The best tool to get organized!</strong>
             <Wave2 className={toCss(s_waveBottom)} />
         </Fragment> 
     );
