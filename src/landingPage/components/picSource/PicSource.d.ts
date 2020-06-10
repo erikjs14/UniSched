@@ -1,11 +1,13 @@
+export interface ItemType {
+    fallbackSet: string;
+    fallbackType: string;
+    webpSet: string;
+    fallback: string;
+    sizes: string;
+}
 export interface PicSourceProps {
-    item: {
-        pngSet: string;
-        webpSet: string;
-        fallback: string;
-        sizes: string;
-    }
+    item: ItemType,
     figClass: string;
-    imgClass: string;
+    imgClass?: string;
     alt: string;
 }

@@ -11,7 +11,7 @@ import { toCss } from '../../../util/util';
 import Case from '../../components/case/Case';
 import CtaButton from '../../components/ctaButton/CtaButton';
 import PicSource from '../../components/picSource/PicSource';
-import { fallbackJpgSet, fallbackSizes, fallbackFallback } from './Img';
+import { fallbackImgItem } from './Img';
 const {
     wrapper: s_wrapper,
     ctaBtn: s_ctaBtn,
@@ -71,13 +71,7 @@ export default function(props: ShowcaseProps): JSX.Element {
                  minHeight
             >
                 <div className={toCss(s_orderVideo)} >
-                    <img
-                        className={toCss(s_fallbackImg)} 
-                        srcSet={fallbackJpgSet}
-                        sizes={fallbackSizes}
-                        src={fallbackFallback}
-                        alt='A structured desk with writing stuff and a laptop'
-                    />
+                    <PicSource item={fallbackImgItem} figClass={toCss(s_fallbackImg)} alt='A structured desk with writing stuff and a laptop' />
                     <video className={toCss(s_video)}  autoPlay muted loop>
                         <source src={orderVideoMp4Url} type='video/mp4' />
                         <source src={orderVideoWebmUrl} type='video/webm' />

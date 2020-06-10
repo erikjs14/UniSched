@@ -17,14 +17,14 @@ export default function(props: PicSourceProps): JSX.Element {
                 type='image/webp'
             />
             <source
-                srcSet={props.item.pngSet}
+                srcSet={props.item.fallbackSet}
                 sizes={props.item.sizes}
-                type='image/png'
+                type={props.item.fallbackType}
             />
             <img
                 src={props.item.fallback}
                 alt={props.alt}
-                className={toCss(props.imgClass)} 
+                className={props.imgClass ? toCss(props.imgClass) : undefined} 
             />
         </picture>
     );

@@ -6,36 +6,36 @@
     padding: calc(13vw + 5rem) 3rem 25rem;
     position: relative;
     background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-        url(../../assets/img/desk_from_above/desk_from_above_w_2410.jpg);
+        url(../../assets/img/desk_from_above/desk_from_above_w_1627.jpg);
 
     /* @ 1x Images */
     @media (max-width: 300px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_300.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_300.webp);
     }
     @media (min-width: 301px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_814.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_814.webp);
     }
     @media (min-width: 815px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_1627.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_1627.webp);
     }
     @media (min-width: 1628px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_2410.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_2410.webp);
     }
     @media (min-width: 2410px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_3038.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_3038.webp);
     }
     @media (min-width: 3039px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_3537.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_3537.webp);
     }
     @media (min-width: 3538px) {
         background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_3840.jpg);
+                url(../../assets/img/desk_from_above/desk_from_above_w_3840.webp);
     }
     /* @2x Images (Pixel Ratio of 1.25+) */
     @media  only screen and (-o-min-device-pixel-ratio: 5/4),
@@ -44,31 +44,31 @@
             only screen and (min-resolution: 1.25dppx) {
         @media (max-width: 149px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_300.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_300.webp);
         }
         @media (min-width: 150px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_814.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_814.webp);
         }
         @media (min-width: 400px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_1627.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_1627.webp);
         }
         @media (min-width: 800px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_2410.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_2410.webp);
         }
         @media (min-width: 1200px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_3038.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_3038.webp);
         }
         @media (min-width: 1500px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_3537.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_3537.webp);
         }
         @media (min-width: 1750px) {
             background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_3840.jpg);
+                    url(../../assets/img/desk_from_above/desk_from_above_w_3840.webp);
         }
     }
 

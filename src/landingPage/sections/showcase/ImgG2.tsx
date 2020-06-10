@@ -72,6 +72,7 @@ import item5_459_webp from '../../assets/img/gallery/tab-port-menu/tab-port-menu
 import item5_549_webp from '../../assets/img/gallery/tab-port-menu/tab-port-menu_w_549.webp';
 import item5_629_webp from '../../assets/img/gallery/tab-port-menu/tab-port-menu_w_629.webp';
 import item5_700_webp from '../../assets/img/gallery/tab-port-menu/tab-port-menu_w_700.webp';
+import { ItemType } from '../../components/picSource/PicSource.d';
 
 export const g2item5PngSet = `
     ${item5_50} 50w,
@@ -96,8 +97,9 @@ export const g2item5Sizes = `
     (min-width: 601px) 13vw,
     25vw
 `;
-export const g2item5 = {
-    pngSet: g2item5PngSet,
+export const g2item5: ItemType = {
+    fallbackSet: g2item5PngSet,
+    fallbackType: 'image/png',
     webpSet: g2item5WebpSet,
     fallback: g2item5Fallback,
     sizes: g2item5Sizes,
@@ -126,8 +128,9 @@ export const g2item4Sizes = `
     (min-width: 601px) 13vw,
     25vw
 `;
-export const g2item4 = {
-    pngSet: g2item4PngSet,
+export const g2item4: ItemType = {
+    fallbackSet: g2item4PngSet,
+    fallbackType: 'image/png',
     webpSet: g2item4WebpSet,
     fallback: g2item4Fallback,
     sizes: g2item4Sizes,
@@ -156,8 +159,9 @@ export const g2item2Sizes = `
     (min-width: 601px) 13vw,
     25vw
 `;
-export const g2item2 = {
-    pngSet: g2item2PngSet,
+export const g2item2: ItemType = {
+    fallbackSet: g2item2PngSet,
+    fallbackType: 'image/png',
     webpSet: g2item2WebpSet,
     fallback: g2item2Fallback,
     sizes: g2item2Sizes,
@@ -186,8 +190,9 @@ export const g2item1Sizes = `
     (min-width: 601px) 13vw,
     25vw
 `;
-export const g2item1 = {
-    pngSet: g2item1PngSet,
+export const g2item1: ItemType = {
+    fallbackSet: g2item1PngSet,
+    fallbackType: 'image/png',
     webpSet: g2item1WebpSet,
     fallback: g2item1Fallback,
     sizes: g2item1Sizes,
@@ -216,8 +221,9 @@ export const g2item6Sizes = `
     (min-width: 601px) 25vw,
     50vw
 `;
-export const g2item6 = {
-    pngSet: g2item6PngSet,
+export const g2item6: ItemType = {
+    fallbackSet: g2item6PngSet,
+    fallbackType: 'image/png',
     webpSet: g2item6WebpSet,
     fallback: g2item6Fallback,
     sizes: g2item6Sizes,

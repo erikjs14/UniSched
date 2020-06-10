@@ -104,6 +104,7 @@ import item7_529_webp from '../../assets/img/gallery/tab-land-todo/tab-land-todo
 import item7_624_webp from '../../assets/img/gallery/tab-land-todo/tab-land-todo_w_624.webp';
 import item7_714_webp from '../../assets/img/gallery/tab-land-todo/tab-land-todo_w_714.webp';
 import item7_800_webp from '../../assets/img/gallery/tab-land-todo/tab-land-todo_w_800.webp';
+import { ItemType } from '../../components/picSource/PicSource.d';
 
 
 export const g1item7PngSet = `
@@ -129,8 +130,9 @@ export const g1item7Sizes = `
     (min-width: 601px) 20vw,
     40vw
 `;
-export const g1item7 = {
-    pngSet: g1item7PngSet,
+export const g1item7: ItemType = {
+    fallbackSet: g1item7PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item7WebpSet,
     fallback: g1item7Fallback,
     sizes: g1item7Sizes,
@@ -159,8 +161,9 @@ export const g1item5Sizes = `
     (min-width: 601px) 25vw,
     50vw
 `;
-export const g1item5 = {
-    pngSet: g1item5PngSet,
+export const g1item5: ItemType = {
+    fallbackSet: g1item5PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item5WebpSet,
     fallback: g1item5Fallback,
     sizes: g1item5Sizes,
@@ -187,8 +190,9 @@ export const g1item4Sizes = `
     (min-width: 601px) 15vw,
     25vw
 `;
-export const g1item4 = {
-    pngSet: g1item4PngSet,
+export const g1item4: ItemType = {
+    fallbackSet: g1item4PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item4WebpSet,
     fallback: g1item4Fallback,
     sizes: g1item4Sizes,
@@ -223,8 +227,9 @@ export const g1item3Sizes = `
     (min-width: 601px) 15vw,
     25vw
 `;
-export const g1item3 = {
-    pngSet: g1item3PngSet,
+export const g1item3: ItemType = {
+    fallbackSet: g1item3PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item3WebpSet,
     fallback: g1item3Fallback,
     sizes: g1item3Sizes,
@@ -253,8 +258,9 @@ export const g1item2Sizes = `
     (min-width: 601px) 20vw,
     40vw
 `;
-export const g1item2 = {
-    pngSet: g1item2PngSet,
+export const g1item2: ItemType = {
+    fallbackSet: g1item2PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item2WebpSet,
     fallback: g1item2Fallback,
     sizes: g1item2Sizes,
@@ -283,8 +289,9 @@ export const g1item6Sizes = `
     (min-width: 601px) 25vw,
     50vw
 `;
-export const g1item6 = {
-    pngSet: g1item6PngSet,
+export const g1item6: ItemType = {
+    fallbackSet: g1item6PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item6WebpSet,
     fallback: g1item6Fallback,
     sizes: g1item6Sizes,
@@ -311,8 +318,9 @@ export const g1item1Sizes = `
     (min-width: 601px) 18vw,
     40vw
 `;
-export const g1item1 = {
-    pngSet: g1item1PngSet,
+export const g1item1: ItemType = {
+    fallbackSet: g1item1PngSet,
+    fallbackType: 'image/png',
     webpSet: g1item1WebpSet,
     fallback: g1item1Fallback,
     sizes: g1item1Sizes,
