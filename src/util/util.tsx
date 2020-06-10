@@ -37,3 +37,8 @@ export const subjectsToObject = (subjects: SubjectModelWithId[]): {[id: string]:
     subjects.forEach(sub => out[sub.id] = (removeKey('id', sub) as SubjectModel));
     return out;
 }
+
+// heuristic approach
+export const isMobile = (): boolean => {
+    return window.screen.width < 1000;
+}

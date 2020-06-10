@@ -48,3 +48,9 @@ $breakpoint argument choices:
         @media (min-width: 112.5em) { @content};
     }
 }
+
+@mixin minrespond($breakpoint) {
+    @if $breakpoint == phone {
+        @media (min-width: 37.5em) { @content };
+    }
+}

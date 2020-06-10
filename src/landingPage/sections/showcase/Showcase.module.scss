@@ -37,6 +37,21 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .video {
+            display: none;
+            @include minrespond(phone) { display: block; }
+        }
+
+        @include respond(phone) { position: relative;}
+        .fallbackImg {
+            display: none;
+            @include respond(phone) { 
+                display: block; 
+                width: 100%;
+                object-fit: cover;
+            }
+        }
      }
 
      .ctaBtn {

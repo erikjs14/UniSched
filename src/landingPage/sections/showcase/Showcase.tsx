@@ -11,6 +11,7 @@ import { toCss } from '../../../util/util';
 import Case from '../../components/case/Case';
 import CtaButton from '../../components/ctaButton/CtaButton';
 import PicSource from '../../components/picSource/PicSource';
+import { fallbackJpgSet, fallbackSizes, fallbackFallback } from './Img';
 const {
     wrapper: s_wrapper,
     ctaBtn: s_ctaBtn,
@@ -18,6 +19,8 @@ const {
     gallery: s_gallery,
     colorful: s_colorful,
     intuitive: s_intuitive,
+    video: s_video,
+    fallbackImg: s_fallbackImg,
     image: s_image,
     item1: s_item1,
     item2: s_item2,
@@ -65,10 +68,17 @@ export default function(props: ShowcaseProps): JSX.Element {
 
             <Case
                 text='And Order?'   
-                minHeight 
+                 minHeight
             >
                 <div className={toCss(s_orderVideo)} >
-                    <video autoPlay muted loop>
+                    <img
+                        className={toCss(s_fallbackImg)} 
+                        srcSet={fallbackJpgSet}
+                        sizes={fallbackSizes}
+                        src={fallbackFallback}
+                        alt='A structured desk with writing stuff and a laptop'
+                    />
+                    <video className={toCss(s_video)}  autoPlay muted loop>
                         <source src={orderVideoMp4Url} type='video/mp4' />
                         <source src={orderVideoWebmUrl} type='video/webm' />
                     </video>
