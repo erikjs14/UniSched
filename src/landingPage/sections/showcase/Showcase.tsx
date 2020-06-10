@@ -7,11 +7,12 @@ import CSS from './Showcase.module.scss';
 import orderVideoMp4Url from '../../assets/video/order.mp4';
 import orderVideoWebmUrl from '../../assets/video/order.webm';
 import { ShowcaseProps } from './Showcase.d';
-import { toCss } from '../../../util/util';
+import { toCss, isMobile } from '../../../util/util';
 import Case from '../../components/case/Case';
 import CtaButton from '../../components/ctaButton/CtaButton';
 import PicSource from '../../components/picSource/PicSource';
 import { fallbackImgItem } from './Img';
+import { LazyLoadComponent, trackWindowScroll, ScrollPosition } from 'react-lazy-load-image-component';
 const {
     wrapper: s_wrapper,
     ctaBtn: s_ctaBtn,
@@ -31,7 +32,7 @@ const {
     item7: s_item7,
 } = CSS;
 
-export default function(props: ShowcaseProps): JSX.Element {
+export default trackWindowScroll(function(props: ShowcaseProps&{scrollPosition: ScrollPosition|undefined}): JSX.Element {
     
     return (
         <section className={toCss(s_wrapper)}>
@@ -41,13 +42,13 @@ export default function(props: ShowcaseProps): JSX.Element {
                 text='Colorful Design'    
             >
                 <div className={toCss(s_gallery, s_colorful)} >
-                    <PicSource item={g1item1} figClass={toCss(s_item1)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item2} figClass={toCss(s_item2)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item3} figClass={toCss(s_item3)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item4} figClass={toCss(s_item4)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item5} figClass={toCss(s_item5)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item6} figClass={toCss(s_item6)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item7} figClass={toCss(s_item7)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item1} figClass={toCss(s_item1)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item2} figClass={toCss(s_item2)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item3} figClass={toCss(s_item3)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item4} figClass={toCss(s_item4)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item5} figClass={toCss(s_item5)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item6} figClass={toCss(s_item6)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item7} figClass={toCss(s_item7)} imgClass={s_image} alt='' />
                 </div>
             </Case>
 
@@ -56,13 +57,13 @@ export default function(props: ShowcaseProps): JSX.Element {
                 text='Intuitive Design'    
             >
                 <div className={toCss(s_gallery, s_intuitive)} >
-                    <PicSource item={g2item1} figClass={toCss(s_item1)} imgClass={s_image} alt='' />
-                    <PicSource item={g2item2} figClass={toCss(s_item2)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item3} figClass={toCss(s_item3)} imgClass={s_image} alt='' />
-                    <PicSource item={g2item4} figClass={toCss(s_item4)} imgClass={s_image} alt='' />
-                    <PicSource item={g2item5} figClass={toCss(s_item5)} imgClass={s_image} alt='' />
-                    <PicSource item={g2item6} figClass={toCss(s_item6)} imgClass={s_image} alt='' />
-                    <PicSource item={g1item7} figClass={toCss(s_item7)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g2item1} figClass={toCss(s_item1)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g2item2} figClass={toCss(s_item2)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item3} figClass={toCss(s_item3)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g2item4} figClass={toCss(s_item4)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g2item5} figClass={toCss(s_item5)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g2item6} figClass={toCss(s_item6)} imgClass={s_image} alt='' />
+                    <PicSource scrollPosition={props.scrollPosition} item={g1item7} figClass={toCss(s_item7)} imgClass={s_image} alt='' />
                 </div>
             </Case>
 
@@ -71,11 +72,14 @@ export default function(props: ShowcaseProps): JSX.Element {
                  minHeight
             >
                 <div className={toCss(s_orderVideo)} >
-                    <PicSource item={fallbackImgItem} figClass={toCss(s_fallbackImg)} alt='A structured desk with writing stuff and a laptop' />
-                    <video className={toCss(s_video)}  autoPlay muted loop>
-                        <source src={orderVideoMp4Url} type='video/mp4' />
-                        <source src={orderVideoWebmUrl} type='video/webm' />
-                    </video>
+                    {!isMobile() ? (
+                        <LazyLoadComponent>
+                            <video className={toCss(s_video)}  autoPlay muted loop>
+                                <source src={orderVideoMp4Url} type='video/mp4' />
+                                <source src={orderVideoWebmUrl} type='video/webm' />
+                            </video>
+                        </LazyLoadComponent>
+                    ) : <PicSource scrollPosition={props.scrollPosition} item={fallbackImgItem} figClass={toCss(s_fallbackImg)} alt='A structured desk with writing stuff and a laptop' />}
                 </div>
             </Case>
 
@@ -85,4 +89,4 @@ export default function(props: ShowcaseProps): JSX.Element {
 
         </section>
     );
-}
+});

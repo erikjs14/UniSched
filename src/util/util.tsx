@@ -40,5 +40,5 @@ export const subjectsToObject = (subjects: SubjectModelWithId[]): {[id: string]:
 
 // heuristic approach
 export const isMobile = (): boolean => {
-    return window.screen.width < 1000;
+    return window.screen.width < 601;
 }

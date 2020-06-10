@@ -6,6 +6,7 @@ export interface ItemType {
     sizes: string;
 }
 export interface PicSourceProps {
+    scrollPosition?: ScrollPosition;
     item: ItemType,
     figClass: string;
     imgClass?: string;
