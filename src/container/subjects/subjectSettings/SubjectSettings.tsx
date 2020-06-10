@@ -388,6 +388,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                                 .then(() => {
                                                     close();
                                                     dispatchToStore(removeSubjectLocally(state.subject?.id || ''))
+                                                    dispatchToStore(forceRefresh('event'));
+                                                    dispatchToStore(forceRefresh('task'));
+                                                    dispatchToStore(forceRefresh('exam'));
                                                     history.push('/subjects');
                                                 })
                                                 .catch(error => {

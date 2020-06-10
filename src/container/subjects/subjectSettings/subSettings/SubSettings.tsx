@@ -8,6 +8,8 @@ import { Dialog } from 'evergreen-ui';
 import { SubjectDataModelWithId, SubjectDataModel } from './../../../../firebase/model';
 import { removeKey } from '../../../../util/util';
 import { getTimestampFromDate } from '../../../../util/timeUtil';
+import { useDispatch } from 'react-redux';
+import { forceRefresh } from '../../../../store/actions';
 
 export default React.memo(
     forwardRef(
@@ -16,6 +18,8 @@ export default React.memo(
             ref: React.Ref<any>
         )
     : JSX.Element => {
+
+    const dispatchGlobal = useDispatch();
 
     const {
         fetchAllData,
@@ -119,15 +123,14 @@ export default React.memo(
                         setDeleting(true);
 
                         if (wantDelete.startsWith('NEW_')) {
-                            console.log(data)
                             remove(wantDelete);
                             setDeleting(false);
                             setWantDelete(null);
-                            console.log(data)
                         } else {
                             deleteData(wantDelete)
                                 .then(() => {
                                     close();
+                                    dispatchGlobal(forceRefresh(props.dataTypeId));
                                 })
                                 .catch(error => {
                                     props.onError(error);

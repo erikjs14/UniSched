@@ -1,6 +1,6 @@
 import React, { useEffect, Suspense } from 'react';
 import './App.scss';
-import { Switch, Redirect, Route } from 'react-router-dom';
+import { Switch, Redirect, Route, useLocation } from 'react-router-dom';
 import AntiProtectedRoute from './components/util/AntiProtectedRoute/AntiProtectedRoute';
 import './firebase/firebase'; // init firebase
 import firebase from 'firebase';
@@ -45,18 +45,20 @@ function App() {
         })
     }, [dispatch]);
 
+    const location = useLocation();
+
     const loading = useSelector((state: RootState) => state.user?.globalLoading);
-    if (loading) {
+    if (loading && location.pathname !== '/') {
         // display global page load animation here
         return <h1>LOADING...</h1>;
     }
 
     const routes = (
-        <Suspense fallback={<h1>LOADING...</h1>}>
+        <Suspense fallback={<Loader />}>
             <Switch>
                 {/* Non-protected routes */}
-                <AntiProtectedRoute exact path='/' component={LandingPage} orElse='/todo' />
-                <Route exact path='/auth' component={Auth} />
+                <Route exact path='/' component={LandingPage} />
+                <AntiProtectedRoute exact path='/auth' component={Auth} orElse='/todo' />
                 <Route exact path='/legal-details' component={Imprint} />
                 <Route exact path='/tos' component={Tos} />
                 <Route exact path='/privacy' component={PrivacyPolicy} />

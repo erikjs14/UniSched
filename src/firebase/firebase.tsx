@@ -11,7 +11,7 @@ export const authUI: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(firebas
 
 export const showAuthUI = (identifier: string | Element): void => {
     authUI.start(identifier, {
-        signInSuccessUrl: '/todos',
+        signInSuccessUrl: '/todo',
         signInOptions: [
             firebase.auth.EmailAuthProvider.PROVIDER_ID,
             firebase.auth.GoogleAuthProvider.PROVIDER_ID,

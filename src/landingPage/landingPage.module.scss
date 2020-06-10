@@ -1,0 +1,48 @@
+.toAppContainer {
+    animation: animateIn .2s forwards;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    color: #fff;
+    text-align: center;
+    z-index: 10000;
+    cursor: pointer;
+
+    span {
+        display: block;
+        margin-bottom: -.15em;
+        margin-top: -.3em;
+        font-size: 1.5em;
+        line-height: 1em;
+    }
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(#fff, .1);
+        border-bottom-left-radius: 50%;
+        transition: all .2s;
+    }
+
+    &:hover::before,
+    &:active::before {
+        background-color: rgba(#fff, .2);
+        height: calc(100% + .5rem);
+        width: calc(100% + .5rem);
+    }
+}
+
+@keyframes animateIn {
+    from {
+        transform: translate(100%, -100%);
+    }
+    to {
+        transform: translate(0, 0);
+    }
+}
