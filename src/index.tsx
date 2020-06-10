@@ -9,8 +9,6 @@ import { Provider } from 'react-redux';
 
 // style imports
 import './index.scss';
-import './style/override.scss';
-import 'react-datepicker/dist/react-datepicker.css';
 
 import userReducer from './store/reducers/user';
 import dataReducer from './store/reducers/data';

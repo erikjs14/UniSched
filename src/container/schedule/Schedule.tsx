@@ -14,6 +14,8 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/daygrid/main.css';
 import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
+import '../../style/override.scss';
+import 'react-datepicker/dist/react-datepicker.css';
 import { toCss } from './../../util/util';
 
 import CSS from './Schedule.module.scss';

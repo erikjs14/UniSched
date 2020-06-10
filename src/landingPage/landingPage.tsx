@@ -6,6 +6,7 @@ import Showcase from './sections/showcase/Showcase';
 import Footer from './sections/footer/Footer';
 
 export default function(): JSX.Element {
+    console.log('LANDING')
     return (
         <div>
             

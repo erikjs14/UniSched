@@ -27,6 +27,8 @@ import { useDispatch } from 'react-redux';
 import { updateSubjectLocally } from '../../../store/actions/user';
 import { toaster } from 'evergreen-ui';
 import { getTimestampFromDate } from '../../../util/timeUtil';
+import '../../../style/override.scss';
+import 'react-datepicker/dist/react-datepicker.css';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -41,6 +43,7 @@ const {
     saveBtn: s_saveBtn,
     backArrow: s_backArrow,
 } = CSS;
+
 
 export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 

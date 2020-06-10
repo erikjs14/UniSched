@@ -1,6 +1,6 @@
 import React, { useEffect, Suspense } from 'react';
 import './App.scss';
-import { Switch, Redirect, Route, useLocation } from 'react-router-dom';
+import { Switch, Redirect, Route } from 'react-router-dom';
 import AntiProtectedRoute from './components/util/AntiProtectedRoute/AntiProtectedRoute';
 import './firebase/firebase'; // init firebase
 import firebase from 'firebase';
@@ -45,10 +45,8 @@ function App() {
         })
     }, [dispatch]);
 
-    const location = useLocation();
-
     const loading = useSelector((state: RootState) => state.user?.globalLoading);
-    if (loading && location.pathname !== '/') {
+    if (loading) {
         // display global page load animation here
         return <h1>LOADING...</h1>;
     }
@@ -67,6 +65,7 @@ function App() {
                 <Route path='/' render={() => (
                     <Suspense fallback={<Loader />}>
                         <Layout>
+                            <Suspense fallback={<Loader />}>
                                 <AnimatedSwitch>
                                     <ProtectedRoute exact path='/todo'       component={ToDos}       orElse='/auth' />
                                     <ProtectedRoute exact path='/schedule'   component={Schedule}    orElse='/auth' />
@@ -78,6 +77,7 @@ function App() {
 
                                     <Redirect to='/' />
                                 </AnimatedSwitch>
+                            </Suspense>
                         </Layout>
                     </Suspense>
                 )} />

@@ -15,6 +15,8 @@ import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
 //calendar styles
 import '@fullcalendar/core/main.css';
 import '@fullcalendar/list/main.css';
+import '../../style/override.scss';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const {
     wrapperCalendar: s_wrapperCalendar,
