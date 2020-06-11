@@ -6,6 +6,7 @@
     font-weight: bold;
     background-color: $col-secondary-light;
     padding-top: 7rem;
+    @include respond(phone) { padding-top: 12rem;}
     padding-bottom: 10rem;
     font-size: 8rem;
     @include respond(phone) { font-size: 5rem;}

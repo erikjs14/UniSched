@@ -74,6 +74,8 @@
 
     background-size: cover;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 10rem));
+    @include respond(phone) { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5rem)); padding-bottom: 15rem;}
+    @include respond(small-phone) { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3rem)); padding-bottom: 10rem;}
 
     h2 {
         color: $col-secondary-light;

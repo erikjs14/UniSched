@@ -4,13 +4,17 @@
 .wrapper {
     position: relative;
     padding: 5rem;
+    @include respond(phone) { padding-top: 0;}
     padding-bottom: 15vw;
     @include respond(tab-land) {padding: 3rem 2rem inherit;}
-    @include respond(phone) {padding-bottom: 66vw;}
-    @include respond(small-phone) {padding-bottom: 75vw;}
+    @include respond(phone) {padding-bottom: 50vw;}
+    @include respond(small-phone) {padding-bottom: 60vw;}
     color: white;
     background: rgb(34,40,49);
     background: $hero-gradient;
+    @include respond(phone) {
+        background: unset;
+    }
     .waveTop {
         z-index: 10;
         position: absolute;
@@ -40,7 +44,7 @@
         flex-grow: 1;
         flex-basis: 50%;
         // flex: 1 0 50%;
-        @include respond(phone) {order: -1; min-width: 100vw; margin-bottom: 4rem;}
+        @include respond(phone) {order: -1; min-width: 100vw;}
         text-align: center;
         // height: 60%;
 
@@ -53,7 +57,7 @@
             position: relative;
             font-size: 8rem;
             @include respond(tab-port) {font-size: 6rem;}
-            @include respond(small-phone) {font-size: 4.5rem;}
+            @include respond(small-phone) {font-size: 5rem;}
             text-transform: uppercase;
             margin-bottom: 4rem;
 
@@ -101,6 +105,81 @@
                 }
             }
         }
+
+        .sloganMobile,
+        .downArrow {
+            display: none;
+        }
+
+        @include respond(phone) {
+            padding-top: 15vh;
+            min-height: 100vh;
+            background-color: #fff;
+            color: #000;
+            position: relative;
+
+            h1 {
+                letter-spacing: 2px;
+                .arrow {
+                    background-color: #000;
+                    &::after {
+                        border-color: transparent transparent transparent #000;
+                    }
+                }
+            }
+
+            .ctaAndLogin {
+                color: #fff;
+                background-image: $hero-gradient;
+                width: 100vw;
+                padding: 5rem 0;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                // margin-top: 3rem;
+                clip-path: polygon(0 0, 100% 2rem, 100% 100%, 0 calc(100% - 2rem));
+
+                .ctaBtn {
+                    @include respond(small-phone) { font-size: 1.7em; }
+                }
+            }
+
+            .sloganMobile {
+                font-style: italic;
+                font-weight: 600;
+                font-size: 2.5rem;
+                @include respond(small-phone) { font-size: 2rem;}
+                display: block;
+                position: absolute;
+                bottom: 12rem;
+            }
+
+            .downArrow {
+                cursor: pointer;
+                display: block;
+                position: absolute;
+                bottom: 6rem;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 8px;
+                height: 3rem;
+                background-color: #000;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -8px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 11px 8px 0 8px;
+                    border-color: #000 transparent transparent transparent;
+                }
+            }
+        }
     }
 }
 
@@ -113,8 +192,7 @@
     position: relative;
     z-index: 1000;
     @include respond(phone) {
-        font-size: 1.5em;
-        margin-bottom: unset;
+        display: none;
     }
 }
 

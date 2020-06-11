@@ -42,3 +42,5 @@ export const subjectsToObject = (subjects: SubjectModelWithId[]): {[id: string]:
 export const isMobile = (): boolean => {
     return window.screen.width < 601;
 }
+
+export const scrollTo = (myRef: any) => myRef.current ? window.scrollTo(0, myRef.current.offsetTop) : null;

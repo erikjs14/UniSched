@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useRef } from 'react';
 
 import CSS from './Hero.module.scss';
 import { HeroProps } from './Hero.d';
-import { toCss } from '../../../util/util';
+import { toCss, scrollTo } from '../../../util/util';
 import {ReactComponent as Wave1} from '../../assets/svg/wave1.svg';
 import {ReactComponent as Wave2} from '../../assets/svg/wave2.svg';
 import NameBrand from '../../components/nameBrand/NameBrand';
@@ -21,11 +21,16 @@ const {
     ctaBtn: s_ctaBtn,
     login: s_login,
     arrow: s_arrow,
+    ctaAndLogin: s_ctaAndLogin,
+    sloganMobile: s_sloganMobile,
+    downArrow: s_downArrow,
 } = CSS;
 
 
 
 export default function(props: HeroProps): JSX.Element {
+
+    const compositionRef = useRef(null);
     
     return (
         <Fragment>
@@ -35,7 +40,10 @@ export default function(props: HeroProps): JSX.Element {
                     <NameBrand first='erik' last='schake' withBg/>
                 </div>
 
-                <div className={toCss(s_showcase)} >
+                <div 
+                    ref={compositionRef}
+                    className={toCss(s_showcase)} 
+                >
 
                     <DeviceComposition
                         laptopPngSet={laptopPngSet} laptopWebpSet={laptopWebpSet} laptopFallback={laptopFallback}
@@ -53,14 +61,18 @@ export default function(props: HeroProps): JSX.Element {
 
                 <div className={toCss(s_ctaArea)}>
                     <h1>Unisched<span className={toCss(s_arrow)}></span> </h1>
-                    <div className={toCss(s_ctaBtn)} >
-                        <CtaButton
-                            linkTo='/auth'
-                        >
-                            Free Sign Up
-                        </CtaButton>
-                    </div>                
-                    <p className={toCss(s_login)} ><Link to='/auth'>or Login</Link></p>    
+                    <div className={toCss(s_ctaAndLogin)} >
+                        <div className={toCss(s_ctaBtn)} >
+                            <CtaButton
+                                linkTo='/auth'
+                            >
+                                Free Sign Up
+                            </CtaButton>
+                        </div>                
+                        <p className={toCss(s_login)} ><Link to='/auth'>or Login</Link></p>    
+                    </div>  
+                    <span className={toCss(s_sloganMobile)}>The best tool to get organized!</span>
+                    <span onClick={() => scrollTo(compositionRef)} className={toCss(s_downArrow)}></span>                    
                 </div> 
 
                 <Wave1 className={toCss(s_waveTop)} />
