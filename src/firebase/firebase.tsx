@@ -1,13 +1,13 @@
 import firebaseConfig from './firebaseConfig.json';
 import firebase from 'firebase/app';
-import * as firebaseui from 'firebaseui';
+import {auth} from 'firebaseui';
 import 'firebase/auth';
 import 'firebase/firestore';
 
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
-export const authUI: firebaseui.auth.AuthUI = new firebaseui.auth.AuthUI(firebase.auth());
+export const authUI: auth.AuthUI = new auth.AuthUI(firebase.auth());
 
 export const showAuthUI = (identifier: string | Element): void => {
     authUI.start(identifier, {
