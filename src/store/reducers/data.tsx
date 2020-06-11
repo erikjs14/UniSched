@@ -3,7 +3,7 @@ import { updateObject } from '../../util/util';
 import { DataState } from './data.d';
 import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC } from '../actions/data.d';
 import { ExamModelWithId, EventModelWithId } from '../../firebase/model';
-import { getAllConfigFromExams, getAllConfigFromEvents } from '../../util/scheduleUtil';
+import { getAllConfigFromExams, getAllConfigFromEvents, ConfigType } from '../../util/scheduleUtil';
 import { findColorConfig } from '../../config/colorChoices';
 import { SubjectModelWithId } from './../../firebase/model';
 
@@ -201,8 +201,9 @@ const forceRefresh = (state: DataState, action: ForceRefreshAC): DataState => {
 };
 
 
-const mapExamsPerSubjectToConfig = (examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]): object[] => {
-    let newExamsConfig: object[] = [];
+export interface ExamConfigType extends ConfigType {backgroundColor: string}
+const mapExamsPerSubjectToConfig = (examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]): ExamConfigType[] => {
+    let newExamsConfig: ExamConfigType[] = [];
     examsPerSubject.forEach((exams, idx) => {
         newExamsConfig = [
             ...newExamsConfig,
@@ -211,14 +212,15 @@ const mapExamsPerSubjectToConfig = (examsPerSubject: ExamModelWithId[][], subjec
                 title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
                 backgroundColor: findColorConfig(subjects[idx].color).value,
                 end: '', // unset end
-            })),
+            } as unknown as ExamConfigType)),
         ];
     });
     return newExamsConfig;
 }
 
-const mapEventsPerSubjectToConfig = (eventsPerSubject: EventModelWithId[][], subjects: SubjectModelWithId[]): object[] => {
-    let newEventsConfig: object[] = [];
+export interface EventConfigType extends ConfigType {backgroundColor: string}
+const mapEventsPerSubjectToConfig = (eventsPerSubject: EventModelWithId[][], subjects: SubjectModelWithId[]): EventConfigType[] => {
+    let newEventsConfig: EventConfigType[] = [];
     eventsPerSubject.forEach((events, idx) => {
         newEventsConfig = [
             ...newEventsConfig,
@@ -227,7 +229,7 @@ const mapEventsPerSubjectToConfig = (eventsPerSubject: EventModelWithId[][], sub
                 title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
                 backgroundColor: findColorConfig(subjects[idx].color).value,
                 end: '', // unset end
-            })),
+            } as unknown as EventConfigType)),
         ];
     });
     return newEventsConfig;

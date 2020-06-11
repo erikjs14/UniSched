@@ -220,6 +220,8 @@ export const endOf = (date: Date): Date => {
     return out;
 }
 
+export const isInFuture = (d: Date): boolean => Date.now() < d.getTime();
+
 export const getTimestampFromSeconds = (secs: number): Timestamp => ({seconds: secs, nanoseconds: 0});
 export const getSecondsFromDate = (date: Date): number => Math.round(date.getTime() / 1000);
 export const getDateFromSeconds = (secs: number): Date => new Date(secs * 1000);
