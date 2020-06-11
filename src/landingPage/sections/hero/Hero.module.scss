@@ -63,10 +63,10 @@
 
             .arrow {
                 position: absolute;
-                left: 0;
-                bottom: 0;
+                left: 1rem;
+                right: 1rem;
+                bottom: .5rem;
                 height: 5px;
-                width: 100%;
                 background-color: #fff;
 
                 &::after {
@@ -83,6 +83,10 @@
                     border-color: transparent transparent transparent #fff;
 
                 }
+            }
+            overflow: hidden;
+            &:hover .arrow {
+                animation: animateArrow .75s ease-in-out;
             }
         }
 
@@ -102,7 +106,7 @@
                 color: inherit;
                 font-size: 1.3em;
 
-                &:hover {
+                &:hover:not(:active) {
                     color: rgba(#fff, .5);
                     text-decoration: none;
                 }
@@ -237,5 +241,21 @@
     }
     100% {
         transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes animateArrow {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(150%);
+        animation-timing-function: step-end;
+    }
+    51% {
+        transform: translateX(-150%);
+    }
+    100% {
+        transform: translateX(0);
     }
 }
