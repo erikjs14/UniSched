@@ -113,7 +113,8 @@
 
         @include respond(phone) {
             padding-top: 15vh;
-            min-height: 100vh;
+            min-height: 95vh;
+            margin-bottom: 5vh;
             background-color: #fff;
             color: #000;
             position: relative;
