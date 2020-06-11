@@ -17,10 +17,10 @@ const {
     showcase: s_showcase,
     ctaArea: s_ctaArea,
     nameBrand: s_nameBrand,
-    by: s_by,
     slogan: s_slogan,
     ctaBtn: s_ctaBtn,
     login: s_login,
+    arrow: s_arrow,
 } = CSS;
 
 
@@ -30,6 +30,10 @@ export default function(props: HeroProps): JSX.Element {
     return (
         <Fragment>
             <header className={toCss(s_wrapper)}>
+
+                <div className={toCss(s_nameBrand)} >
+                    <NameBrand first='erik' last='schake' withBg/>
+                </div>
 
                 <div className={toCss(s_showcase)} >
 
@@ -48,21 +52,15 @@ export default function(props: HeroProps): JSX.Element {
                 </div>
 
                 <div className={toCss(s_ctaArea)}>
-                    <h1>Unisched</h1>
-                    <div className={toCss(s_nameBrand)} >
-                        <div className={toCss(s_by)} >
-                            by
-                        </div>
-                        <NameBrand first='erik' last='schake' withBg/>
-                    </div>
+                    <h1>Unisched<span className={toCss(s_arrow)}></span> </h1>
                     <div className={toCss(s_ctaBtn)} >
                         <CtaButton
                             linkTo='/auth'
                         >
-                            Sign Up
+                            Free Sign Up
                         </CtaButton>
                     </div>                
-                    <p className={toCss(s_login)} >Or <Link to='/auth'>&nbsp; login &crarr;</Link></p>    
+                    <p className={toCss(s_login)} ><Link to='/auth'>or Login</Link></p>    
                 </div> 
 
                 <Wave1 className={toCss(s_waveTop)} />

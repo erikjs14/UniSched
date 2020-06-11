@@ -2,6 +2,8 @@
 @import '../../../style/abstract/mixins';
 
 .wrapper {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: bold;
     background-color: $col-secondary-light;
     padding-top: 7rem;
     padding-bottom: 10rem;
@@ -38,24 +40,12 @@
             object-fit: cover;
         }
 
-        // .video {
-        //     display: none;
-        //     @include minrespond(phone) { display: block; }
-        // }
-
         @include respond(phone) { position: relative;}
-        // .fallbackImg {
-        //     display: none;
-        //     @include respond(phone) { 
-        //         display: block; 
-        //         width: 100%;
-        //         object-fit: cover;
-        //     }
-        // }
      }
 
      .ctaBtn {
          margin: 10rem auto 0;
+         color: #fff;
          font-size: 4rem;
          @include respond(phone) { font-size: 3rem;}
      }

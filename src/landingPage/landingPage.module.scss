@@ -36,6 +36,14 @@
         height: calc(100% + .5rem);
         width: calc(100% + .5rem);
     }
+
+}
+
+.wrapper {
+    //override in app font
+    h1, h2 {
+        font-family: 'IBM Plex mono', monospace;
+    }
 }
 
 @keyframes animateIn {

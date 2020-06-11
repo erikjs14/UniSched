@@ -1,11 +1,11 @@
 $text-col: #000;
 $text-col-white: #fff;
-$bg-col: #333;
+$bg-col: #000;
 
 .wrapper {
     display: inline-block;
     font-family: 'IBM Plex Mono', monospace;
-    padding: .25em .5em;
+    padding: 1.7em .5em .25em;
     color: $text-col;
     text-transform: lowercase;
     text-align: left;

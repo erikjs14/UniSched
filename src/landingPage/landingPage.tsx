@@ -11,6 +11,7 @@ import { toCss } from '../util/util';
 import { useHistory } from 'react-router-dom';
 const {
     toAppContainer: s_toAppContainer,
+    wrapper: s_wrapper,
 } = CSS;
 
 export default function(): JSX.Element {
@@ -19,7 +20,7 @@ export default function(): JSX.Element {
     const history = useHistory();
 
     return (
-        <div>
+        <div className={toCss(s_wrapper)} >
 
             {isSignedIn ? (
                 <div 

@@ -18,7 +18,6 @@ export default function(props: PropsWithChildren<CtaButtonProps>): JSX.Element {
             >
                 {props.children}
             </a>
-            <p>For Free</p>
         </div>
     );
 }
