@@ -15,6 +15,13 @@
     background: $hero-gradient;
     text-align: center;
 
+    h1 {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 7rem;
+        @include respond(phone) { font-size: 5rem;}
+        @include respond(small-phone) { font-size: 4rem;}
+    }
+
     .home {
         position: absolute;
         top: 2rem;
