@@ -17,6 +17,9 @@ import '@fullcalendar/core/main.css';
 import '@fullcalendar/list/main.css';
 import '../../style/override.scss';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ExamConfigType } from '../../store/reducers/data';
+import { isInFuture } from '../../util/timeUtil';
+import { PREF_ID_SHOW_ONLY_FUTURE_EXAMS } from './../../config/userPreferences';
 
 const {
     wrapperCalendar: s_wrapperCalendar,
@@ -51,6 +54,8 @@ export default function() {
         }
     }, [dispatch, examsConfig, loading, subjects, timestamp]);
 
+    const userPrefersOnlyFutureExams = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_SHOW_ONLY_FUTURE_EXAMS]);
+
     if (loading) {
         return <Loader />;
     } else if (error || !examsConfig) {
@@ -73,7 +78,10 @@ export default function() {
                     plugins={[listPlugin]}
                     nowIndicator
                     aspectRatio={calAspectRatio}
-                    events={examsConfig}
+                    events={userPrefersOnlyFutureExams
+                        ? examsConfig.filter(examConfig => isInFuture((examConfig as ExamConfigType).start))
+                        : examsConfig 
+                    }
                     eventTimeFormat={CALENDAR_DEFAULT_TIME_FORMAT}
                 />
             </div>

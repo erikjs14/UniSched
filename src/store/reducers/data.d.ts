@@ -1,4 +1,5 @@
 import { TaskModelWithIdAndSubjectId, ExamModelWithId, EventModelWithId } from './../../firebase/model';
+import {EventConfigType, ExamConfigType} from './data';
 
 export interface DataState {
     tasks: {
@@ -10,7 +11,7 @@ export interface DataState {
     };
     exams: {
         dataPerSubject: ExamModelWithId[][] | null;
-        config: object[] | null;
+        config: ExamConfigType[] | null;
         loading: boolean;
         refreshing: boolean;
         error: string | null;
@@ -18,7 +19,7 @@ export interface DataState {
     };
     events: {
         dataPerSubject: EventModelWithId[] | null;
-        config: object[] | null;
+        config: EventConfigType[] | null;
         loading: boolean;
         refreshing: boolean;
         error: string | null;

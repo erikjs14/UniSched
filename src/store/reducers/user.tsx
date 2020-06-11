@@ -3,6 +3,7 @@ import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
 import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC } from '../actions/user.d';
 import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC, AddUserAndDataAC } from './../actions/user.d';
+import { DEFAULT_PREFERENCES_STATE } from '../../config/userPreferences';
 
 const initialState: UserState = {
     username: null,
@@ -123,7 +124,10 @@ const postUserData = (state: UserState, action: PostUserDataAC): UserState => {
 const setUserData = (state: UserState, action: SetUserDataAC): UserState => {
     return updateObject(state, {
         timeCreated: action.timeCreated,
-        preferences: action.preferences,
+        preferences: {
+            ...DEFAULT_PREFERENCES_STATE, //merge with default
+            ...action.preferences,
+        },
     });
 };
 
