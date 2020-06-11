@@ -38,6 +38,8 @@
         position: absolute;
         top: 0;
         left: 5rem;
+        @include respond(phone) { left: 3rem;}
+        z-index: 1000;
     }
 
     .ctaArea {
@@ -88,6 +90,9 @@
 
         .ctaBtn {
             font-size: 3rem;
+            @include respond(tab-port) { font-size: 2.5rem;}
+            @include respond(phone) { font-size: 3rem;}
+            @include respond(small-phone) { font-size: 2.5rem;}
         }
 
         .login {
@@ -153,6 +158,7 @@
                 display: block;
                 position: absolute;
                 bottom: 12rem;
+                text-align: center;
             }
 
             .downArrow {
