@@ -14,6 +14,7 @@ const {
     wrapper: s_wrapper,
     waveTop: s_waveTop,
     waveBottom: s_waveBottom,
+    waveBottomWrapper: s_waveBottomWrapper,
     showcase: s_showcase,
     ctaArea: s_ctaArea,
     nameBrand: s_nameBrand,
@@ -78,7 +79,7 @@ export default function(props: HeroProps): JSX.Element {
                 <Wave1 className={toCss(s_waveTop)} />
             </header>
             <strong className={toCss(s_slogan)} >The best tool to get organized!</strong>
-            <Wave2 className={toCss(s_waveBottom)} />
+            <div className={toCss(s_waveBottomWrapper)} ><Wave2 className={toCss(s_waveBottom)} /></div>
         </Fragment> 
     );
 }

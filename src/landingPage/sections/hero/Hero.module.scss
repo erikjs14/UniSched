@@ -55,6 +55,7 @@
 
         h1 {
             position: relative;
+            padding: .5rem 0;
             font-size: 8rem;
             @include respond(tab-port) {font-size: 6rem;}
             @include respond(small-phone) {font-size: 5rem;}
@@ -64,7 +65,7 @@
             .arrow {
                 position: absolute;
                 left: 1rem;
-                right: 1rem;
+                right: calc(1rem + 7px);
                 bottom: .5rem;
                 height: 5px;
                 background-color: #fff;
@@ -225,11 +226,15 @@
     }
 }
 
-.waveBottom {
-    transform: rotate(180deg);
-    width: 105vw;
-    position: relative;
-    z-index: 100;
+.waveBottomWrapper{
+    width: 100vw;
+    overflow: hidden;
+    .waveBottom {
+        transform: rotate(180deg);
+        width: 105vw;
+        position: relative;
+        z-index: 100;
+    }
 }
 
 @keyframes animateUpDown {
