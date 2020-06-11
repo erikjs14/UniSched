@@ -150,6 +150,7 @@
             }
 
             .sloganMobile {
+                font-family: 'IBM Plex sans', sans-serif;
                 font-style: italic;
                 font-weight: 600;
                 font-size: 2.5rem;
@@ -186,6 +187,8 @@
                 height: 3rem;
                 background-color: #000;
 
+                animation: animateUpDown 3s infinite;
+
                 &::after {
                     content: '';
                     position: absolute;
@@ -204,6 +207,8 @@
 }
 
 .slogan {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-style: italic;
     text-align: center;
     display: block;
     margin: auto;
@@ -221,4 +226,16 @@
     width: 105vw;
     position: relative;
     z-index: 100;
+}
+
+@keyframes animateUpDown {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    60%, 70% {
+        transform: translateY(10px) scale(1.05);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
 }
