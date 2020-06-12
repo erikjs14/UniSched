@@ -48,6 +48,11 @@ jobs:
         env:
           FILE_NAME: ./src/legal/PrivacyPolicy.tsx
           FILE_DATA: ${{ secrets.PRIVACY_COMPONENT }}
+      - name: Add sitemap
+        uses: finnp/create-file-action@1.0.0
+        env:
+          FILE_NAME: ./public/sitemap.txt
+          FILE_DATA: ${{ secrets.SITEMAP }}
       - name: Install Dependencies
         run: yarn install
       - name: Build
