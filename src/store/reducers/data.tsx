@@ -228,7 +228,6 @@ const mapEventsPerSubjectToConfig = (eventsPerSubject: EventModelWithId[][], sub
                 ...conf,
                 title: '[' + subjects[idx].name.toUpperCase() + '] ' + conf.title,
                 backgroundColor: findColorConfig(subjects[idx].color).value,
-                end: '', // unset end
             } as unknown as EventConfigType)),
         ];
     });
