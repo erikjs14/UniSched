@@ -1,3 +1,5 @@
+@import '../../../../style/abstract/variables';
+
 .wrapper {
 
 }
@@ -6,4 +8,12 @@
     &:last-child {
         margin-bottom: 2rem;
     }
+}
+
+.showMore {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1.2em;
+    margin: 2rem 10rem;
+    border-bottom: 2px solid $col-primary-light;
 }
