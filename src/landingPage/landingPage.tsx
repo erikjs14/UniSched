@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import Hero from './sections/hero/Hero';
 import Functions from './sections/functions/Functions';
 import Testimonials from './sections/testimonials/Testimonials';
 import Showcase from './sections/showcase/Showcase';
 import Footer from './sections/footer/Footer';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '..';
 import CSS from './landingPage.module.scss';
 import { toCss } from '../util/util';
 import { useHistory } from 'react-router-dom';
+import BackTop from '../components/backtop/BackTop';
+import * as actions from '../store/actions';
 const {
     toAppContainer: s_toAppContainer,
     wrapper: s_wrapper,
@@ -19,8 +21,14 @@ export default function(): JSX.Element {
     const isSignedIn = useSelector((state: RootState) => state.user.username !== null);
     const history = useHistory();
 
+    const dispatch = useDispatch();
+    const scrollContainerRef = useRef(null);
+    useEffect(() => {
+        dispatch(actions.setScrollContainerRef(null));
+    }, [dispatch]);
+
     return (
-        <div className={toCss(s_wrapper)} >
+        <div ref={scrollContainerRef} className={toCss(s_wrapper)} >
 
             {isSignedIn ? (
                 <div 
@@ -51,6 +59,8 @@ export default function(): JSX.Element {
             <Footer
 
             />
+
+            <BackTop />
 
         </div>
     )

@@ -1,0 +1,36 @@
+@import '../../style/abstract/variables';
+@import '../../style/abstract/mixins';
+
+.wrapper {
+    position: fixed;
+    bottom: 3rem;
+    right: 5rem;
+    @include respond(phone) { bottom: 5rem; right: 3rem;}
+    width: 3rem;
+    height: 3rem;
+    @include respond(phone) { width: 5rem; height: 5rem;}
+    cursor: pointer;
+    background-color: $col-secondary-light;
+    border-radius: 50%;
+    box-shadow: 0 0 3px 1px $col-primary-light;
+    z-index: 10000;
+
+    transition: all .3s;
+    &:hover {
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 0 5px 1px $col-primary-light;
+    }
+
+    .icon {
+        width: 100%;
+        height: 100%;
+        color: rgba($col-primary-dark, .8);
+    }
+
+    opacity: 0;
+    visibility: hidden;
+    &.show {
+        opacity: 1;
+        visibility: visible;
+    }
+}
