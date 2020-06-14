@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import FullCalendar from '@fullcalendar/react';
 import Loader from '../../components/ui/loader/Loader';
@@ -20,15 +20,28 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ExamConfigType } from '../../store/reducers/data';
 import { isInFuture } from '../../util/timeUtil';
 import { PREF_ID_SHOW_ONLY_FUTURE_EXAMS } from './../../config/userPreferences';
+import Input from '../../components/ui/input/Input';
 
 const {
     wrapperCalendar: s_wrapperCalendar,
+    viewToggle: s_viewToggle,
 } = CSS;
+
+const availableViews: {[id: string]: string} = {
+    listMonth: 'Month',
+    listYear: 'Year',
+};
 
 export default function() {
 
+    const [calendarView, setCalendarView] = useState('listMonth');
     const calAspectRatio = React.useMemo(() => window.innerWidth < 900 ? undefined : 2.2, []);
-    
+    const calRef = useRef<FullCalendar>(null);
+
+    useEffect(() => {
+        calRef.current?.getApi().changeView(calendarView);
+    }, [calendarView]);
+
     const {
         loading,
         refreshing,
@@ -72,9 +85,20 @@ export default function() {
                 refreshing={refreshing} 
             />
 
+            <Input
+                elementType='select-visual'
+                value={availableViews[calendarView]}
+                onChange={newView => setCalendarView(Object.keys(availableViews).find(key => availableViews[key] === newView) || 'listMonth')}
+                label='Views'
+                options={Object.values(availableViews)}
+                addClass={toCss(s_viewToggle)}
+                minSize
+            />
+
             <div className={toCss(s_wrapperCalendar)}>
                 <FullCalendar
-                    defaultView={'listMonth'}
+                    ref={calRef}
+                    defaultView={calendarView}
                     plugins={[listPlugin]}
                     nowIndicator
                     aspectRatio={calAspectRatio}
