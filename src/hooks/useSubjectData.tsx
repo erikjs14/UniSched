@@ -603,7 +603,6 @@ const useSubjectData = <T extends SubjectDataModel>(
                     }
                 }
             }
-            console.log(dataTypeId + ': Saving ' + out.length + ' objects');
             return out;
         }
 
