@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, Fragment, useMemo } from 'react';
+import React, { PropsWithChildren, Fragment, useMemo, useRef, useEffect } from 'react';
 import cuteDog from '../../assets/img/cute_dog.jpg';
 import bird1 from '../../assets/img/bird1.jpeg';
 import bird2 from '../../assets/img/bird2.jpeg';
@@ -15,6 +15,8 @@ import bird12 from '../../assets/img/bird12.jpeg';
 
 import Sidebar from '../../components/navigation/sidebar/Sidebar';
 import { useDispatch, useSelector } from 'react-redux';
+import * as actions from '../../store/actions';
+import BackTop from '../../components/backtop/BackTop';
 
 import { logout } from '../../store/actions/dispatcher';
 import navConfig from '../../config/nav';
@@ -43,6 +45,11 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
         return options[(Math.floor(Math.random() * 13))];
     }, []);
 
+    const scrollContainerRef = useRef(null);
+    useEffect(() => {
+        dispatch(actions.setScrollContainerRef(scrollContainerRef));
+    }, [dispatch]);
+
     return (
         <Fragment>
             <nav className={toCss(s_navDesktop)}>
@@ -63,8 +70,9 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                 />
             </nav>
 
-            <main className={toCss(s_main)}>
+            <main ref={scrollContainerRef} className={toCss(s_main)}>
                 {props.children}
+                <BackTop />
             </main>
         </Fragment>
     )

@@ -29,14 +29,15 @@
     position: absolute;
     right: 0;
     top: 0;
+    bottom: 0;
+    overflow-y: auto;
     display: block;
     width: calc(100% - #{$sidebar-default-width});
     min-width: calc(100% - #{$sidebar-max-width});
     max-width: calc(100% - #{$sidebar-min-width});
 
     @include respond(tab-port) {
-        position: relative;
-        width: auto;
+        width: 100vw;
         min-width: unset;
         max-width: unset;
     }

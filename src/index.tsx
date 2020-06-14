@@ -12,6 +12,7 @@ import './index.scss';
 
 import userReducer from './store/reducers/user';
 import dataReducer from './store/reducers/data';
+import generalReducer from './store/reducers/general';
 import { userWatcher, dataWatcher } from './store/sagas';
 
 declare global {
@@ -25,6 +26,7 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
     user: userReducer,
     data: dataReducer,
+    general: generalReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

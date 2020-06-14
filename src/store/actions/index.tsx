@@ -34,3 +34,6 @@ export {
     fetchEventsFail,
     forceRefresh,
 } from './data';
+export {
+    setScrollContainerRef,
+} from './general';

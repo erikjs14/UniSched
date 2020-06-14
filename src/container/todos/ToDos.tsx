@@ -27,6 +27,7 @@ export default function() {
     } = useSelector((state: RootState) => state.data.tasks);
     const dispatch = useDispatch();
 
+
     // when site stays open, refresh every x ms and clear interval when component is exited
     useEffect(() => {
         const id = setInterval(() => dispatch(actions.refreshTasks()), TIME_BEFORE_DATA_REFRESH_MS);
