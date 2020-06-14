@@ -13,7 +13,7 @@ export const EVENTS_START_STATE: EventModel = {
         nanoseconds: 0
     },
     endAt: {
-        seconds: Math.round(nowAtDefault.getTime() / 1000 + DEFAULT_DURATION * 60 * 24 * 7),
+        seconds: Math.round(nowAtDefault.getTime() / 1000 + 60 * 60 * 24 * 7),
         nanoseconds: 0
     },
     interval: 'weekly',

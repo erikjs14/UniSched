@@ -1,7 +1,7 @@
 import { Timestamp, TaskModel, IntervalType, TaskModelWithIdAndSubjectId } from './../firebase/model';
 import { getResult } from './util';
 import { format, formatDistanceToNow } from 'date-fns';
-import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT } from './../config/timeConfig';
+import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, TIME_INTERVAL_SELECT } from './../config/timeConfig';
 
 export const containsTimestamp = (toCheck: Timestamp, array: Timestamp[]): boolean => {
     let contained = false;
@@ -383,4 +383,32 @@ export const getDayIdentifier = (date: Date): string => {
     else if (isTomorrow(date)) return 'tomorrow';
     else if (isYesterday(date)) return 'yesterday';
     else return getWeekDay(date);
+}
+
+export const getExcludedTimes = (date: Date): Date[] => {
+    const out = [];
+    const secStartOf = getSecondsFromDate(startOf(date));
+    const secTarget = getSecondsFromDate(date);
+    const intervalSec = TIME_INTERVAL_SELECT * 60;
+
+    let cur = secStartOf;
+    while (cur < secTarget) {
+        out.push(getDateFromSeconds(cur));
+        cur += intervalSec;
+    }
+
+    return out;
+}
+
+export const findNextDayForInterval = (start: Date, cur: Date, interval: IntervalType): Date => {
+    if (interval === 'once') return start;
+
+    const startSec = getSecondsFromDate(startOf(start));
+    let curSec = getSecondsFromDate(startOf(cur))
+        + (sameDay(start, cur) ? DAY_IN_SEC : 0);
+
+    while (((curSec - startSec) % getSecondsFromIntervalType(interval)) !== 0) {
+        curSec += DAY_IN_SEC;
+    }
+    return getDateFromSeconds(curSec);
 }
