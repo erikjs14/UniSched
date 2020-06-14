@@ -45,6 +45,7 @@
 }
 
 .wrapper {
+    overflow: hidden;
     //override in app font
     h1, h2 {
         font-family: 'IBM Plex mono', monospace;
