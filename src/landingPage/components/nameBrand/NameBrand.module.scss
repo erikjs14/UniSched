@@ -10,6 +10,11 @@ $bg-col: #000;
     text-transform: lowercase;
     text-align: left;
 
+    transition: padding-top .3s;
+    &:hover {
+        padding-top: 2.25em;
+    }
+
     .first {
 
     }
