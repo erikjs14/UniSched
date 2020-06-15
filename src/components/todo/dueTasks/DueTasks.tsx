@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import WeekdaySeperator from './weekdaySeperator/WeekdaySeperator';
 import Collapsible from '../../ui/collapsible/Collapsible';
@@ -6,10 +6,11 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, containsDay, endOf, getSecondsFromDate, allTasksOfOneDayContained, taskContained, sameDay } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, sameDay, TaskSemantic, formatDateTimeOutput, getSecondsFromDate } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toaster } from 'evergreen-ui';
 const {
     wrapper: s_wrapper,
     dayWrapper: s_dayWrapper,
@@ -33,6 +34,12 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             }
         }
     }, [fadeTaskOut, semTasks]);
+
+    const showTaskInfo = useCallback((task: TaskSemantic): void => {
+        toaster.notify(
+            `Due at ${formatDateTimeOutput(task.dueAt)}`,
+        );
+    }, []);
 
     // no tasks todo
     if (!semTasks || semTasks.length === 0) {
@@ -104,6 +111,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                         setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
                                     }}
                                     backgroundColor={props.subjects[task.subjectId].color}
+                                    infoClicked={() => showTaskInfo(task)}
                                 />
                             ))}
                     </Collapsible>

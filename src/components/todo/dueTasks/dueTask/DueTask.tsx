@@ -6,6 +6,8 @@ import { toCss } from './../../../../util/util';
 import Input from '../../../ui/input/Input';
 import { findColorConfig } from './../../../../config/colorChoices';
 import AnimateHeight from 'react-animate-height';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 const {
     wrapper: s_wrapper,
     fadeOut: s_fadeOut,
@@ -13,6 +15,7 @@ const {
     titleSub: s_titleSub,
     titleTask: s_titleTask,
     dueAt: s_dueAt,
+    moreInfo: s_moreInfo,
 } = CSS;
 
 export default React.memo(function(props: DueTaskProps): JSX.Element {
@@ -27,7 +30,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                 onFadeOutComplete();
             }, 3000);
         }   
-    }, [onFadeOutComplete, fadeOut, fadingOut])
+    }, [onFadeOutComplete, fadeOut, fadingOut]);
 
     return (
         <AnimateHeight
@@ -68,6 +71,12 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                     {props.taskSemantic.dueString}
                 </span>
 
+                <span 
+                    className={toCss(s_moreInfo)} 
+                    onClick={() => props.infoClicked?.()}
+                >
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                </span>
             </div>
         </AnimateHeight>
     );

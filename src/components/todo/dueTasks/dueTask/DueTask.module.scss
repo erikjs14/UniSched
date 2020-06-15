@@ -54,4 +54,18 @@
     .dueAt {
 
     }
+
+    .moreInfo {
+        position: absolute;
+        top: .5rem;
+        right: 1.5rem;
+        opacity: .6;
+        cursor: pointer;
+
+        transition: all .3s;
+        &:hover {
+            transform: scale(1.1);
+            opacity: .8;
+        }
+    }
 }
