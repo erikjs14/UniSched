@@ -66,3 +66,16 @@ export const getAllConfigFromExams = (exams: ExamModel[]): Array<ConfigType> => 
     });
     return out;
 }
+
+const leadZero = (time: number): string => time < 10 ? `0${time}` : ''+time;
+export const getSubAndTitleAndTimeFromEventTitle = (event: any): {subjectName: string; eventName: string, startStr: string, endStr: string} => {
+    const [first, second] = event.title.split(']');
+    const start: Date = event.start;
+    const end: Date = event.end;
+    return {
+        subjectName: first.slice(1),
+        eventName: second,
+        startStr: `${leadZero(start.getHours())}:${leadZero(start.getMinutes())}`,
+        endStr: `${leadZero(end.getHours())}:${leadZero(end.getMinutes())}`,
+    };
+}

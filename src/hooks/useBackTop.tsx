@@ -10,6 +10,7 @@ export const useBackTop = (visibleFrom: number) => {
     useEffect(() => {
         if (curScrollContainerRef) {
             const el = (ReactDOM.findDOMNode(curScrollContainerRef.current) as Element);
+            if (!el) return;
             const listener = () => {
                 setVisible(el.scrollTop > visibleFrom);
             };

@@ -17,16 +17,26 @@
     align-items: center;;
     width: 80%;
     margin: auto;
+    @include respond(phone) { flex-wrap: wrap;}
 
     svg {
         font-size: 3em;
     }
-
-    @include respond(tab-land) {
-        h2 {
-            max-width: 70%;
+    
+    h2 {
+        font-size: 3rem;
+        @include respond(tab-land) { max-width: 70%;}
+        @include respond(phone) { 
+            font-size: 2.5rem;
+            display: block; 
+            text-align: center; 
+            width: 100%; 
+            max-width: unset;
+            margin-top: 1rem;
         }
     }
+
+    
 }
 .animMargin {
     animation: animateMargin .2s forwards;
@@ -63,6 +73,12 @@
 
     @include respond(phone) {
         width: 90%;
+    }
+
+    h2 {
+        font-size: 5rem;
+        @include respond(phone) { font-size: 4rem;}
+        @include respond(small-phone) { font-size: 3rem;}
     }
 }
 

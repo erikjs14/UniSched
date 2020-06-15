@@ -24,6 +24,7 @@ import { RootState } from '../..';
 import Input from '../../components/ui/input/Input';
 import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig'
 import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
+import { getSubAndTitleAndTimeFromEventTitle } from '../../util/scheduleUtil';
 const {
     wrapperCalendar: s_wrapperCalendar,
     viewToggle: s_viewToggle,
@@ -88,6 +89,18 @@ export default function() {
         }
     }, [dispatch, examsConfig, examsError, examsLoading, examsTimestamp, subjects]);
 
+    const eventClickHandler = useCallback(({event}) => {
+        const {subjectName, eventName, startStr, endStr} = getSubAndTitleAndTimeFromEventTitle(event)
+        toaster.notify(
+            eventName, 
+            {
+                id: 'unique',
+                duration: 2,
+                description: `${startStr} - ${endStr} ${subjectName}`,
+            }
+        );
+    }, []);
+
     if (eventsLoading || examsLoading) {
         return <Loader />;
     } else if (eventsError || examsError || !eventsConfig || !examsConfig) {
@@ -123,10 +136,7 @@ export default function() {
                     nowIndicator
                     aspectRatio={calAspectRatio}
                     events={[...eventsConfig, ...examsConfig]}
-                    eventClick={({event}) => toaster.notify(event.title, {
-                        id: 'unique',
-                        duration: 2,
-                    })}
+                    eventClick={eventClickHandler}
                     {...DEFAULT_SCHEDULE_CALENDAR_PROPS}
                 />
             </div>
