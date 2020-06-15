@@ -30,6 +30,7 @@ export const DATETIME_FORMAT_SELECT_EN = 'MMMM d, yyyy h:mm aa';
 
 export const DEFAULT_DATE_FORMAT = isGerman ? 'dd.MM.yyyy' : 'MM/dd/yyyy';
 export const DEFAULT_TIME_FORMAT = isGerman ? TIME_FORMAT_DE : TIME_FORMAT_EN;
+export const DEFAULT_DATETIME_FORMAT = isGerman ? DATETIME_FORMAT_SELECT_DE : DATETIME_FORMAT_SELECT_EN;
 
 export const DATETIMEPICKER_DEFAULT_PROPS = isGerman
     ?
