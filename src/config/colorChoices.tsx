@@ -26,12 +26,30 @@ const choices: Color[] = [
 export default choices;
 
 export const findColorConfig = (name: string): Color => {
+    if (name.startsWith('#')) {
+        return {
+            name,
+            value: name,
+            textColor: textColOf(name),
+        }
+    }
     const val =  choices.find(color => {
         if (color.name === name) return color;
         return false;
     });
     if (val) return val;
     else return choices[0];
+}
+
+export const textColOf = (hex: string): string => {
+    if (!hex.startsWith('#')) return '#000';
+    const short = hex.length === 4;
+
+    const r = short ? parseInt(hex[1]+hex[1], 16) : parseInt(hex.slice(1,3), 16);
+    const g = short ? parseInt(hex[2]+hex[2], 16) : parseInt(hex.slice(3,5), 16);
+    const b = short ? parseInt(hex[3]+hex[3], 16) : parseInt(hex.slice(5,7), 16);
+
+    return (r*0.299 + g*0.587 + b*0.114) > 186 ? '#000': '#fff';
 }
 
 export const defaultColor = () => {
