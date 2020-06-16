@@ -18,6 +18,7 @@ const {
     fadeOutMargin: s_fadeOutMargin,
     noTodoToday: s_noTodoToday,
     animMargin: s_animMargin,
+    small: s_small,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
@@ -25,7 +26,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [fadeTaskOut, setFadeTaskOut] = useState<[string, number][]>([]);
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
 
-    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(props.dueTasks, false), [props.dueTasks]);
+    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(props.dueTasks, false, props.noFuture ? true : false), [props.dueTasks, props.noFuture]);
     
     useEffect(() => {
         for (const tasksOneDay of semTasks) {
@@ -80,7 +81,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                 delay={1800}
                 onAnimationEnd={params => params.newHeight === 0 ? setFadeDayOut(prev => prev.filter(d => !sameDay(d, tasksOneDay[0].dueAt))) : null}
             >
-                <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''))}>
+                <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''), (props.small ? s_small : ''))}>
                     <Collapsible
                         header={(
                             <WeekdaySeperator
@@ -112,6 +113,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                     }}
                                     backgroundColor={props.subjects[task.subjectId].color}
                                     infoClicked={() => showTaskInfo(task)}
+                                    small={props.small}
                                 />
                             ))}
                     </Collapsible>

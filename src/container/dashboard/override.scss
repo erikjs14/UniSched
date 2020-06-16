@@ -1,0 +1,13 @@
+.gridClass {
+    .fc-header-toolbar {
+        display: none;
+    }
+    .fc-day-header {
+        span {
+            display: none;
+        }
+        &::before {
+            content: 'Today';
+        }
+    }
+}
