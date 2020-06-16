@@ -1,8 +1,8 @@
 @import '../../style/abstract/mixins';
 
 .grid {
-    margin: 0 auto;
-    @include respond(phone) { margin: 0 1.5rem;}
+    margin: 0 2rem;
+    @include respond(phone) { margin: 0 4rem 0 1.5rem;}
     
     .gridArea {
         overflow: auto;

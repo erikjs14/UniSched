@@ -5,12 +5,17 @@
     width: 90%;
     margin: auto;
 
-    .dayWrapper {
-        margin-bottom: 2rem;
-        &.small {
+    &.small {
+        width: 100%;
+
+        .dayWrapper {
             margin-bottom: .3rem;
             font-size: .8em;
         }
+    }
+
+    .dayWrapper {
+        margin-bottom: 2rem;
     }
 }
 

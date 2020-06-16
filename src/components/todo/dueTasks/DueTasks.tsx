@@ -81,7 +81,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                 delay={1800}
                 onAnimationEnd={params => params.newHeight === 0 ? setFadeDayOut(prev => prev.filter(d => !sameDay(d, tasksOneDay[0].dueAt))) : null}
             >
-                <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''), (props.small ? s_small : ''))}>
+                <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''))}>
                     <Collapsible
                         header={(
                             <WeekdaySeperator
@@ -123,7 +123,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     });
     
     return (
-        <div className={toCss(s_wrapper)}>
+        <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
             {todayView}
             {allTasks}
         </div>

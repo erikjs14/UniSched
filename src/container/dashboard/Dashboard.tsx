@@ -127,7 +127,7 @@ export default function(): JSX.Element {
     }, []);
 
     let thisLayouts;
-    const storedLayouts = localStorage.getItem('dashboard_layouts');
+    const storedLayouts = localStorage.getItem('dashboard_layouts_pref');
     if (storedLayouts) {
         thisLayouts = JSON.parse(storedLayouts);
     } else {
@@ -156,7 +156,7 @@ export default function(): JSX.Element {
                 cols={{nm: 6, sm: 2}}
                 rowHeight={50}
                 className={toCss(s_grid, 'gridClass')} 
-                onLayoutChange={(cur, newLayouts) => localStorage.setItem('dashboard_layouts', JSON.stringify(newLayouts))}
+                onLayoutChange={(cur, newLayouts) => localStorage.setItem('dashboard_layouts_pref', JSON.stringify(newLayouts))}
             >
 
                 <div key='tasks' className={toCss(s_gridArea, s_tasksArea)} >
