@@ -9,19 +9,24 @@ import NavigationItems from '../navigationItems/NavigationItems';
 import { logout } from '../../../store/actions/dispatcher';
 import { useDispatch } from 'react-redux';
 import { Clock } from 'grommet';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router-dom';
 const {
     sidebar: s_sidebar,
     userArea: s_userArea,
     userImg: s_userImg,
     username: s_username,
     navArea: s_navArea,
-    logoutArea: s_logoutArea,
+    bottomArea: s_bottomArea,
     clock: s_clock,
+    settingsIcon: s_settingsIcon,
 } = CSS;
 
 export default React.memo(function(props: SidebarProps): JSX.Element {
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     return (
         <div className={toCss(s_sidebar)}>
@@ -42,7 +47,10 @@ export default React.memo(function(props: SidebarProps): JSX.Element {
                 />
             </div>
 
-            <div className={toCss(s_logoutArea)}>
+            <div className={toCss(s_bottomArea)}>
+                <div className={toCss(s_settingsIcon)} onClick={() => history.push('/settings')}>
+                    <FontAwesomeIcon icon={faCog} />
+                </div>
                 <Button onClick={() => logout(dispatch)}>Sign out</Button>
             </div>
         </div>

@@ -47,12 +47,35 @@
         }
     }
 
-    .logoutArea {
-        margin-top: 3rem;
-        text-align: right;
+    .bottomArea {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 75%;
+        margin: 3rem 0 0 auto;
+
 
         button {
             font-size: 1rem;
+            @include respond(tab-port) { font-size: 1.5rem;}
+            @include respond(phone) { font-size: 1.2rem;}
+        }
+
+        .settingsIcon {
+            font-size: 2rem;
+            cursor: pointer;
+            padding: .5rem;
+            border-radius: 50%;
+            width: 1.5em;
+            height: 1.5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: background-color .2s;
+            &:active, &:hover {
+                background-color: rgba($col-primary-dark, .5);
+            }
         }
     }
 

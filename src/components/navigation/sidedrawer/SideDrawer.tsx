@@ -9,6 +9,9 @@ import { toCss } from './../../../util/util';
 import NavigationItems from '../navigationItems/NavigationItems';
 import { useDispatch } from 'react-redux';
 import { logout } from './../../../store/actions/dispatcher';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router-dom';
 const {
     drawer: s_drawer,
     toggled: s_toggled,
@@ -18,12 +21,14 @@ const {
     userImg: s_userImg,
     username: s_username,
     backdrop: s_backdrop,
-    logoutArea: s_logoutArea,
+    bottomArea: s_bottomArea,
+    settingsIcon: s_settingsIcon,
 } = CSS;
 
 export default React.memo(function(props: SideDrawerProps): JSX.Element {
 
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const [toggled, setToggled] = useState(false);
 
@@ -57,7 +62,10 @@ export default React.memo(function(props: SideDrawerProps): JSX.Element {
                     onItemClicked={() => setToggled(prevToggled => !prevToggled)}    
                 />
 
-                <div className={toCss(s_logoutArea)}>
+                <div className={toCss(s_bottomArea)}>
+                    <div className={toCss(s_settingsIcon)} onClick={() => {history.push('/settings'); setToggled(prev => !prev);}}>
+                        <FontAwesomeIcon icon={faCog} />
+                    </div>
                     <Button onClick={() => logout(dispatch)}>Sign out</Button>
                 </div>
             </div>

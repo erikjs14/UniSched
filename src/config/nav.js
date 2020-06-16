@@ -19,8 +19,4 @@ export default [
         label: 'Subjects',
         link: '/subjects',
     },
-    {
-        label: 'Settings',
-        link: '/settings'
-    }
 ];
