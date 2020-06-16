@@ -4,4 +4,6 @@ export interface DueTasksProps {
     dueTasks: TaskModelWithIdAndSubjectId[];  
     subjects: {[id: string]: SubjectModel};
     onTaskChecked(subjectId: string, taskId: string, timestampSeconds: number): void;
+    noFuture?: boolean;
+    small?: boolean;
 }

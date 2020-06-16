@@ -20,6 +20,7 @@ const Tos            = React.lazy(() => import('./legal/Tos'));
 const Imprint        = React.lazy(() => import('./legal/Imprint'));
 const PrivacyPolicy  = React.lazy(() => import('./legal/PrivacyPolicy'));
 
+const Dashboard = React.lazy(() => import('./container/dashboard/Dashboard'));
 const ToDos     = React.lazy(() => import('./container/todos/ToDos'));
 const Schedule  = React.lazy(() => import('./container/schedule/Schedule'));
 const Subjects  = React.lazy(() => import('./container/subjects/Subjects'));
@@ -70,6 +71,7 @@ function App() {
                         <Layout>
                             <Suspense fallback={<Loader />}>
                                 <AnimatedSwitch>
+                                    <ProtectedRoute exact path='/dashboard'  component={Dashboard}   orElse='/auth' />
                                     <ProtectedRoute exact path='/todo'       component={ToDos}       orElse='/auth' />
                                     <ProtectedRoute exact path='/schedule'   component={Schedule}    orElse='/auth' />
                                     <ProtectedRoute exact path='/exams'      component={Exams}       orElse='/auth' />

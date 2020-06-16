@@ -7,6 +7,10 @@
 
     .dayWrapper {
         margin-bottom: 2rem;
+        &.small {
+            margin-bottom: .3rem;
+            font-size: .8em;
+        }
     }
 }
 

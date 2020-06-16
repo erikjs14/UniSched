@@ -1,5 +1,9 @@
 export default [
     {
+        label: 'Dashboard',
+        link: '/dashboard',
+    },
+    {
         label: 'ToDo',
         link: '/todo',
     },

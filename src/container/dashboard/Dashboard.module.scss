@@ -1,0 +1,19 @@
+@import '../../style/abstract/mixins';
+
+.grid {
+    margin: 0 auto;
+    @include respond(phone) { margin: 0 1.5rem;}
+    
+    .gridArea {
+        overflow: auto;
+        border: 1px solid rgba(#000, .5);
+        border-radius: 5px;
+        padding: 1rem;
+
+        .areaHeader {
+            margin-bottom: 1rem;
+            font-size: 2.3rem;
+            font-weight: bold;
+        }
+    }
+}

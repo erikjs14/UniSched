@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 
 import CSS from './DueTask.module.scss';
 import { DueTaskProps } from './DueTask.d';
@@ -16,6 +16,7 @@ const {
     titleTask: s_titleTask,
     dueAt: s_dueAt,
     moreInfo: s_moreInfo,
+    small: s_small,
 } = CSS;
 
 export default React.memo(function(props: DueTaskProps): JSX.Element {
@@ -40,7 +41,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
             animateOpacity={true}
         >
             <div
-                className={toCss(s_wrapper, (props.fadeOut ? s_fadeOut : ''))}
+                className={toCss(s_wrapper, (props.fadeOut ? s_fadeOut : ''), (props.small ? s_small : ''))}
                 style={props.backgroundColor 
                     ? {
                         backgroundColor: findColorConfig(props.backgroundColor).value,
@@ -60,23 +61,27 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                 </div>
 
                 <span className={toCss(s_titleTask)}>
-                {props.taskSemantic.name}
+                    {props.taskSemantic.name}
                 </span>
 
-                <span className={toCss(s_titleSub)}>
-                    {props.subjectDisplayName}
-                </span>
+                {!props.small &&
+                    <Fragment>
+                        <span className={toCss(s_titleSub)}>
+                            {props.subjectDisplayName}
+                        </span>
 
-                <span className={toCss(s_dueAt)}>
-                    {props.taskSemantic.dueString}
-                </span>
+                        <span className={toCss(s_dueAt)}>
+                            {props.taskSemantic.dueString}
+                        </span>
 
-                <span 
-                    className={toCss(s_moreInfo)} 
-                    onClick={() => props.infoClicked?.()}
-                >
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                </span>
+                        <span 
+                            className={toCss(s_moreInfo)} 
+                            onClick={() => props.infoClicked?.()}
+                        >
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                        </span>
+                    </Fragment>
+                }
             </div>
         </AnimateHeight>
     );

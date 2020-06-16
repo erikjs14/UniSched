@@ -114,12 +114,16 @@ export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): TaskSe
     return out;
 }
 
-export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean): TaskSemantic[] => {
+export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, noFuture: boolean): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
     
     rawTasks.forEach(task => {
+        const endOfToday = endOf(new Date());
+        const stamps = noFuture
+            ? task.timestamps.filter(ts => getSecondsFromDate(endOfToday) >= ts.seconds)
+            : task.timestamps;
         out.push(
-            getRelevantTimestamps(task.timestamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
+            getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
                 name: task.type,
                 taskId: task.id,
                 subjectId: task.subjectId,
@@ -132,7 +136,7 @@ export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]
 
     return out.flat().sort((ts1, ts2) => ts1.dueAt.getTime() - ts2.dueAt.getTime());
 }
-export const getRelevantTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture));
+export const getRelevantTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, noFuture: boolean): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, noFuture));
 
 export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
