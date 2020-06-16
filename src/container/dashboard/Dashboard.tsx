@@ -44,7 +44,7 @@ const gridLayouts = {
         {i: 'exams', x: 3, y: 5, w: 3, h: 5, minW: 2, minH: 4},
     ],
     sm: [
-        {i: 'tasks', x: 0, y: 0, w: 2, h: 5, minW: 2, minH: 3, isDrahggable: false},
+        {i: 'tasks', x: 0, y: 0, w: 2, h: 5, minW: 2, minH: 3, isDraggable: false},
         {i: 'events', x: 0, y: 5, w: 2, h: 5, minW: 1, minH: 4, isDraggable: false},
         {i: 'exams', x: 0, y: 10, w: 2, h: 5, minW: 1, minH: 4, isDraggable: false},
     ],
