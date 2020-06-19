@@ -28,17 +28,25 @@ export function* fetchShallowSubjects() {
 }
 
 export function* fetchUserData() {
-    try {
-        yield take(actionTypes.USER_SET_SIGNED_IN);
+    yield take(actionTypes.USER_SET_SIGNED_IN);
+    const trySignin = function*() {
         const data = yield fetchUser();
         if (data.timeCreated) {
             yield put(actions.setUserData(data.timeCreated, data.preferences));
         } else {
             yield put(actions.postUserData(getTimestampFromSeconds(getSecondsFromDate(new Date()))));
         }        
+    }
+    try {
+        yield trySignin();
     } catch (error) {
-        // user doc does not exist yet
-        yield put(actions.addUserAndData(getTimestampFromDate(new Date())));
+        // try again once
+        try {
+            yield trySignin();
+        } catch (error) {
+            // user doc does not exist yet (probably)
+            yield put(actions.addUserAndData(getTimestampFromDate(new Date())));
+        }
     }
 }
 

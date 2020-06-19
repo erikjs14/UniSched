@@ -16,7 +16,7 @@ const events_ref = (subjectId: string) => subject_ref(subjectId).collection(fiel
 const events_q_by_timestamp = (subjectId: string) => events_ref(subjectId).orderBy('timeCreated', 'desc');
 const event_ref = (subjectId: string, eventId: string) => events_ref(subjectId).doc(eventId);
 const tasks_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.TASKS_COL);
-const tasks_q_by_timestamp = (subjectId: string) => tasks_ref(subjectId).orderBy('timeCreated', 'desc');
+const tasks_q_by_timestamp = (subjectId: string) => tasks_ref(subjectId).where('deleted', '==', false).orderBy('timeCreated', 'desc');
 const task_ref = (subjectId: string, taskId: string) => tasks_ref(subjectId).doc(taskId);
 
 
@@ -169,6 +169,7 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
         timestampsDone: dataWithId.data?.timestampsDone,
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
+        deleted: dataWithId.data?.deleted,
     }));
 
     return tasks;
@@ -182,6 +183,7 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
         timestampsDone: docWithId.data?.timestampsDone,
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
+        deleted: docWithId.data?.deleted,
     };
 }
 
@@ -193,7 +195,7 @@ const addDoc = async <T extends models.BaseModel>(colRef: ColRef, data: T): Prom
 }
 
 export const addUser = async (user: models.UserModel): Promise<void> => {
-    return await user_ref().set(user);
+    return await user_ref().set(user, {merge: true});
 }
 
 export const addSubject = async (subject: models.SubjectModel): Promise<string> => {

@@ -42,7 +42,6 @@ export function* fetchEvents() {
 
 export function* fetchTasks() {
     const subjects: SubjectModelWithId[] | null = yield select(state => state.user.shallowSubjects);
-
     if (subjects === null) {
         yield put(actions.fetchTasksFail('Subjects not set'));
     } else {

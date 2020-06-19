@@ -51,6 +51,7 @@ export interface ExamModelWithId extends ExamModel, SubjectDataModelWithId {}
 export interface TaskModel extends SubjectDataModel {
     timestamps: Timestamp[];
     timestampsDone: Timestamp[];
+    deleted: boolean;
 }
 export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}
 

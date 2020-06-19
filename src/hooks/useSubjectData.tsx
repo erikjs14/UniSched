@@ -413,6 +413,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     timestamps: task.timestamps,
                     timestampsDone: task.timestampsDone,
                     timeCreated: task.timeCreated,
+                    deleted: task.deleted,
                 };
                 out[task.id] = data;
             });
@@ -462,6 +463,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                     timestamps: datum.timestamps,
                     timestampsDone: datum.timestampsDone,
                     timeCreated: datum.timeCreated,
+                    deleted: datum.deleted,
                 };
                 out.push(data);
             }

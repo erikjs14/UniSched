@@ -35,12 +35,14 @@ export const TASK_START_STATE: TaskModel = {
     timestamps: [],
     timestampsDone: [],
     timeCreated: undefined,
+    deleted: false,
 }
 export const getTaskStartState = (): TaskModel => ({
     type: '',
     timestamps: [getTimestampFromDate(new Date())],
     timestampsDone: [],
     timeCreated: undefined,
+    deleted: false,
 });
 
 export const TOASTER_SHOW_DURATION = 4;
