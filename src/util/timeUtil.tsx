@@ -224,6 +224,7 @@ export const endOf = (date: Date): Date => {
     out.setMilliseconds(999);
     return out;
 }
+export const subtractDays = (date: Date, days: number): Date => new Date(date.getTime() - days * 1000 * DAY_IN_SEC);
 
 export const isInFuture = (d: Date): boolean => Date.now() < d.getTime();
 
