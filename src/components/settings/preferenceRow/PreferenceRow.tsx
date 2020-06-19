@@ -23,6 +23,20 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                 />
             );
             break;
+        case 'integer':
+            inputEl = (
+                <input
+                    type='number'
+                    id={props.config.id}
+                    name={props.config.id}
+                    min={props.config.min || undefined}
+                    max={props.config.max || undefined}
+                    step={props.config.step || undefined}
+                    value={props.value}
+                    onChange={e => props.onChange(parseInt(e.target.value))}
+                />
+            );
+            break;
         default:
             inputEl = null;
             break;

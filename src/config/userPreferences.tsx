@@ -6,15 +6,23 @@ export interface BasePreferenceConfig {
     name: string;
 }
 
-export interface BooleanPreferenceConfig extends BasePreferenceConfig{
+export interface BooleanPreferenceConfig extends BasePreferenceConfig {
     type: 'boolean';
     default: boolean;
 }
+export interface IntegerPreferenceConfig extends BasePreferenceConfig {
+    type: 'integer';
+    default: number;
+    min?: number;
+    max?: number;
+    step?: number;
+}
 
-export type PreferenceConfig = BooleanPreferenceConfig;
+export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig;
 
 export const PREF_ID_ACTIVATE_RANDOM_AVATAR = 'activateRandomAvatar';
 export const PREF_ID_SHOW_ONLY_FUTURE_EXAMS = 'showOnlyFutureExams';
+export const PREF_ID_DAYS_BEFORE_TASK_DELETION = 'daysBeforeTaskDeletion';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
 export const PREFERENCES_CONFIG: PreferenceConfig[] = [
@@ -32,11 +40,21 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         description: 'If enabled, only future exams will be shown in the exams view.',
         default: false,
     },
+    {
+        id: PREF_ID_DAYS_BEFORE_TASK_DELETION,
+        type: 'integer',
+        name: 'Days until task deletion',
+        description: 'The number of days after the last task of a task definition, when the task will get deleted. Only applies to tasks, which are entirely done.',
+        default: 5,
+        min: 1,
+        max: 1000,
+        step: 1,
+    }
 ]
 
 const allIds = PREFERENCES_CONFIG.map(config => config.id);
 export type PreferenceId = typeof allIds[number];
-export type PreferenceVal = boolean;
+export type PreferenceVal = PreferenceConfig['default'];
 
 export interface PreferencesState {
     [id: string]: PreferenceVal;

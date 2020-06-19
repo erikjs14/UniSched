@@ -64,9 +64,13 @@ export function* addUserAndData(action: AddUserAndDataAC) {
     } catch (error) {}
 }
 
+const inputTimeouts: {[id: string]: any} = {};
 export function* setUserPreference(action: SetUserPreferenceAC) {
     try {
-        yield updatePreference(action.id, action.value);
+        if (inputTimeouts[action.id]) clearTimeout(inputTimeouts[action.id]);
+        inputTimeouts[action.id] = setTimeout(() => {
+            updatePreference(action.id, action.value);
+        }, 500);
     } catch (error) {
         yield put(actions.setUserPreferenceFail('Something went wrong'));
     }

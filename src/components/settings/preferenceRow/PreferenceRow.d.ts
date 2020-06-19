@@ -1,7 +1,7 @@
-import { BooleanPreferenceConfig } from "../../config/userPreferences";
+import { PreferenceConfig, PreferenceVal } from "../../config/userPreferences";
 
 export interface PreferenceRowProps {
-    config: BooleanPreferenceConfig;
-    value: boolean;
-    onChange(newVal: boolean): void;
+    config: PreferenceConfig;
+    value: PreferenceVal;
+    onChange(newVal: PreferenceVal): void;
 }
