@@ -188,7 +188,7 @@ export default function(): JSX.Element {
                 <div key='exams' className={toCss(s_gridArea, s_examsArea)} >
                     <h3 className={toCss(s_areaHeader)}>Upcoming exams</h3>
                     <FullCalendar
-                        defaultView='listMonth'
+                        defaultView='listYear'
                         plugins={[listPlugin]}
                         nowIndicator
                         height='auto'

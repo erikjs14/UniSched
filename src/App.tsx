@@ -39,7 +39,7 @@ function App() {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
                 dispatch(fetchUserData());
-                dispatch(setSignedIn(user))
+                dispatch(setSignedIn(user));
                 dispatch(fetchShallowSubjects());
             } else {
                 dispatch(setSignedOut());
