@@ -79,7 +79,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                 height={dayContained ? 0 : 'auto'}
                 duration={400}
                 delay={1800}
-                onAnimationEnd={params => params.newHeight === 0 ? setFadeDayOut(prev => prev.filter(d => !sameDay(d, tasksOneDay[0].dueAt))) : null}
+                // onAnimationEnd={params => params.newHeight === 0 ? setFadeDayOut(prev => prev.filter(d => !sameDay(d, tasksOneDay[0].dueAt))) : null}
             >
                 <div className={toCss(s_dayWrapper, (dayContained ? s_fadeOutMargin : ''))}>
                     <Collapsible
@@ -109,7 +109,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                     fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
                                     onFadeOutComplete={() => {
                                         props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt));
-                                        setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
+                                        // setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
                                     }}
                                     backgroundColor={props.subjects[task.subjectId].color}
                                     infoClicked={() => showTaskInfo(task)}
