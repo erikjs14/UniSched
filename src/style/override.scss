@@ -1,34 +1,45 @@
 @import './abstract/mixins';
 
 .react-datepicker {
-    z-index: 1000000;
-    font-size: 1.5rem !important;
-}
-
-.react-datepicker__current-month,
-.react-datepicker-time__header,
-.react-datepicker-year-header {
-    font-size: 1.3rem !important;
-}
-
-.react-datepicker__navigation {
-    line-height: 2rem !important;
-}
-
-.react-datepicker__day-name {
-    width: 2.5rem !important;
-
-    &s {
-        margin-top: .5rem !important;
-    }
-}
-
-.react-datepicker__day {
-    width: 2.4rem !important;
-}
-
-.react-datepicker {
     animation: inAnim .2s;
+    font-size: 2rem !important;
+    @include respond(tab-land) { font-size: 1.4em !important;}
+    @include respond(tab-port) { font-size: 2rem !important;}
+    // @include respond(phone) { font-size: 1em !important;}
+    @include respond(small-phone) { font-size: 4vw !important;}
+}
+.react-datepicker__header {
+    padding-top: 0.8em !important;
+}
+.react-datepicker__month {
+    margin: 0.4em 1em !important;
+}
+.react-datepicker__day-name, .react-datepicker__day {
+    width: 1.9em !important;
+    line-height: 1.9em !important;
+    margin: 0.166em !important;
+}
+.react-datepicker__current-month {
+    font-size: 1em !important;
+}
+.react-datepicker__navigation {
+    top: 1em !important;
+    line-height: 1.7em !important;
+    border: 0.45em solid transparent !important;
+}
+.react-datepicker__navigation--previous {
+    border-right-color: #ccc !important;
+    left: 1em !important;
+}
+.react-datepicker__navigation--next {
+    border-left-color: #ccc !important;
+    right: 7.5em !important;
+}
+.react-datepicker__time-container {
+    width: 4.5em !important;
+}
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box {
+    width: auto !important;
 }
 
 @keyframes inAnim {
