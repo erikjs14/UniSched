@@ -23,6 +23,7 @@ export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig
 export const PREF_ID_ACTIVATE_RANDOM_AVATAR = 'activateRandomAvatar';
 export const PREF_ID_SHOW_ONLY_FUTURE_EXAMS = 'showOnlyFutureExams';
 export const PREF_ID_DAYS_BEFORE_TASK_DELETION = 'daysBeforeTaskDeletion';
+export const PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT = 'futureTasksTodoViewLimit';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
 export const PREFERENCES_CONFIG: PreferenceConfig[] = [
@@ -47,6 +48,16 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         description: 'The number of days after the last task of a task definition, when the task will get deleted. Only applies to tasks, which are entirely done.',
         default: 5,
         min: 1,
+        max: 1000,
+        step: 1,
+    },
+    {
+        id: PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT,
+        type: 'integer',
+        name: 'Limit future tasks in todo view',
+        description: 'The number of days into the future for which tasks shall be shown in the todo view.',
+        default: 3,
+        min: 0,
         max: 1000,
         step: 1,
     }

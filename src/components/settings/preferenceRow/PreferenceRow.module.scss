@@ -1,3 +1,5 @@
+@import '../../../style/abstract/mixins';
+
 .wrapper {
     width: 100%;
     display: flex;
@@ -7,15 +9,28 @@
     align-items: center;
     font-size: 1.1em;
     
+    &:not(:last-child) {
+        @include respond(small-phone) { margin-bottom: 1rem;}
+    }
+    
     .name {
 
         .info {
             margin: 0 2rem;
             height: .8em;
         }
+
+        @include respond(small-phone) {
+            min-width: 100%;
+        }
     }
 
     .input {
         margin: 1rem 0;
+
+        input[type="number"] {
+            max-width: 7.5rem;
+            @include respond(phone) { max-width: 6rem;}
+        }
     }
 }

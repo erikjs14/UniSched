@@ -165,7 +165,7 @@ export default function(): JSX.Element {
                         dueTasks={tasks}
                         subjects={subjectsToObject(subjects)}
                         onTaskChecked={checkTaskHandler}
-                        noFuture
+                        limitDaysInFuture={0}
                         small
                     />
                 </div>

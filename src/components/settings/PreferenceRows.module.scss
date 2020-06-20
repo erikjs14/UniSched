@@ -1,24 +1,24 @@
 @import '../../style/abstract/mixins';
 
 .wrapper {
-    width: 40%;
+    width: 50%;
     margin: auto;
 
     @include respond(tab-land) {
-        width: 60%;
+        width: 80%;
     }
 
-    @include respond(tab-land) {
-        width: 40%;
+    @include respond(tab-port) {
+        width: 60%;
     }
 
     @include respond(phone) {
         width: 80%;
         font-size: 1.2em;
     }
+
+    @include respond(small-phone) { width: 90%;}
+
     max-width: 50rem;
-
-    .row {
-
-    }
+    
 }

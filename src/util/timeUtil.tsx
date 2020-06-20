@@ -114,13 +114,14 @@ export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): TaskSe
     return out;
 }
 
-export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, noFuture: boolean): TaskSemantic[] => {
+export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
+    const endOfLimitDay = limitFutureBy === undefined ? undefined : endOf(addDays(new Date(), limitFutureBy));
+    const limitInSec = endOfLimitDay ? getSecondsFromDate(endOfLimitDay) : undefined;
     
     rawTasks.forEach(task => {
-        const endOfToday = endOf(new Date());
-        const stamps = noFuture
-            ? task.timestamps.filter(ts => getSecondsFromDate(endOfToday) >= ts.seconds)
+        const stamps = endOfLimitDay && limitInSec
+            ? task.timestamps.filter(ts => limitInSec >= ts.seconds)
             : task.timestamps;
         out.push(
             getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
@@ -136,7 +137,7 @@ export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]
 
     return out.flat().sort((ts1, ts2) => ts1.dueAt.getTime() - ts2.dueAt.getTime());
 }
-export const getRelevantTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, noFuture: boolean): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, noFuture));
+export const getRelevantTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy));
 
 export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
@@ -225,6 +226,7 @@ export const endOf = (date: Date): Date => {
     return out;
 }
 export const subtractDays = (date: Date, days: number): Date => new Date(date.getTime() - days * 1000 * DAY_IN_SEC);
+export const addDays = (date: Date, days: number): Date => subtractDays(date, -days);
 
 export const isInFuture = (d: Date): boolean => Date.now() < d.getTime();
 

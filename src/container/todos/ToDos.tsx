@@ -12,6 +12,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CheckedTasks from '../../components/todo/checkedTasks/CheckedTasks';
 import * as actions from '../../store/actions';
 import { TIME_BEFORE_DATA_REFRESH_MS } from './../../config/generalConfig';
+import { PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT } from '../../config/userPreferences';
 
 export default function() {
 
@@ -53,6 +54,8 @@ export default function() {
 
     const refreshHandler = useCallback(() => dispatch(actions.refreshTasks()), [dispatch]);
 
+    const userPrefersLimitTasksInFuture = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT] as (number|undefined));
+
     if (loading) {
         return <Loader />;
     } else if (error || !tasks || !subjects) {
@@ -73,6 +76,7 @@ export default function() {
                 dueTasks={tasks}
                 subjects={subjectsToObject(subjects)}
                 onTaskChecked={checkTaskHandler}
+                limitDaysInFuture={userPrefersLimitTasksInFuture}
             />
                 
             <FloatingButton 

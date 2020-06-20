@@ -6,7 +6,7 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, sameDay, TaskSemantic, formatDateTimeOutput, getSecondsFromDate } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,7 +26,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [fadeTaskOut, setFadeTaskOut] = useState<[string, number][]>([]);
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
 
-    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(props.dueTasks, false, props.noFuture ? true : false), [props.dueTasks, props.noFuture]);
+    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(props.dueTasks, false, props.limitDaysInFuture), [props.dueTasks, props.limitDaysInFuture]);
     
     useEffect(() => {
         for (const tasksOneDay of semTasks) {
