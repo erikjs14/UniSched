@@ -19,6 +19,7 @@ const {
     noTodoToday: s_noTodoToday,
     animMargin: s_animMargin,
     small: s_small,
+    showAll: s_showAll,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
@@ -26,7 +27,11 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [fadeTaskOut, setFadeTaskOut] = useState<[string, number][]>([]);
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
 
-    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(props.dueTasks, false, props.limitDaysInFuture), [props.dueTasks, props.limitDaysInFuture]);
+    const [showAll, setShowAll] = useState(false);
+
+    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(
+            props.dueTasks, false, (!showAll ? props.limitDaysInFuture : undefined)
+        ), [props.dueTasks, props.limitDaysInFuture, showAll]);
     
     useEffect(() => {
         for (const tasksOneDay of semTasks) {
@@ -126,6 +131,9 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
             {todayView}
             {allTasks}
+            <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>
+                {!showAll ? 'Show all' : 'Show less'}
+            </span>
         </div>
     );
 });
