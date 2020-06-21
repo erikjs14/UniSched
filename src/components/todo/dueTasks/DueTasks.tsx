@@ -20,6 +20,8 @@ const {
     animMargin: s_animMargin,
     small: s_small,
     showAll: s_showAll,
+    filterStar: s_filterStar,
+    enabled: s_enabled,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
@@ -28,10 +30,11 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
 
     const [showAll, setShowAll] = useState(false);
+    const [onlyStars, setOnlyStars] = useState(false);
 
     const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(
-            props.dueTasks, false, (!showAll ? props.limitDaysInFuture : undefined)
-        ), [props.dueTasks, props.limitDaysInFuture, showAll]);
+            props.dueTasks, false, (!showAll ? props.limitDaysInFuture : undefined), onlyStars
+        ), [onlyStars, props.dueTasks, props.limitDaysInFuture, showAll]);
     
     useEffect(() => {
         for (const tasksOneDay of semTasks) {
@@ -43,7 +46,10 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
 
     const showTaskInfo = useCallback((task: TaskSemantic): void => {
         toaster.notify(
-            `Due at ${formatDateTimeOutput(task.dueAt)}`,
+            `Due at ${formatDateTimeOutput(task.dueAt)}`, {
+                id: 'unique',
+                description: task.additionalInfo?.text,
+            }
         );
     }, []);
 
@@ -119,6 +125,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                     backgroundColor={props.subjects[task.subjectId].color}
                                     infoClicked={() => showTaskInfo(task)}
                                     small={props.small}
+                                    star={task.star}
                                 />
                             ))}
                     </Collapsible>
@@ -129,6 +136,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
+            <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
             {todayView}
             {allTasks}
             <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>

@@ -114,7 +114,7 @@ export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): TaskSe
     return out;
 }
 
-export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined): TaskSemantic[] => {
+export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined, onlyStars: boolean = false): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
     const endOfLimitDay = limitFutureBy === undefined ? undefined : endOf(addDays(new Date(), limitFutureBy));
     const limitInSec = endOfLimitDay ? getSecondsFromDate(endOfLimitDay) : undefined;
@@ -123,21 +123,30 @@ export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]
         const stamps = endOfLimitDay && limitInSec
             ? task.timestamps.filter(ts => limitInSec >= ts.seconds)
             : task.timestamps;
-        out.push(
-            getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
-                name: task.type,
-                taskId: task.id,
-                subjectId: task.subjectId,
-                checked: containsTimestamp(tstamp, task.timestampsDone),
-                dueString: formatDistanceOutput(getDateFromTimestamp(tstamp)),
-                dueAt: getDateFromTimestamp(tstamp),
-            }))
-        )
+        if (!onlyStars || task.star) { 
+            out.push(
+                getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
+                    name: task.type,
+                    taskId: task.id,
+                    subjectId: task.subjectId,
+                    checked: containsTimestamp(tstamp, task.timestampsDone),
+                    dueString: formatDistanceOutput(getDateFromTimestamp(tstamp)),
+                    dueAt: getDateFromTimestamp(tstamp),
+                    star: task.star,
+                    additionalInfo: task.additionalInfo,
+                }))
+            );
+        }
     });
 
     return out.flat().sort((ts1, ts2) => ts1.dueAt.getTime() - ts2.dueAt.getTime());
 }
-export const getRelevantTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy));
+export const getRelevantTaskSemanticsGrouped = (
+    rawTasks: TaskModelWithIdAndSubjectId[], 
+    forceAppendFuture: boolean, 
+    limitFutureBy: number | undefined = undefined,
+    onlyStars: boolean = false,
+): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars));
 
 export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
@@ -151,6 +160,8 @@ export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[
                 checked: true,
                 dueString: formatDateOutput(getDateFromTimestamp(tsDone)),
                 dueAt: getDateFromTimestamp(tsDone),
+                star: task.star,
+                additionalInfo: task.additionalInfo,
             }))
         )
     });
@@ -174,6 +185,10 @@ export interface TaskSemantic {
     taskId: string;
     subjectId: string;
     checked: boolean;
+    star: boolean;
+    additionalInfo: {
+        text: string;
+    } | null;
     dueAt: Date;
 }
 

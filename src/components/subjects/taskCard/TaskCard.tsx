@@ -14,14 +14,16 @@ import { toaster } from 'evergreen-ui';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
+    checkAddInfo: s_checkAddInfo,
+    addInfoTextarea: s_addInfoTextarea,
 } = CSS;
 
 export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
-    
+
     const [inputTouched, setInputTouched] = useState(false);
 
     const { onChange } = props;
-    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone } = props.data;
+    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, star, additionalInfo } = props.data;
     const changeHandler = useCallback((config: TaskConfig) => {
         const [timestamps, timestampsDone] = getEditedTimestamps(config, oldTimestamps, oldTimestampsDone);
         onChange('timestamps', timestamps);
@@ -53,6 +55,10 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
             onHeaderValueChange={newVal => props.onChange('type', newVal)}
             onRemoveClicked={props.onRemove}
             markEmptyTitles={props.markEmptyTitles}
+            star={{
+                selected: star,
+                starClicked: () => onChange('star', !star),
+            }}
         >
 
                 <div className={toCss(s_row)}>
@@ -112,6 +118,28 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         addClass={toCss(s_intervalOptions)}
                     />
                 </div>
+
+                    <div className={toCss(s_row)} >
+                        <span>
+                            Add Info
+                            <Input 
+                                addClass={s_checkAddInfo} 
+                                label='' 
+                                elementType='simple-checkbox' 
+                                value={additionalInfo ? true : false} 
+                                onChange={() => !additionalInfo ? onChange('additionalInfo', {text: ''}) : onChange('additionalInfo', null)} 
+                            />
+                        </span>
+                        {additionalInfo && 
+                            <Input
+                                addClass={s_addInfoTextarea} 
+                                label='Add Info'
+                                elementType='text-area'
+                                value={additionalInfo.text}
+                                onChange={newText => onChange('additionalInfo', {text: newText})}
+                            />
+                        }
+                    </div>
 
         </SettingsCard>
     );

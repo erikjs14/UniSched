@@ -7,7 +7,7 @@ import Input from '../../../ui/input/Input';
 import { findColorConfig } from './../../../../config/colorChoices';
 import AnimateHeight from 'react-animate-height';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faStar } from '@fortawesome/free-solid-svg-icons';
 const {
     wrapper: s_wrapper,
     fadeOut: s_fadeOut,
@@ -61,6 +61,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                 </div>
 
                 <span className={toCss(s_titleTask)}>
+                    {props.star && <FontAwesomeIcon icon={faStar} />}&nbsp;
                     {props.taskSemantic.name}
                 </span>
 

@@ -14,10 +14,12 @@ const {
     disabled: s_disabled,
     minSize: s_minSize,
     glowRed: s_glowRed,
+    textarea: s_textarea,
+    simpleCheckbox: s_simpleCheckbox,
 } = CSS;
 
 export interface InputProps<T> {
-    elementType: 'input' |'input-transparent' | 'select-visual' | 'checkbox';
+    elementType: 'input' |'input-transparent' | 'text-area' | 'select-visual' | 'checkbox' | 'simple-checkbox';
     value: T;
     onChange(val: T): void;
     label: string;
@@ -30,7 +32,7 @@ export interface InputProps<T> {
     labelLeft?: boolean;
     disabled?: boolean;
     minSize?: boolean;
-    markWhenEmpty?: boolean;
+    markWhenEmpty?: boolean;    
 }
 
 export default function(props: InputProps<string|boolean>): JSX.Element| null {
@@ -73,6 +75,18 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                     </label>
                 </div>
             );
+        case 'text-area':
+            return (
+                <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
+                    <textarea 
+                        {...props.elementConfig}
+                        placeholder=''
+                        value={props.value as string}
+                        onChange={event => props.onChange(event.target.value)}
+                        className={toCss(s_textarea)} 
+                    />
+                </div>
+            );
         case 'select-visual':
             return (
                 <div className={toCss(s_wrapper, s_wrapperSelect, props.addClass || '')}>
@@ -108,6 +122,19 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                         />
                         <span></span>
                     </label>
+                </div>
+            );
+        case 'simple-checkbox':
+            return (
+                <div className={toCss(s_wrapper, props.addClass || '')} >
+                    <input
+                        className={toCss(s_simpleCheckbox)} 
+                        type='checkbox'
+                        value={props.label}
+                        onChange={event => props.disabled ? null : props.onChange(event.target.value)}
+                        checked={props.value as boolean}
+                        name={props.label}
+                    />
                 </div>
             );
         default:

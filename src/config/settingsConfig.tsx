@@ -35,6 +35,8 @@ export const TASK_START_STATE: TaskModel = {
     timestamps: [],
     timestampsDone: [],
     timeCreated: undefined,
+    star: false,
+    additionalInfo: null,
     deleted: false,
 }
 export const getTaskStartState = (): TaskModel => ({
@@ -42,6 +44,8 @@ export const getTaskStartState = (): TaskModel => ({
     timestamps: [getTimestampFromDate(new Date())],
     timestampsDone: [],
     timeCreated: undefined,
+    star: false,
+    additionalInfo: null,
     deleted: false,
 });
 

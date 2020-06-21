@@ -413,6 +413,8 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     timestamps: task.timestamps,
                     timestampsDone: task.timestampsDone,
                     timeCreated: task.timeCreated,
+                    star: task.star,
+                    additionalInfo: task.additionalInfo,
                     deleted: task.deleted,
                 };
                 out[task.id] = data;
@@ -463,6 +465,8 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                     timestamps: datum.timestamps,
                     timestampsDone: datum.timestampsDone,
                     timeCreated: datum.timeCreated,
+                    star: datum.star,
+                    additionalInfo: datum.additionalInfo,
                     deleted: datum.deleted,
                 };
                 out.push(data);

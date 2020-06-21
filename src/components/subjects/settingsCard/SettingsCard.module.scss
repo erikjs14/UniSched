@@ -8,7 +8,7 @@
 @import '../../../style/abstract/mixins';
 
 .header {
-    
+    position: relative;
     font-size: .5em;
 
     @include respond(tab-port) {
@@ -17,6 +17,16 @@
 
     input {
         text-align: center;
+    }
+
+    .star {
+        font-size: 1.7em;
+        @include respond(phone) { font-size: 2.25em;}
+        position: absolute;
+        left: -3rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: all;
     }
 }
 
@@ -27,7 +37,9 @@
         position: relative;
         display: flex;
         justify-content: space-between;
+        align-items: flex-start;
         padding: .3rem .2rem;
+        &:not(:last-child) {margin-bottom: .5rem;}
 
         @include respond(phone) {
             margin-bottom: 1.5rem;
@@ -43,6 +55,21 @@
                 width: 14px;
                 height: 14px;
                 margin-left: 1rem;
+            }
+
+            .checkAddInfo {
+                margin-left: 2rem;
+            }
+        }
+
+        .addInfoTextarea {
+            @include respond(phone) { width: 100%;}
+
+            textarea {
+                resize: vertical;
+                min-width: 50rem;
+                @include respond(tab-land) { min-width: 40rem;}
+                @include respond(phone) { min-width: 100%;}
             }
         }
 

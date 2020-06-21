@@ -5,6 +5,10 @@ export interface SettingsCardProps {
     onHeaderValueChange(newVal: string): void;
     onRemoveClicked: Function;
     markEmptyTitles?: boolean;
+    star?: {
+        starClicked: Function;
+        selected: boolean;
+    },
 }
 
 export interface SubjectDataCardProps<M extends SubjectDataModel> {

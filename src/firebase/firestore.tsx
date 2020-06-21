@@ -169,9 +169,11 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
         timestampsDone: dataWithId.data?.timestampsDone,
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
+        star: dataWithId.data?.star ? true : false,
+        additionalInfo: dataWithId.data?.additionalInfo || null,
         deleted: dataWithId.data?.deleted,
     }));
-
+    
     return tasks;
 }
 
@@ -183,6 +185,8 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
         timestampsDone: docWithId.data?.timestampsDone,
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
+        star: docWithId.data?.star,
+        additionalInfo: docWithId.data?.additionalInfo || null,
         deleted: docWithId.data?.deleted,
     };
 }

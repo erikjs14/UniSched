@@ -9,4 +9,5 @@ export interface DueTaskProps {
     backgroundColor?: string;
     infoClicked?: Function;
     small?: boolean;
+    star?: boolean;
 }
