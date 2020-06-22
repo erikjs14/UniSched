@@ -17,6 +17,7 @@ const {
     dueAt: s_dueAt,
     moreInfo: s_moreInfo,
     small: s_small,
+    highlight: s_highlight,
 } = CSS;
 
 export default React.memo(function(props: DueTaskProps): JSX.Element {
@@ -76,7 +77,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                         </span>
 
                         <span 
-                            className={toCss(s_moreInfo)} 
+                            className={toCss(s_moreInfo, (props.moreInfo ? s_highlight : ''))} 
                             onClick={() => props.infoClicked?.()}
                         >
                             <FontAwesomeIcon icon={faInfoCircle} />

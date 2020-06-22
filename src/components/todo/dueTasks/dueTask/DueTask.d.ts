@@ -10,4 +10,5 @@ export interface DueTaskProps {
     infoClicked?: Function;
     small?: boolean;
     star?: boolean;
+    moreInfo?: boolean;
 }

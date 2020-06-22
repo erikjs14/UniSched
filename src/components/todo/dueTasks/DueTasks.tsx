@@ -131,6 +131,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                     infoClicked={() => showTaskInfo(task)}
                                     small={props.small}
                                     star={task.star}
+                                    moreInfo={task.additionalInfo?.text ? true : false}
                                 />
                             ))}
                     </Collapsible>
