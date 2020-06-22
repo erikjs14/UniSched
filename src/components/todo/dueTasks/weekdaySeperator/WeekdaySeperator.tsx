@@ -14,6 +14,7 @@ const {
     amount: s_amount,
     today: s_today,
     show: s_show,
+    starsMobile: s_starsMobile,
 } = CSS;
 
 export default function(props: WeekdaySeperatorProps): JSX.Element {
@@ -34,6 +35,12 @@ export default function(props: WeekdaySeperatorProps): JSX.Element {
                     { props.amountStars }
                 </i>
             </span>
+            { props.amountStars ? (
+                <span className={toCss(s_starsMobile)} >
+                    <FontAwesomeIcon icon={faStar} />
+                    { props.amountStars }
+                </span>
+            ) : null }
         </div>
     );
 }

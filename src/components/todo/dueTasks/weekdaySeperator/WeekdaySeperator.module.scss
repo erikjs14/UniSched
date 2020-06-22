@@ -20,7 +20,7 @@
         grid-template-columns: repeat(2, 1fr);
         grid-template-areas:
             "weekday amount"
-            "date date";
+            "date stars";
         row-gap: .3rem;
     }
     
@@ -50,6 +50,7 @@
             margin-left: 1rem;
             visibility: hidden;
             opacity: 0;
+            @include respond(phone) { display: none;}
 
             svg {
                 color: $col-primary-light;
@@ -66,5 +67,18 @@
                 transform: scale(1.05);
             }
         }
+    }
+
+    .starsMobile {
+        display: none;
+        grid-area: stars;
+        text-align: right;
+        margin-right: 1rem;
+
+        svg {
+            color: $col-primary-light;
+        }
+
+        @include respond(phone) { display: initial;}
     }
 }
