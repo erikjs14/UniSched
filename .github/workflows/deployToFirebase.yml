@@ -58,7 +58,7 @@ jobs:
       - name: Build
         run: yarn run build
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@latest
+        uses: w9jds/firebase-action@1.4.0
         with:
           args: deploy --only hosting
         env:
