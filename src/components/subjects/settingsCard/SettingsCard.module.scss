@@ -58,18 +58,17 @@
             }
 
             .checkAddInfo {
-                margin-left: 2rem;
+                margin: 0 2rem;
             }
         }
 
         .addInfoTextarea {
+            flex-grow: 1;
             @include respond(phone) { width: 100%;}
 
             textarea {
                 resize: vertical;
-                min-width: 50rem;
-                @include respond(tab-land) { min-width: 40rem;}
-                @include respond(phone) { min-width: 100%;}
+                width: 100%;
             }
         }
 
