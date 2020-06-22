@@ -61,7 +61,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                 </div>
 
                 <span className={toCss(s_titleTask)}>
-                    {props.star && <FontAwesomeIcon icon={faStar} />}&nbsp;
+                    {props.star && <Fragment><FontAwesomeIcon icon={faStar} /> &nbsp;</Fragment>}
                     {props.taskSemantic.name}
                 </span>
 
