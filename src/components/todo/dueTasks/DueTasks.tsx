@@ -32,9 +32,12 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [showAll, setShowAll] = useState(false);
     const [onlyStars, setOnlyStars] = useState(false);
 
-    const semTasks = React.useMemo(() => getRelevantTaskSemanticsGrouped(
+    const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
             props.dueTasks, false, (!showAll ? props.limitDaysInFuture : undefined), onlyStars
         ), [onlyStars, props.dueTasks, props.limitDaysInFuture, showAll]);
+    const containsStars = React.useMemo(() => {
+        return starsPerDay.some(nr => nr > 0);
+    }, [starsPerDay]);
     
     useEffect(() => {
         for (const tasksOneDay of semTasks) {
@@ -81,6 +84,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         </AnimateHeight>
     );
     
+    let dayIdx = 0;
     const allTasks = semTasks.map(tasksOneDay => {
         const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
         const dayInPast = tasksOneDay[0].dueAt.getTime() < endOf(new Date()).getTime();
@@ -99,6 +103,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                 date={tasksOneDay[0].dueAt}
                                 amount={tasksOneDay.length}
                                 withClock={dayInPast}
+                                amountStars={starsPerDay[dayIdx++]}
                             />
                         )}
                         uncollapsed={endOf(new Date()).getTime() > tasksOneDay[0].dueAt.getTime()}
@@ -136,7 +141,9 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
-            <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
+            {containsStars &&
+                <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
+            }
             {todayView}
             {allTasks}
             <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>

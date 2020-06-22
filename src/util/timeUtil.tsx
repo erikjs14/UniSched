@@ -81,37 +81,47 @@ export const sameDay = (d1: Date | null, d2: Date | null): boolean => {
 }
 
 // input must already been sorted by due day
-export const groupTaskSemanticsByDueDay = (sortedTasks: TaskSemantic[]): TaskSemantic[][] => {
+export const groupTaskSemanticsByDueDay = (sortedTasks: TaskSemantic[]): [TaskSemantic[][], number[]] => {
     const out: TaskSemantic[][] = [];
+    const starsPerSubject: number[] = [];
 
     let prev = null;
     for (const ts of sortedTasks) {
         if (sameDay(prev, ts.dueAt)) {
             out[out.length-1].push(ts);
+            if (ts.star) starsPerSubject[out.length-1] += 1;
         } else {
             out.push([ts]);
+            starsPerSubject.push(
+                ts.star ? 1 : 0
+            );
         }
         prev = ts.dueAt;
     }
 
-    return out;
+    return [out, starsPerSubject];
 }
 
 // input must already be sorted by subject
-export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): TaskSemantic[][] => {
+export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): [TaskSemantic[][], number[]] => {
     const out: TaskSemantic[][] = [];
+    const starsPerSubject: number[] = [];
 
     let prev: TaskSemantic | null = null;
     for (const ts of sortedTasks) {
         if (ts.subjectId === prev?.subjectId) {
             out[out.length-1].push(ts);
+            if (ts.star) starsPerSubject[out.length-1] += 1;
         } else {
             out.push([ts]);
+            starsPerSubject.push(
+                ts.star ? 1 : 0
+            );
         }
         prev = ts;
     }
 
-    return out;
+    return [out, starsPerSubject];
 }
 
 export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined, onlyStars: boolean = false): TaskSemantic[] => {
@@ -146,7 +156,7 @@ export const getRelevantTaskSemanticsGrouped = (
     forceAppendFuture: boolean, 
     limitFutureBy: number | undefined = undefined,
     onlyStars: boolean = false,
-): TaskSemantic[][] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars));
+): [TaskSemantic[][], number[]] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars));
 
 export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
@@ -168,11 +178,11 @@ export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[
 
     return out.flat().sort((ts1, ts2) => ts1.subjectId.localeCompare(ts2.subjectId));
 }
-export const getUncheckedTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[]): TaskSemantic[][] => groupTaskSemanticsBySubject(getUncheckedTaskSemantics(rawTasks));
+export const getUncheckedTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[]): [TaskSemantic[][], number[]] => groupTaskSemanticsBySubject(getUncheckedTaskSemantics(rawTasks));
 export const getUncheckedTaskSemanticsGroupedObject = (rawTasks: TaskModelWithIdAndSubjectId[]): {[subjectId: string]: TaskSemantic[]} => {
     const out: {[subjectId: string]: TaskSemantic[]} = {};
 
-    for (const semPerSubject of getUncheckedTaskSemanticsGrouped(rawTasks)) {
+    for (const semPerSubject of getUncheckedTaskSemanticsGrouped(rawTasks)[0]) {
         out[semPerSubject[0].subjectId] = semPerSubject.sort((ts1, ts2) => ts2.dueAt.getTime() - ts1.dueAt.getTime());
     }
 

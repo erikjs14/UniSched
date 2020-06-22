@@ -5,12 +5,15 @@ import { WeekdaySeperatorProps } from './WeekdaySeperator.d';
 import { toCss } from './../../../../util/util';
 import { formatDateOutput, isToday } from '../../../../util/timeUtil';
 import { getDayIdentifier } from './../../../../util/timeUtil';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
 const {
     wrapper: s_wrapper,
     weekday: s_weekday,
     date: s_date,
     amount: s_amount,
     today: s_today,
+    show: s_show,
 } = CSS;
 
 export default function(props: WeekdaySeperatorProps): JSX.Element {
@@ -26,6 +29,10 @@ export default function(props: WeekdaySeperatorProps): JSX.Element {
             </span>
             <span className={toCss(s_amount)}>
                 ToDo: {props.amount}
+                <i className={toCss(props.amountStars ? s_show : '')} >
+                    <FontAwesomeIcon icon={faStar} />
+                    { props.amountStars }
+                </i>
             </span>
         </div>
     );
