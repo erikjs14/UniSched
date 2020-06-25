@@ -24,6 +24,7 @@ export const PREF_ID_ACTIVATE_RANDOM_AVATAR = 'activateRandomAvatar';
 export const PREF_ID_SHOW_ONLY_FUTURE_EXAMS = 'showOnlyFutureExams';
 export const PREF_ID_DAYS_BEFORE_TASK_DELETION = 'daysBeforeTaskDeletion';
 export const PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT = 'futureTasksTodoViewLimit';
+export const PREF_ID_DAY_STARTS_AT = 'dayStartsAt';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
 export const PREFERENCES_CONFIG: PreferenceConfig[] = [
@@ -60,7 +61,17 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         min: 0,
         max: 1000,
         step: 1,
-    }
+    },
+    {
+        id: PREF_ID_DAY_STARTS_AT,
+        type: 'integer',
+        name: 'Day starts at',
+        description: 'Depicts the hour, at which you want to start seeing the tasks for this day.',
+        default: 0,
+        min: 0,
+        max: 23,
+        step: 1,
+    },
 ]
 
 const allIds = PREFERENCES_CONFIG.map(config => config.id);

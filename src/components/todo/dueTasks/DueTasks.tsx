@@ -6,7 +6,7 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate, subtractHours } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -30,7 +30,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
 
     const [showAll, setShowAll] = useState(false);
-    const [onlyStars, setOnlyStars] = useState(false);
+    const [onlyStars, setOnlyStars] = useState(props.onlyStars);
 
     const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
             props.dueTasks, false, (!showAll ? props.limitDaysInFuture : undefined), onlyStars
@@ -66,10 +66,11 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         )
     }
 
+    const endOfDayMsAdapted = endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime();
     // if no tasks today or from past display that today all tasks are done
     const todayView = (
         <AnimateHeight
-            height={semTasks[0][0].dueAt.getTime() > endOf(new Date()).getTime() ? 'auto' : 0}
+            height={endOfDayMsAdapted < endOf(semTasks[0][0].dueAt).getTime() ? 'auto' : 0}
             animateOpacity
             duration={400}
             animationStateClasses={{
@@ -87,7 +88,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     let dayIdx = 0;
     const allTasks = semTasks.map(tasksOneDay => {
         const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
-        const dayInPast = tasksOneDay[0].dueAt.getTime() < endOf(new Date()).getTime();
+        const dayInPast = tasksOneDay[0].dueAt.getTime() <= endOfDayMsAdapted;
         return (
             <AnimateHeight
                 key={tasksOneDay[0].dueAt.getTime()} 
@@ -104,9 +105,10 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                 amount={tasksOneDay.length}
                                 withClock={dayInPast}
                                 amountStars={starsPerDay[dayIdx++]}
+                                dayStartsAtHour={props.dayStartsAtHour}
                             />
                         )}
-                        uncollapsed={endOf(new Date()).getTime() > tasksOneDay[0].dueAt.getTime()}
+                        uncollapsed={endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime() >= endOf(tasksOneDay[0].dueAt).getTime()}
                         noBorder
                         fullWidthHeader
                         headerClickable

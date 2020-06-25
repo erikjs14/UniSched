@@ -21,9 +21,9 @@ export default function(props: WeekdaySeperatorProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper)}>
-            <h3 className={toCss(s_weekday, (isToday(props.date) ? s_today : ''))}>
+            <h3 className={toCss(s_weekday, (isToday(props.date, props.dayStartsAtHour || 0) ? s_today : ''))}>
                 {props.withClock ? <span role='img' aria-label='clock'> 🕑 </span> : null} 
-                {getDayIdentifier(props.date)}
+                {getDayIdentifier(props.date, props.dayStartsAtHour || 0)}
             </h3>
             <span className={toCss(s_date)}>
                 {formatDateOutput(props.date)}

@@ -252,6 +252,8 @@ export const endOf = (date: Date): Date => {
 }
 export const subtractDays = (date: Date, days: number): Date => new Date(date.getTime() - days * 1000 * DAY_IN_SEC);
 export const addDays = (date: Date, days: number): Date => subtractDays(date, -days);
+export const addHours = (date: Date, hours: number): Date => new Date(date.getTime() + hours * 60 * 60 * 1000);
+export const subtractHours = (date: Date, hours: number): Date => new Date(date.getTime() - hours * 60 * 60 * 1000);
 
 export const isInFuture = (d: Date): boolean => Date.now() < d.getTime();
 
@@ -407,14 +409,14 @@ export const allTasksOfOneDayContained = (tasks: TaskSemantic[], toFadeOut: [str
 
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 export const getWeekDay = (date: Date): typeof days[number] => days[date.getDay()];
-export const isToday = (date: Date): boolean => sameDay(new Date(), date);
-export const isYesterday = (date: Date): boolean => sameDay(new Date(new Date().getTime() - 1000*DAY_IN_SEC), date);
-export const isTomorrow = (date: Date): boolean => sameDay(new Date(new Date().getTime() + 1000*DAY_IN_SEC), date);
+export const isToday = (date: Date, dayStartsAtHour: number): boolean => sameDay(subtractHours(new Date(), dayStartsAtHour), date);
+export const isYesterday = (date: Date, dayStartsAtHour: number): boolean => sameDay(subtractHours(new Date(new Date().getTime() - 1000*DAY_IN_SEC), dayStartsAtHour), date);
+export const isTomorrow = (date: Date, dayStartsAtHour: number): boolean => sameDay(subtractHours(new Date(new Date().getTime() + 1000*DAY_IN_SEC), dayStartsAtHour), date);
 
-export const getDayIdentifier = (date: Date): string => {
-    if (isToday(date)) return 'today';
-    else if (isTomorrow(date)) return 'tomorrow';
-    else if (isYesterday(date)) return 'yesterday';
+export const getDayIdentifier = (date: Date, dayStartsAtHour: number): string => {
+    if (isToday(date, dayStartsAtHour)) return 'today';
+    else if (isTomorrow(date, dayStartsAtHour)) return 'tomorrow';
+    else if (isYesterday(date, dayStartsAtHour)) return 'yesterday';
     else return getWeekDay(date);
 }
 

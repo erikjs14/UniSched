@@ -13,6 +13,7 @@ const {
 
 export default function(props: PreferenceRowProps): JSX.Element | null {
 
+    console.log(props)
     let inputEl;
     switch (props.config.type) {
         case 'boolean':
@@ -29,9 +30,9 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                     type='number'
                     id={props.config.id}
                     name={props.config.id}
-                    min={props.config.min || undefined}
-                    max={props.config.max || undefined}
-                    step={props.config.step || undefined}
+                    min={props.config.min ?? undefined}
+                    max={props.config.max ?? undefined}
+                    step={props.config.step ?? undefined}
                     value={props.value}
                     onChange={e => props.onChange(parseInt(e.target.value))}
                 />

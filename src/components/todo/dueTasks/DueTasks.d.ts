@@ -6,4 +6,6 @@ export interface DueTasksProps {
     onTaskChecked(subjectId: string, taskId: string, timestampSeconds: number): void;
     limitDaysInFuture?: number;
     small?: boolean;
+    onlyStars?: boolean;
+    dayStartsAtHour?: number;
 }

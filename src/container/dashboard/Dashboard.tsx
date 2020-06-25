@@ -27,6 +27,7 @@ import { isInFuture } from '../../util/timeUtil';
 import { ExamConfigType } from '../../store/reducers/data';
 
 import CSS from './Dashboard.module.scss';
+import { PREF_ID_DAY_STARTS_AT } from './../../config/userPreferences';
 const {
     tasksArea: s_tasksArea,
     eventsArea: s_eventsArea,
@@ -134,6 +135,8 @@ export default function(): JSX.Element {
         thisLayouts = gridLayouts;
     }
 
+    const userPrefersDayStartsAt = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
+
     if (eventsLoading || examsLoading || tasksLoading) {
         return <Loader />;
     } else if (eventsError || examsError || tasksError || !eventsConfig || !examsConfig || !tasks || !subjects) {
@@ -166,6 +169,7 @@ export default function(): JSX.Element {
                         subjects={subjectsToObject(subjects)}
                         onTaskChecked={checkTaskHandler}
                         limitDaysInFuture={0}
+                        dayStartsAtHour={userPrefersDayStartsAt || 0}
                         small
                     />
                 </div>

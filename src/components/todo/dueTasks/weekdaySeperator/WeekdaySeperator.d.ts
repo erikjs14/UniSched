@@ -3,4 +3,5 @@ export interface WeekdaySeperatorProps {
     amount: number;
     withClock?: boolean;
     amountStars?: number;
+    dayStartsAtHour?: number;
 }
