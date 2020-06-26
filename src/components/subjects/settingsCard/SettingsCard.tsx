@@ -47,6 +47,7 @@ export default function(props: PropsWithChildren<SettingsCardProps>): JSX.Elemen
         <Collapsible
             header={header}
             addCss={s_wrapper}
+            uncollapsed={props.uncollapsed}
         >
             <div className={toCss(s_content)}>
                 {props.children}

@@ -10,6 +10,11 @@ import { removeKey } from '../../../../util/util';
 import { getTimestampFromDate } from '../../../../util/timeUtil';
 import { useDispatch } from 'react-redux';
 import { forceRefresh } from '../../../../store/actions';
+import { useLocation } from 'react-router-dom';
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 export default React.memo(
     forwardRef(
@@ -20,6 +25,8 @@ export default React.memo(
     : JSX.Element => {
 
     const dispatchGlobal = useDispatch();
+
+    const query = useQuery();
 
     const {
         fetchAllData,
@@ -85,6 +92,7 @@ export default React.memo(
         return <Loader />;
     }
 
+    const uncollapsedTaskId = query.get('unctid');
     const Card = props.cardComponent;
     const cards = data.items.map(dataItem => (
         <Card
@@ -94,6 +102,7 @@ export default React.memo(
             onRemove={() => setWantDelete(dataItem.id)}
             new={dataItem.id.startsWith('NEW_')}
             markEmptyTitles={markTitlesWhenEmpty}
+            uncollapsed={uncollapsedTaskId === dataItem.id}
         />
     ));
     

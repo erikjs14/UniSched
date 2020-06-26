@@ -59,6 +59,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                 selected: star,
                 starClicked: () => onChange('star', !star),
             }}
+            uncollapsed={props.uncollapsed}
         >
 
                 <div className={toCss(s_row)}>

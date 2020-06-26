@@ -8,7 +8,8 @@ export interface SettingsCardProps {
     star?: {
         starClicked: Function;
         selected: boolean;
-    },
+    };
+    uncollapsed?: boolean;
 }
 
 export interface SubjectDataCardProps<M extends SubjectDataModel> {
@@ -17,4 +18,5 @@ export interface SubjectDataCardProps<M extends SubjectDataModel> {
     onRemove: Function;
     new?: boolean;
     markEmptyTitles?: boolean;
+    uncollapsed?: boolean;
 }

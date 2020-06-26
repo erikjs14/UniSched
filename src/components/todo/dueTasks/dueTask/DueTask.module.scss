@@ -60,21 +60,40 @@
 
     }
 
-    .moreInfo {
+    .options {
         position: absolute;
         top: .5rem;
         right: 1.5rem;
-        opacity: .4;
-        cursor: pointer;
-        transform: scale(.9);
+        display: block;
 
-        transition: all .3s;
-        
+        > *:not(:last-child) {
+            margin-right: 1rem;
+        }
 
-        &.highlight {
-            opacity: .75;
-            transform: scale(1);
+        .moreInfo {
+            cursor: pointer;
+            transform: scale(.9);
+            opacity: .4;
+
+            transition: all .3s;
             
+
+            &.highlight {
+                opacity: .75;
+                transform: scale(1);
+                
+                &:hover {
+                    transform: scale(1.1);
+                    opacity: .8;
+                }
+            }
+        }
+
+        .change {
+            cursor: pointer;
+            opacity: .4;
+
+            transition: all .3s;
             &:hover {
                 transform: scale(1.1);
                 opacity: .8;

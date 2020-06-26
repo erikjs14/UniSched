@@ -7,7 +7,8 @@ import Input from '../../../ui/input/Input';
 import { findColorConfig } from './../../../../config/colorChoices';
 import AnimateHeight from 'react-animate-height';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faStar, faPen } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router-dom';
 const {
     wrapper: s_wrapper,
     fadeOut: s_fadeOut,
@@ -16,6 +17,8 @@ const {
     titleTask: s_titleTask,
     dueAt: s_dueAt,
     moreInfo: s_moreInfo,
+    change: s_change,
+    options: s_options,
     small: s_small,
     highlight: s_highlight,
 } = CSS;
@@ -33,6 +36,8 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
             }, 3000);
         }   
     }, [onFadeOutComplete, fadeOut, fadingOut]);
+
+    const history = useHistory();
 
     return (
         <AnimateHeight
@@ -76,12 +81,21 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                             {props.taskSemantic.dueString}
                         </span>
 
-                        <span 
-                            className={toCss(s_moreInfo, (props.moreInfo ? s_highlight : ''))} 
-                            onClick={() => props.infoClicked?.()}
-                        >
-                            <FontAwesomeIcon icon={faInfoCircle} />
-                        </span>
+                        <div className={toCss(s_options)} >
+                            <span
+                                className={toCss(s_change)} 
+                                onClick={() => history.push(`/subjects/${props.taskSemantic.subjectId}?unctid=${props.taskSemantic.taskId}`)}
+                            >
+                                <FontAwesomeIcon icon={faPen} />
+                            </span>
+
+                            <span 
+                                className={toCss(s_moreInfo, (props.moreInfo ? s_highlight : ''))} 
+                                onClick={() => props.infoClicked?.()}
+                            >
+                                <FontAwesomeIcon icon={faInfoCircle} />
+                            </span>
+                        </div>
                     </Fragment>
                 }
             </div>
