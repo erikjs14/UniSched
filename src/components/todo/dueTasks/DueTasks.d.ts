@@ -8,4 +8,5 @@ export interface DueTasksProps {
     small?: boolean;
     onlyStars?: boolean;
     dayStartsAtHour?: number;
+    expandAllVisibleDays?: boolean;
 }

@@ -13,6 +13,7 @@ import CheckedTasks from '../../components/todo/checkedTasks/CheckedTasks';
 import * as actions from '../../store/actions';
 import { TIME_BEFORE_DATA_REFRESH_MS } from './../../config/generalConfig';
 import { PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT, PREF_ID_DAY_STARTS_AT } from '../../config/userPreferences';
+import { PREF_ID_EXPAND_ALL_VISIBLE_DAYS } from './../../config/userPreferences';
 
 export default function() {
 
@@ -56,6 +57,7 @@ export default function() {
 
     const userPrefersLimitTasksInFuture = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT] as (number|undefined));
     const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
+    const userPrefersExpandAllVisibleDays = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_EXPAND_ALL_VISIBLE_DAYS] as (boolean|undefined));
 
     if (loading) {
         return <Loader />;
@@ -79,6 +81,7 @@ export default function() {
                 onTaskChecked={checkTaskHandler}
                 limitDaysInFuture={userPrefersLimitTasksInFuture}
                 dayStartsAtHour={userPrefersDayStartsAtHour}
+                expandAllVisibleDays={userPrefersExpandAllVisibleDays}
             />
                 
             <FloatingButton 

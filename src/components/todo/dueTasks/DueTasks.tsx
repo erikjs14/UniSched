@@ -108,7 +108,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                 dayStartsAtHour={props.dayStartsAtHour}
                             />
                         )}
-                        uncollapsed={endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime() >= endOf(tasksOneDay[0].dueAt).getTime()}
+                        uncollapsed={props.expandAllVisibleDays || endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime() >= endOf(tasksOneDay[0].dueAt).getTime()}
                         noBorder
                         fullWidthHeader
                         headerClickable

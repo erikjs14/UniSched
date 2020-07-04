@@ -22,6 +22,7 @@ export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig
 
 export const PREF_ID_ACTIVATE_RANDOM_AVATAR = 'activateRandomAvatar';
 export const PREF_ID_SHOW_ONLY_FUTURE_EXAMS = 'showOnlyFutureExams';
+export const PREF_ID_EXPAND_ALL_VISIBLE_DAYS = 'expandAllVisibleDays';
 export const PREF_ID_DAYS_BEFORE_TASK_DELETION = 'daysBeforeTaskDeletion';
 export const PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT = 'futureTasksTodoViewLimit';
 export const PREF_ID_DAY_STARTS_AT = 'dayStartsAt';
@@ -40,6 +41,13 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         type: 'boolean',
         name: 'Only show future exams',
         description: 'If enabled, only future exams will be shown in the exams view.',
+        default: false,
+    },
+    {
+        id: PREF_ID_EXPAND_ALL_VISIBLE_DAYS,
+        type: 'boolean',
+        name: 'Expand all visible days',
+        description: 'If enabled, all days that are visible in the todo view, will be expanded.',
         default: false,
     },
     {
