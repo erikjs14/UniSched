@@ -4,7 +4,7 @@ import DateTimePicker from 'react-datepicker';
 import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
 import { TaskModel, IntervalOptions } from '../../../firebase/model';
-import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo } from './../../../util/timeUtil';
+import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo, allTasksChecked } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
@@ -60,6 +60,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                 starClicked: () => onChange('star', !star),
             }}
             uncollapsed={props.uncollapsed}
+            checked={allTasksChecked(oldTimestamps, oldTimestampsDone)}
         >
 
                 <div className={toCss(s_row)}>

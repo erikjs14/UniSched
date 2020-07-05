@@ -10,6 +10,7 @@ export interface SettingsCardProps {
         selected: boolean;
     };
     uncollapsed?: boolean;
+    checked?: boolean;
 }
 
 export interface SubjectDataCardProps<M extends SubjectDataModel> {

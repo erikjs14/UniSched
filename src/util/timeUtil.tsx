@@ -447,3 +447,5 @@ export const findNextDayForInterval = (start: Date, cur: Date, interval: Interva
     }
     return getDateFromSeconds(curSec);
 }
+
+export const allTasksChecked = (timestamps: Timestamp[], timestampsDone: Timestamp[]): boolean => timestamps.every(ts => containsTimestamp(ts, timestampsDone));

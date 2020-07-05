@@ -10,13 +10,24 @@
 .header {
     position: relative;
     font-size: .5em;
+    display: flex;
+    align-items: center;
 
     @include respond(tab-port) {
         margin-top: 1.5rem;
     }
 
+    .inputWrapper {
+        flex-grow: 1;
+    }
+
     input {
         text-align: center;
+    }
+
+    .checkmark {
+        font-size: 1.9em;
+        width: 3rem;
     }
 
     .star {
@@ -27,6 +38,14 @@
         top: 50%;
         transform: translateY(-50%);
         pointer-events: all;
+    }
+
+    &.checked {
+        opacity: .5;
+
+        .inputWrapper {
+            padding-left: 3rem;
+        }
     }
 }
 

@@ -7,7 +7,7 @@ import { toCss } from '../../../util/util';
 import Input from '../../ui/input/Input';
 import Button from '../../ui/button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as fasStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar as fasStar, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 const {
@@ -17,12 +17,16 @@ const {
     btnRow: s_btnRow,
     removeBtn: s_removeBtn,
     star: s_star,
+    inputWrapper: s_inputWrapper,
+    checked: s_checked,
+    checkmark: s_checkmark,
+
 } = CSS;
 
 export default function(props: PropsWithChildren<SettingsCardProps>): JSX.Element {
 
     const header = (
-        <div className={toCss(s_header)}>
+        <div className={toCss(s_header, (props.checked ? s_checked : ''))}>
             {props.star && 
                 <FontAwesomeIcon 
                     className={toCss(s_star)}  
@@ -39,7 +43,14 @@ export default function(props: PropsWithChildren<SettingsCardProps>): JSX.Elemen
                 onChange={newVal => props.onHeaderValueChange(newVal as string)}
                 label='Insert title here'
                 markWhenEmpty={props.markEmptyTitles}
+                addClass={toCss(s_inputWrapper)}
             />
+            {props.checked &&
+                <FontAwesomeIcon
+                    icon={faCheck}
+                    className={toCss(s_checkmark)} 
+                />
+            }
         </div>
     );
     
