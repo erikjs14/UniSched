@@ -54,3 +54,7 @@ $breakpoint argument choices:
         @media (min-width: 37.5em) { @content };
     }
 }
+
+@mixin mobileKeyboardOpen() {
+    @media (max-height: 25em) and (max-width: 37.5em) { @content };
+}

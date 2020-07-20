@@ -35,15 +35,12 @@ const {
     inAndStar: s_inAndStar,
     typeInput: s_typeInput,
     firstDeadlineInput: s_firstDeadlineInput,
-    sectionFirstDeadline: s_sectionFirstDeadline,
-    sectionInterval: s_sectionInterval,
-    sectionLastDeadline: s_sectionLastDeadline,
     intervalOptions: s_intervalOptions,
     addTextField: s_addTextField,
 } = CSS;
 
 // !!! ALWAYS UPDATE
-const pageLen = 4;
+const pageLen = 6;
 export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element {
 
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
@@ -79,7 +76,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         if (props.isShown && pageCnt === 1){
             // evergreen dialog focuses on cancel by default --> wait and override
             setTimeout(() => typeInputRef.current?.focus(), 350);
-        } else if (props.isShown && pageCnt === 3) {
+        } else if (props.isShown && pageCnt === pageLen - 1) {
             setTimeout(() => addTextInputRef.current?.focus(), 350);
         } else if (!props.isShown) {
             setPageCnt(0);
@@ -122,7 +119,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         }
     }, [firstDeadline, interval, lastDeadline, taskConfig.timestamps, taskConfig.timestampsDone]);
 
-    const onChangePageCnt = useCallback((amount: number) => {
+    const onChangePageCnt = useCallback((amount: number, force: boolean = false) => {
         // check type input
         if (amount !== 0 && pageCnt === 1) {
             if (taskConfig.type.trim().length === 0) {
@@ -134,8 +131,17 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         let newCnt = pageCnt + amount;
         if (newCnt < 0) newCnt = 0;
         else if (newCnt >= pageLen) newCnt = pageLen - 1;
+
+        // check if last deadline is to be skipped
+        if (!force && newCnt === 4 && interval === 'once') {
+            if (amount > 0)
+                newCnt = 5;
+            else if (amount < 0)
+                newCnt = 3;
+        }
+
         setPageCnt(newCnt);
-    }, [pageCnt, taskConfig.type]);
+    }, [interval, pageCnt, taskConfig.type]);
 
     const reset = useCallback(() => {
         setPageCnt(0);
@@ -197,59 +203,71 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             </div>
         </Fragment>,
         <Fragment>
-            <div className={toCss(s_sectionFirstDeadline)} >
                 
-                <h3>When do you want to be reminded?</h3>
-                <div className={toCss(s_shortcuts)} >
-                    {(() => {
-                        const dateIn = (days: number): Date => addDays(endOf(subtractHours(new Date(), userPrefersDayStartsAtHour || 0)), days);
-                        const dates = arrayToN(6).map((val, idx) => dateIn(idx));
-                        return dates.map((date, idx) => (
-                            <Button
-                                key={idx}
-                                fontSize='.8em'
-                                onClick={() => changeHandler('firstDeadline', date)}
-                            >
-                                { idx === 0 ? 'Today'
-                                    : idx === 1 ? 'Tomorrow'
-                                    : getWeekDay(date) }
-                            </Button>
-                        ));
-                    })()}
-                    <input 
-                        type="date"
-                        value={dateToHTMLString(getDateFromTimestamp(firstDeadline))}
-                        onChange={e => changeHandler('firstDeadline', HTMLStringToDate(e.target.value, 23, 59))}
-                        className={toCss(s_firstDeadlineInput)} 
-                    />
-                </div>
-            </div>
-
-            <div className={toCss(s_sectionInterval)} >
-                
-                <h3>What is the interval?</h3>
-                <Input
-                    label='Interval'
-                    elementType='select-visual'
-                    value={interval}
-                    onChange={newInterval => changeHandler('interval', newInterval)}
-                    options={IntervalOptions.reverse()}
-                    addClass={toCss(s_intervalOptions)}
+            <h3>When do you want to be reminded?</h3>
+            <div className={toCss(s_shortcuts)} >
+                {(() => {
+                    const dateIn = (days: number): Date => addDays(endOf(subtractHours(new Date(), userPrefersDayStartsAtHour || 0)), days);
+                    const dates = arrayToN(6).map((val, idx) => dateIn(idx));
+                    return dates.map((date, idx) => (
+                        <Button
+                            key={idx}
+                            fontSize='.8em'
+                            onClick={() => {
+                                changeHandler('firstDeadline', date);
+                                onChangePageCnt(1);
+                            }}
+                        >
+                            { idx === 0 ? 'Today'
+                                : idx === 1 ? 'Tomorrow'
+                                : getWeekDay(date) }
+                        </Button>
+                    ));
+                })()}
+                <input 
+                    type="date"
+                    value={dateToHTMLString(getDateFromTimestamp(firstDeadline))}
+                    onChange={e => changeHandler('firstDeadline', HTMLStringToDate(e.target.value, 23, 59))}
+                    className={toCss(s_firstDeadlineInput)} 
                 />
             </div>
 
-            <div className={toCss(s_sectionLastDeadline, (interval === 'once' ? s_hidden : ''))} >
+        </Fragment>,
+        <Fragment>
                 
-                <Fragment>
-                    <h3>What's the last date?</h3>
-                    <select value={lastDeadline.seconds} onChange={event => changeHandler('lastDeadline', getDateFromSeconds(parseInt(event.target.value)))}>
-                        { getNDatesAsSecondsForInterval(firstDeadline.seconds, interval, CONFIG__QUICK_ADD_FUTURE_END_OPTIONS).map(secs => (
-                            <option key={secs} value={secs}>{formatDateOutput(getDateFromSeconds(secs))}</option>
-                        ))}
-                    </select>
-                </Fragment>
+            <h3>What is the interval?</h3>
+            <Input
+                label='Interval'
+                elementType='select-visual'
+                value={interval}
+                onChange={newInterval => {
+                    changeHandler('interval', newInterval);
+                }}
+                onClick={(event: any) => {
+                    if (event.target.value !== 'once')
+                        onChangePageCnt(1, true);
+                    else 
+                        onChangePageCnt(2, true);
+                }}
+                options={IntervalOptions.reverse()}
+                addClass={toCss(s_intervalOptions)}
+            />
+
+        </Fragment>,
+        <Fragment>  
                 
-            </div>
+            <Fragment>
+                <h3>What's the last date?</h3>
+                <select value={lastDeadline.seconds} onChange={event => {
+                    changeHandler('lastDeadline', getDateFromSeconds(parseInt(event.target.value))); 
+                    onChangePageCnt(1);
+                }}>
+                    { getNDatesAsSecondsForInterval(firstDeadline.seconds, interval, CONFIG__QUICK_ADD_FUTURE_END_OPTIONS).map(secs => (
+                        <option key={secs} value={secs}>{formatDateOutput(getDateFromSeconds(secs))}</option>
+                    ))}
+                </select>
+            </Fragment>
+                
         </Fragment>,
         <Fragment>
             <h3>Any Additional Text?</h3>
@@ -275,6 +293,10 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             confirmLabel='Add'
             isConfirmDisabled={!addEnabled}
             isConfirmLoading={loading}
+            onCancel= {close => {
+                close();
+                reset();
+            }}
         >
             {({ close }) => (
                 <div 

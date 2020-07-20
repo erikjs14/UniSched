@@ -33,6 +33,7 @@ export interface InputProps<T> {
     disabled?: boolean;
     minSize?: boolean;
     markWhenEmpty?: boolean;
+    onClick?: Function;
 }
 
 export default React.forwardRef(function(props: InputProps<string|boolean>, ref: MutableRefObject<any> | ((instance: any) => void) | null): JSX.Element| null {
@@ -112,6 +113,7 @@ export default React.forwardRef(function(props: InputProps<string|boolean>, ref:
                                 ref={ref}
                                 value={option}
                                 onChange={event => props.onChange(event.target.value)}
+                                onClick={(event) => props.onClick?.(event)}
                                 checked={props.value === option}
                                 name={props.label}
                             />
