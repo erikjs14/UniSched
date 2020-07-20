@@ -6,4 +6,6 @@ export interface SideDrawerProps {
     onLogout: Function;
     onPlus: Function;
     navItems: Array<NavigationItemConfig>;
+    showQuickAddToggle?: boolean;
+    onQuickAdd?: Function;
 }

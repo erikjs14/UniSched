@@ -5,4 +5,6 @@ export interface SidebarProps {
     displayName: string;
     onLogout: Function;
     navItems: Array<NavigationItemConfig>;
+    showQuickAddToggle?: boolean;
+    onQuickAdd?: Function;
 }

@@ -10,8 +10,9 @@ import NavigationItems from '../navigationItems/NavigationItems';
 import { useDispatch } from 'react-redux';
 import { logout } from './../../../store/actions/dispatcher';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
+import FloatingButton from '../../ui/floatingButton/FloatingButton';
 const {
     drawer: s_drawer,
     toggled: s_toggled,
@@ -23,6 +24,7 @@ const {
     backdrop: s_backdrop,
     bottomArea: s_bottomArea,
     settingsIcon: s_settingsIcon,
+    plusBtn: s_plusBtn,
 } = CSS;
 
 export default React.memo(function(props: SideDrawerProps): JSX.Element {
@@ -61,6 +63,18 @@ export default React.memo(function(props: SideDrawerProps): JSX.Element {
                     items={props.navItems} 
                     onItemClicked={() => setToggled(prevToggled => !prevToggled)}    
                 />
+
+                { props.showQuickAddToggle &&
+                    <FloatingButton 
+                        className={toCss(s_plusBtn)} 
+                        onClick={() => {
+                            setToggled(false);
+                            props.onQuickAdd?.();
+                        }}
+                    >
+                        <FontAwesomeIcon icon={faPlus} />
+                    </FloatingButton>
+                }
 
                 <div className={toCss(s_bottomArea)}>
                     <div className={toCss(s_settingsIcon)} onClick={() => {history.push('/settings'); setToggled(prev => !prev);}}>

@@ -68,6 +68,8 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     onLogout={() => logout(dispatch)} 
                     displayName={displayName}
                     imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
+                    showQuickAddToggle
+                    onQuickAdd={() => setShowAddTaskDialog(true)}
                 />
             </nav>
 
@@ -78,6 +80,8 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     onPlus={() => {}}
                     displayName={displayName}
                     imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
+                    showQuickAddToggle
+                    onQuickAdd={() => setShowAddTaskDialog(true)}
                 />
             </nav>
 

@@ -20,7 +20,8 @@ import SimpleSettingsRow from '../../subjects/SimpleSettingsRow/SimpleSettingsRo
 import { IntervalOptions } from '../../../firebase/model';
 import { CONFIG__QUICK_ADD_FUTURE_END_OPTIONS } from '../../../config/todoConfig';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { addAndSaveNewTask } from '../../../store/actions';
+import { addAndSaveNewTask, fetchTasks } from '../../../store/actions';
+import { TIME_BEFORE_DATA_REFRESH_MS } from '../../../config/generalConfig';
 const {
     wrapper: s_wrapper,
     angleLeft: s_angleLeft,
@@ -43,10 +44,17 @@ const {
 const pageLen = 6;
 export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element {
 
+    const {data: tasks, timestamp, } = useSelector((state: RootState) => state.data.tasks);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
-
     const {loading, error} = useSelector((state: RootState) => state.data.tasks);
     const dispatch = useDispatch();
+
+    // fetch all tasks if not already loaded
+    useEffect(() => {
+        if ((props.isShown && subjects && !tasks && !error) || (props.isShown && !loading && Date.now() - timestamp > TIME_BEFORE_DATA_REFRESH_MS)) { //fetch on first mount and when timespan has elapsed
+            dispatch(fetchTasks());
+        }
+    }, [dispatch, error, loading, props.isShown, subjects, tasks, timestamp]);
 
     const [pageCnt, setPageCnt] = useState(0);
     const [addEnabled, setAddEnabled] = useState(false);

@@ -10,8 +10,9 @@ import { logout } from '../../../store/actions/dispatcher';
 import { useDispatch } from 'react-redux';
 import { Clock } from 'grommet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
+import FloatingButton from '../../ui/floatingButton/FloatingButton';
 const {
     sidebar: s_sidebar,
     userArea: s_userArea,
@@ -21,6 +22,7 @@ const {
     bottomArea: s_bottomArea,
     clock: s_clock,
     settingsIcon: s_settingsIcon,
+    plusBtn: s_plusBtn,
 } = CSS;
 
 export default React.memo(function(props: SidebarProps): JSX.Element {
@@ -45,6 +47,16 @@ export default React.memo(function(props: SidebarProps): JSX.Element {
                 <NavigationItems 
                     items={props.navItems}   
                 />
+
+                { props.showQuickAddToggle &&
+                    <FloatingButton 
+                        className={toCss(s_plusBtn)} 
+                        onClick={() => props.onQuickAdd?.()}
+                    >
+                        <FontAwesomeIcon icon={faPlus} />
+                    </FloatingButton>
+                }
+
             </div>
 
             <div className={toCss(s_bottomArea)}>
