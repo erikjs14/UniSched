@@ -22,6 +22,7 @@ import { CONFIG__QUICK_ADD_FUTURE_END_OPTIONS } from '../../../config/todoConfig
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { addAndSaveNewTask, fetchTasks } from '../../../store/actions';
 import { TIME_BEFORE_DATA_REFRESH_MS } from '../../../config/generalConfig';
+import * as chrono from 'chrono-node';
 const {
     wrapper: s_wrapper,
     angleLeft: s_angleLeft,
@@ -42,7 +43,7 @@ const {
 
 // !!! ALWAYS UPDATE
 const pageLen = 6;
-export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element {
+export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element | null{
 
     const {data: tasks, timestamp, } = useSelector((state: RootState) => state.data.tasks);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
@@ -160,10 +161,29 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
 
     const addTaskHandler = useCallback((closeDialog: Function) => {
         if (taskConfig?.type?.length > 0 && subjectId) {
+            // if on type page --> look for possible date extraction from natural language
+            const config = {
+                ...taskConfig,
+                timestamps: [...taskConfig.timestamps],
+                timestampsDone: [...taskConfig.timestampsDone],
+            };
+            if (pageCnt === 1 && interval === 'once') {
+                const spec = chrono.parse(taskConfig.type);
+                if (spec?.length > 0) {
+                    const typeWithoutDate = taskConfig.type.replace(spec[0].text, '');
+                    const date = chrono.parseDate(taskConfig.type);
+
+                    config.type = typeWithoutDate;
+                    config.timestamps = [getTimestampFromDate(date)];
+                    config.timestampsDone = [];
+                    setTaskConfig(config);
+                }
+            }
+
             setPageCnt(pageLen - 1);
-            dispatch(addAndSaveNewTask(taskConfig, subjectId, closeDialog, reset));
+            dispatch(addAndSaveNewTask(config, subjectId, closeDialog, reset));
         }
-    }, [dispatch, reset, subjectId, taskConfig]);
+    }, [dispatch, interval, pageCnt, reset, subjectId, taskConfig]);
     
     const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
 
@@ -291,6 +311,8 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         </Fragment>,
     ], [changeHandler, error, firstDeadline, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, subjectId, subjects, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
     
+    if (!props.isShown) return null;
+
     return (
         <Dialog
             isShown={props.isShown}
