@@ -4,5 +4,6 @@ export interface SideDrawerProps {
     imgUrl?: string;
     displayName: string;
     onLogout: Function;
+    onPlus: Function;
     navItems: Array<NavigationItemConfig>;
 }

@@ -24,6 +24,12 @@ export default function(props: FloatingButtonProps): JSX.Element {
                 {button}
             </div>
         );
+    } else if (props.className) {
+        return (
+            <div className={props.className}>
+                {button}
+            </div>
+        );
     } else {
         return button;
     }

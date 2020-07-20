@@ -12,6 +12,7 @@ const {
     icon: s_icon,
     title: s_title,
     noHover: s_noHover,
+    outline: s_outline,
 } = CSS;
 
 export default function(props: SimpleSettingsRowProps): JSX.Element {
@@ -24,13 +25,18 @@ export default function(props: SimpleSettingsRowProps): JSX.Element {
         if (props.linkTo) {
             history.push(props.linkTo);
         }
+        if (props.onClick) {
+            props.onClick();
+        }
     }
+
+    const bgCol = hex2rgba(colorConfig.value, props.darkenBy ? props.darkenBy : 1);
 
     return (
         <div 
-            className={toCss(s_row, (props.noHover ? s_noHover : ''))}
+            className={toCss(s_row, (props.noHover ? s_noHover : ''), (props.outline ? s_outline : ''))}
             style={{
-                backgroundColor: hex2rgba(colorConfig.value, props.darkenBy ? props.darkenBy : 1),
+                backgroundColor: bgCol,
                 backgroundImage: props.darkenBy ? 'linear-gradient(to bottom right, rgba(0,0,0,.2), rgba(0,0,0,.3))' : undefined,
                 color: colorConfig.textColor,
             }}

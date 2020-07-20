@@ -1,8 +1,8 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC } from './data.d';
-import { TaskModelWithIdAndSubjectId, ExamModelWithId, EventModelWithId } from '../../firebase/model';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC } from './data.d';
+import { ExamModelWithId, EventModelWithId, TaskModel } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
-import { SubjectModelWithId } from './../../firebase/model';
+import { SubjectModelWithId, TaskModelWithIdAndSubjectId } from './../../firebase/model';
 import { DataTypeId } from '../../hooks/useSubjectData';
 
 export const fetchTasks = (): FetchTasksAC => {
@@ -122,5 +122,31 @@ export const forceRefresh = (dataTypeId: DataTypeId): ForceRefreshAC => {
     return {
         type: actionTypes.FORCE_REFRESH,
         dataTypeId,
+    };
+};
+
+export const addAndSaveNewTask = (task: TaskModel, subjectId: string, close: Function | undefined, reset: Function | undefined): AddAndSaveNewTaskAC => {
+    return {
+        type: actionTypes.ADD_AND_SAVE_NEW_TASK,
+        task,
+        subjectId,
+        close,
+        reset,
+    };
+};
+
+export const addAndSaveNewTaskSuccess = (task: TaskModelWithIdAndSubjectId, close: Function | undefined, reset: Function | undefined): AddAndSaveNewTaskSuccessAC => {
+    return {
+        type: actionTypes.ADD_AND_SAVE_NEW_TASK_SUCCESS,
+        task,
+        close,
+        reset,
+    };
+};
+
+export const addAndSaveNewTaskFail = (error: string): AddAndSaveNewTaskFailAC => {
+    return {
+        type: actionTypes.ADD_AND_SAVE_NEW_TASK_FAIL,
+        error,
     };
 };

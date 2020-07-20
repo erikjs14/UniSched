@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { DataState } from './data.d';
-import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC } from '../actions/data.d';
+import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, AddAndSaveNewTaskSuccessAC } from '../actions/data.d';
 import { ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { getAllConfigFromExams, getAllConfigFromEvents, ConfigType } from '../../util/scheduleUtil';
 import { findColorConfig } from '../../config/colorChoices';
@@ -50,6 +50,9 @@ export default (state: DataState = initialState, action: BaseActionCreator) => {
         case actionTypes.FETCH_EVENTS_SUCCESS: return fetchEventsSuccess(state, action as FetchEventsSuccessAC);
         case actionTypes.FETCH_EVENTS_FAIL: return fetchEventsFail(state, action as FetchEventsFailAC);
         case actionTypes.FORCE_REFRESH: return forceRefresh(state, action as ForceRefreshAC);
+        case actionTypes.ADD_AND_SAVE_NEW_TASK: return addAndSaveNewTask(state, action as AddAndSaveNewTaskAC);
+        case actionTypes.ADD_AND_SAVE_NEW_TASK_SUCCESS: return addAndSaveNewTaskSuccess(state, action as AddAndSaveNewTaskSuccessAC);
+        case actionTypes.ADD_AND_SAVE_NEW_TASK_FAIL: return addAndSaveNewTaskFail(state, action as AddAndSaveNewTaskFailAC);
         default: return state;
     }
 }
@@ -196,6 +199,48 @@ const forceRefresh = (state: DataState, action: ForceRefreshAC): DataState => {
     return updateObject(state, {
         [dataField]: updateObject(state[dataField], {
             timestamp: 0,
+        }),
+    });
+};
+
+const addAndSaveNewTask = (state: DataState, action: AddAndSaveNewTaskAC): DataState => {
+    return updateObject(state, {
+        tasks: updateObject(state.tasks, {
+            loading: true,
+        }),
+    });
+};
+
+const addAndSaveNewTaskSuccess = (state: DataState, action: AddAndSaveNewTaskSuccessAC): DataState => {
+    if (state.tasks.data) {
+        return updateObject(state, {
+            tasks: updateObject(state.tasks, {
+                loading: false,
+                error: null,
+                data: [
+                    ...state.tasks.data,
+                    action.task,
+                ],
+            }),
+        });
+    } else {
+        return updateObject(state, {
+            tasks: updateObject(state.tasks, {
+                loading: false,
+                error: null,
+                data: [
+                    action.task,
+                ],
+            }),
+        });
+    }
+};
+
+const addAndSaveNewTaskFail = (state: DataState, action: AddAndSaveNewTaskFailAC): DataState => {
+    return updateObject(state, {
+        tasks: updateObject(state.tasks, {
+            loading: false,
+            error: action.error,
         }),
     });
 };

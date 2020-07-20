@@ -1,2 +1,3 @@
 export const CONFIG__PAST_TASKS_LIMIT = 5;
 export const CONFIG__EXPAND_PAST_TASKS = 5;
+export const CONFIG__QUICK_ADD_FUTURE_END_OPTIONS = 30;

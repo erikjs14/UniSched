@@ -36,6 +36,16 @@
     min-width: calc(100% - #{$sidebar-max-width});
     max-width: calc(100% - #{$sidebar-min-width});
 
+    .plusBtn {
+        font-size: 1.2em;
+        position: fixed;
+        bottom: 3rem;
+        right: calc((100% - #{$sidebar-default-width}) * 0.5);
+        transform: translateX(-50%);
+
+        @include respond(tab-port) { bottom: 7.5rem;}
+    }
+
     @include respond(tab-port) {
         width: 100vw;
         min-width: unset;

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, Fragment, useMemo, useRef, useEffect } from 'react';
+import React, { PropsWithChildren, Fragment, useMemo, useRef, useEffect, useState } from 'react';
 import cuteDog from '../../assets/img/cute_dog.jpg';
 import bird1 from '../../assets/img/bird1.jpeg';
 import bird2 from '../../assets/img/bird2.jpeg';
@@ -26,19 +26,29 @@ import CSS from './Layout.module.scss';
 import { toCss } from './../../util/util';
 import SideDrawer from '../../components/navigation/sidedrawer/SideDrawer';
 import { PREF_ID_ACTIVATE_RANDOM_AVATAR } from '../../config/userPreferences';
+import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import AddTaskDialog from '../../components/todo/addTaskDialog/AddTaskDialog';
+import { Route } from 'react-router-dom';
 const {
     navDesktop: s_navDesktop,
     navMobile: s_navMobile,
     main: s_main,
+    plusBtn: s_plusBtn,
 } = CSS;
 
 export default function(props: PropsWithChildren<{}>): JSX.Element {
+
+    const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
 
     const dispatch = useDispatch();
     const useRandomAvatar = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ACTIVATE_RANDOM_AVATAR]);
 
     let [displayName, imgUrl] = useSelector((state: RootState) => [state.user.username, state.user.userImgUrl]);
     if (!displayName) displayName = 'User';
+
+    const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
 
     const randomUserIconUrl = useMemo(() => {
         const options = [cuteDog, bird1, bird2, bird3, bird4, bird5, bird6, bird7, bird8, bird9, bird10, bird11, bird12];
@@ -65,6 +75,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                 <SideDrawer
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)}
+                    onPlus={() => {}}
                     displayName={displayName}
                     imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
                 />
@@ -73,7 +84,23 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
             <main ref={scrollContainerRef} className={toCss(s_main)}>
                 {props.children}
                 <BackTop />
+                { subjects && subjects.length > 0 &&
+                    <Route path='/todo'>
+                        <FloatingButton 
+                            className={toCss(s_plusBtn)} 
+                            onClick={() => setShowAddTaskDialog(true)}
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                        </FloatingButton>
+                    </Route>
+                }
             </main>
+
+            <AddTaskDialog
+                isShown={showAddTaskDialog}
+                onCloseComplete={() => setShowAddTaskDialog(false)}
+                onTaskAdded={() => {}}
+            />
         </Fragment>
     )
 }

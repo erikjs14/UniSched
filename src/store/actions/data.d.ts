@@ -10,6 +10,9 @@ export interface FetchTasksSuccessAC extends BaseActionCreator {tasks: TaskModel
 export interface FetchTasksFailAC extends BaseActionCreator {error: string}
 export interface SetTasksLocallyAC extends BaseActionCreator {tasks: TaskModelWithIdAndSubjectId[]}
 export interface DataSetErrorAC extends BaseActionCreator {error: string, at: keyof DataState}
+export interface AddAndSaveNewTaskAC extends BaseActionCreator {task: TaskModel, subjectId: string, close?: Function, reset?: Function}
+export interface AddAndSaveNewTaskSuccessAC extends BaseActionCreator {task: TaskModelWithIdAndSubjectId, close?: Function, reset?: Function}
+export interface AddAndSaveNewTaskFailAC extends BaseActionCreator {error: string}
 
 export interface CheckTaskAC extends BaseActionCreator {
     subjectId: string;

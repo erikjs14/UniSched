@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, MutableRefObject } from 'react';
 import CSS from './Input.module.scss';
 import { toCss, hex2rgba } from '../../../util/util';
 
@@ -32,10 +32,10 @@ export interface InputProps<T> {
     labelLeft?: boolean;
     disabled?: boolean;
     minSize?: boolean;
-    markWhenEmpty?: boolean;    
+    markWhenEmpty?: boolean;
 }
 
-export default function(props: InputProps<string|boolean>): JSX.Element| null {
+export default React.forwardRef(function(props: InputProps<string|boolean>, ref: MutableRefObject<any> | ((instance: any) => void) | null): JSX.Element| null {
 
     const [touched, setTouched] = useState(false);
 
@@ -46,7 +46,17 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
         case 'input': 
             return (
                 <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
-                    <input {...props.elementConfig} placeholder='' value={props.value as string} onChange={event => props.onChange(event.target.value)} className={toCss(s_input)} />
+                    <input 
+                        {...props.elementConfig} 
+                        ref={ref} 
+                        placeholder='' 
+                        value={props.value as string} 
+                        onChange={event => {
+                            props.onChange(event.target.value);
+                            setTimeout(() => setTouched(true), 500);
+                        }} 
+                        className={toCss(s_input, ((props.markWhenEmpty || touched) && (props.value as string) === '') ? s_glowRed : '')}
+                    />
                     <label className={toCss(s_label)} >{props.label}</label>
                 </div>
             );
@@ -56,6 +66,7 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                     <input 
                         {...props.elementConfig} 
                         value={props.value as string} 
+                        ref={ref}
                         onChange={event => {
                             props.onChange(event.target.value);
                             setTimeout(() => setTouched(true), 500);
@@ -80,6 +91,7 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                 <div style={style} className={toCss(s_wrapper, props.addClass || '')}>
                     <textarea 
                         {...props.elementConfig}
+                        ref={ref}
                         placeholder=''
                         value={props.value as string}
                         onChange={event => props.onChange(event.target.value)}
@@ -97,6 +109,7 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                         >
                             <input
                                 type='checkbox'
+                                ref={ref}
                                 value={option}
                                 onChange={event => props.onChange(event.target.value)}
                                 checked={props.value === option}
@@ -115,6 +128,7 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
                     >
                         <input
                             type='checkbox'
+                            ref={ref}
                             value={props.label}
                             onChange={event => props.disabled ? null : props.onChange(event.target.value)}
                             checked={props.value as boolean}
@@ -128,6 +142,7 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
             return (
                 <div className={toCss(s_wrapper, props.addClass || '')} >
                     <input
+                        ref={ref}
                         className={toCss(s_simpleCheckbox)} 
                         type='checkbox'
                         value={props.label}
@@ -141,4 +156,4 @@ export default function(props: InputProps<string|boolean>): JSX.Element| null {
             return null;
     }
 
-}
+});

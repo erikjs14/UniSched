@@ -33,6 +33,9 @@ export {
     fetchEventsSuccess,
     fetchEventsFail,
     forceRefresh,
+    addAndSaveNewTask,
+    addAndSaveNewTaskSuccess,
+    addAndSaveNewTaskFail,
 } from './data';
 export {
     setScrollContainerRef,

@@ -5,10 +5,6 @@ import { RootState } from '../..';
 import Loader from '../../components/ui/loader/Loader';
 import DueTasks from '../../components/todo/dueTasks/DueTasks';
 import { subjectsToObject } from '../../util/util';
-import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
-import { useHistory } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import CheckedTasks from '../../components/todo/checkedTasks/CheckedTasks';
 import * as actions from '../../store/actions';
 import { TIME_BEFORE_DATA_REFRESH_MS } from './../../config/generalConfig';
@@ -16,8 +12,6 @@ import { PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT, PREF_ID_DAY_STARTS_AT } from '../
 import { PREF_ID_EXPAND_ALL_VISIBLE_DAYS } from './../../config/userPreferences';
 
 export default function() {
-
-    const history = useHistory();
 
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const {
@@ -83,14 +77,6 @@ export default function() {
                 dayStartsAtHour={userPrefersDayStartsAtHour}
                 expandAllVisibleDays={userPrefersExpandAllVisibleDays}
             />
-                
-            <FloatingButton 
-                center
-                onClick={() => history.push('/subjects')}
-                className='util-margin-bottom-medium' 
-            >
-                <FontAwesomeIcon style={{fontSize: '2rem'}} icon={faPlus} />
-            </FloatingButton>
 
             <CheckedTasks
                 rawTasks={tasks}

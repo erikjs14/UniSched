@@ -41,6 +41,11 @@
         filter: blur(2px);
     }
 
+    &.outline {
+        border: 5px double #{$col-primary-dark};
+        border-style: double;
+    }
+
     .icon {
         position: absolute;
         right: 2rem;

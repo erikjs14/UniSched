@@ -5,6 +5,8 @@ export interface SimpleSettingsRowProps {
     icon?: IconType;
     bgColor: string;
     linkTo?: string;
+    onClick?: Function;
     noHover?: boolean;
     darkenBy?: number;
+    outline?: boolean;
 }

@@ -44,3 +44,10 @@ export const isMobile = (): boolean => {
 }
 
 export const scrollTo = (myRef: any) => myRef.current ? window.scrollTo(0, myRef.current.offsetTop) : null;
+
+export const arrayToN = (n: number): number[] => {
+    const out = [];
+    for (let i = 0; i < n; i++) 
+        out.push(i);
+    return out;
+}

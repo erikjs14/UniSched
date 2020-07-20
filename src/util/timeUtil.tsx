@@ -246,14 +246,16 @@ export const endOf = (date: Date): Date => {
     const out = new Date(date);
     out.setHours(23);
     out.setMinutes(59);
-    out.setSeconds(59);
-    out.setMilliseconds(999);
+    out.setSeconds(0);
+    out.setMilliseconds(0);
     return out;
 }
 export const subtractDays = (date: Date, days: number): Date => new Date(date.getTime() - days * 1000 * DAY_IN_SEC);
 export const addDays = (date: Date, days: number): Date => subtractDays(date, -days);
 export const addHours = (date: Date, hours: number): Date => new Date(date.getTime() + hours * 60 * 60 * 1000);
 export const subtractHours = (date: Date, hours: number): Date => new Date(date.getTime() - hours * 60 * 60 * 1000);
+export const addSeconds = (date: Date, seconds: number): Date => new Date(date.getTime() + seconds * 1000);
+export const subtractSeconds = (date: Date, seconds: number): Date => subtractSeconds(date, -seconds);
 
 export const isInFuture = (d: Date): boolean => Date.now() < d.getTime();
 
@@ -372,6 +374,18 @@ export const getFilterForInterval = (startSecs: number, interval: IntervalType):
     }
 }
 
+export const getNDatesAsSecondsForInterval = (excludedStartDateSeconds: number, interval: IntervalType, n: number): number[] => {
+    if (interval === 'once') return [];
+    const out = [];
+    const secsToAdd = getSecondsFromIntervalType(interval);
+    for (let i = 1; i <= n; i++) {
+        out.push(
+            excludedStartDateSeconds + i * secsToAdd
+        );
+    }
+    return out;
+}
+
 export const removeDuplicateTimestamps = (array: Timestamp[]): Timestamp[] => {
     return array.reduce<Timestamp[]>((unique, o) => {
         if (!unique.some(ts => ts.seconds === o.seconds && ts.nanoseconds === o.nanoseconds)) {
@@ -449,3 +463,24 @@ export const findNextDayForInterval = (start: Date, cur: Date, interval: Interva
 }
 
 export const allTasksChecked = (timestamps: Timestamp[], timestampsDone: Timestamp[]): boolean => timestamps.every(ts => containsTimestamp(ts, timestampsDone));
+
+export const dateToHTMLString = (date: Date): string => {
+    const year = date.getFullYear();
+    let month = ''+(date.getMonth() + 1);
+    if (month.length === 1) month = '0' + month;
+    let day = ''+(date.getDate());
+    if (day.length === 1) day = '0' + day;
+    return year+'-'+month+'-'+day;
+}
+export const HTMLStringToDate = (dateStr: string, hours: number, minutes: number): Date => {
+    const [year, month, day] = dateStr.split('-');
+    const out = new Date();
+    out.setFullYear(parseInt(year));
+    out.setMonth(parseInt(month) - 1);
+    out.setDate(parseInt(day));
+    out.setHours(hours);
+    out.setMinutes(minutes);
+    return out;
+}
+
+export const getCurrentTimestamp = (): Timestamp => getTimestampFromDate(new Date());
