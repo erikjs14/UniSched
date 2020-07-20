@@ -29,7 +29,7 @@ import { PREF_ID_ACTIVATE_RANDOM_AVATAR } from '../../config/userPreferences';
 import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import AddTaskDialog from '../../components/todo/addTaskDialog/AddTaskDialog';
+import AddTaskDialog from '../../container/todos/addTaskDialog/AddTaskDialog';
 import { Route } from 'react-router-dom';
 const {
     navDesktop: s_navDesktop,
