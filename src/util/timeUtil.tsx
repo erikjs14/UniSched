@@ -124,6 +124,11 @@ export const groupTaskSemanticsBySubject = (sortedTasks: TaskSemantic[]): [TaskS
     return [out, starsPerSubject];
 }
 
+export const dayIsInLimit = (date: Date, limitDaysInFuture: number): boolean => {
+    const endOfLimitDay = endOf(addDays(new Date(), limitDaysInFuture));
+    return endOfLimitDay.getTime() >= date.getTime();
+}
+
 export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined, onlyStars: boolean = false): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
     const endOfLimitDay = limitFutureBy === undefined ? undefined : endOf(addDays(new Date(), limitFutureBy));

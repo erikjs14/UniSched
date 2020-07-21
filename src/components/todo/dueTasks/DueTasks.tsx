@@ -6,7 +6,7 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate, subtractHours } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate, subtractHours, dayIsInLimit } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -33,8 +33,8 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [onlyStars, setOnlyStars] = useState(props.onlyStars);
 
     const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
-            props.dueTasks, false, (!showAll ? props.limitDaysInFuture : undefined), onlyStars
-        ), [onlyStars, props.dueTasks, props.limitDaysInFuture, showAll]);
+            props.dueTasks, false, undefined, false
+        ), [props.dueTasks]);
     const containsStars = React.useMemo(() => {
         return starsPerDay.some(nr => nr > 0);
     }, [starsPerDay]);
@@ -85,8 +85,12 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         </AnimateHeight>
     );
     
-    let dayIdx = 0;
-    const allTasks = semTasks.map(tasksOneDay => {
+    const allTasks = semTasks.map((tasksOneDay, idx) => {
+        //check if limit reached
+        if (!showAll && !onlyStars && props.limitDaysInFuture && !dayIsInLimit(tasksOneDay[0].dueAt, props.limitDaysInFuture)) return null;
+        //check for stars
+        if (onlyStars && starsPerDay[idx] < 1) return null;
+
         const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
         const dayInPast = tasksOneDay[0].dueAt.getTime() <= endOfDayMsAdapted;
         return (
@@ -104,38 +108,44 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                 date={tasksOneDay[0].dueAt}
                                 amount={tasksOneDay.length}
                                 withClock={dayInPast}
-                                amountStars={starsPerDay[dayIdx++]}
+                                amountStars={starsPerDay[idx]}
                                 dayStartsAtHour={props.dayStartsAtHour}
                             />
                         )}
-                        uncollapsed={props.expandAllVisibleDays || endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime() >= endOf(tasksOneDay[0].dueAt).getTime()}
+                        uncollapsed={onlyStars
+                            || props.expandAllVisibleDays 
+                            || endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime() >= endOf(tasksOneDay[0].dueAt).getTime()
+                        }
                         noBorder
                         fullWidthHeader
                         headerClickable
                     >
                             
                             {tasksOneDay.map(task => (
-                                <DueTask
-                                    key={task.taskId}
-                                    taskSemantic={task}
-                                    subjectDisplayName={props.subjects[task.subjectId].name}
-                                    onCheck={() => {
-                                        if (!taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)) {
-                                            setFadeTaskOut(prev => [...prev, [task.taskId, task.dueAt.getTime()]]);
-                                        }
-                                    }}
-                                    fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
-                                    onFadeOutComplete={() => {
-                                        props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt));
-                                        // setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
-                                    }}
-                                    backgroundColor={props.subjects[task.subjectId].color}
-                                    infoClicked={() => showTaskInfo(task)}
-                                    small={props.small}
-                                    star={task.star}
-                                    moreInfo={task.additionalInfo?.text ? true : false}
-                                />
-                            ))}
+                                (!onlyStars || (onlyStars && task.star)) ?
+                                    <DueTask
+                                        key={task.taskId}
+                                        taskSemantic={task}
+                                        subjectDisplayName={props.subjects[task.subjectId].name}
+                                        onCheck={() => {
+                                            if (!taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)) {
+                                                setFadeTaskOut(prev => [...prev, [task.taskId, task.dueAt.getTime()]]);
+                                            }
+                                        }}
+                                        fadeOut={taskContained(task.taskId, task.dueAt.getTime(), fadeTaskOut)}
+                                        onFadeOutComplete={() => {
+                                            props.onTaskChecked(task.subjectId, task.taskId, getSecondsFromDate(task.dueAt));
+                                            // setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
+                                        }}
+                                        backgroundColor={props.subjects[task.subjectId].color}
+                                        infoClicked={() => showTaskInfo(task)}
+                                        small={props.small}
+                                        star={task.star}
+                                        moreInfo={task.additionalInfo?.text ? true : false}
+                                    />
+                                : null 
+                                ))
+                            }
                     </Collapsible>
                 </div>
             </AnimateHeight>
@@ -149,9 +159,11 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             }
             {todayView}
             {allTasks}
-            <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>
-                {!showAll ? 'Show all' : 'Show less'}
-            </span>
+            {!onlyStars &&
+                <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>
+                    {!showAll ? 'Show all' : 'Show less'}
+                </span>
+            }
         </div>
     );
 });

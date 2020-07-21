@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AnimateHeight from 'react-animate-height';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +21,13 @@ const {
 export default function(props: React.PropsWithChildren<CollapsibleProps>): JSX.Element {
 
     const [collapsed, setCollapsed] = useState(!props.uncollapsed);
+    useEffect(() => {
+        if (props.uncollapsed) {
+            setCollapsed(false);
+        } else {
+            setCollapsed(true);
+        }
+    }, [props.uncollapsed]);
     
     return (
         <div 
