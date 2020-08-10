@@ -4,6 +4,9 @@ import { PreferencesState } from './../config/userPreferences';
 export interface ModelWithId {
     id: string;
 }
+export interface ModelWithSubjectId {
+    subjectId: string;
+}
 
 export interface BaseModel {
     timeCreated: Timestamp | undefined;
@@ -37,7 +40,7 @@ export interface SubjectDataModel extends BaseModel {
     type: string;
 }
 
-export interface SubjectDataModelWithId extends SubjectDataModel, ModelWithId {}
+export interface SubjectDataModelWithId extends SubjectDataModel, ModelWithId, ModelWithSubjectId {}
 
 export const IntervalOptions = ['weekly', 'biweekly', 'daily', 'twice-daily', 'once'];
 export type IntervalType = typeof IntervalOptions[number]; //'weekly' | 'biweekly' | 'daily' | 'twice-daily' | 'once';
@@ -64,5 +67,3 @@ export interface TaskModel extends SubjectDataModel {
     deleted: boolean;
 }
 export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}
-
-export interface TaskModelWithIdAndSubjectId extends TaskModelWithId {subjectId: string}

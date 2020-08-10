@@ -425,7 +425,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
     return out;
 }
 
-const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel): Array<SubjectDataModelWithId> => {
+const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, subjectId: string): Array<SubjectDataModelWithId> => {
     const out: Array<SubjectDataModelWithId> = [];
 
     switch (dataTypeId) {
@@ -434,6 +434,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                 const datum = (dataObject[id] as EventModel);
                 const data: EventModelWithId = {
                     id,
+                    subjectId,
                     type: datum.type,
                     firstStart: datum.firstStart,
                     firstEnd: datum.firstEnd,
@@ -449,6 +450,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                 const datum = (dataObject[id] as ExamModel);
                 const data: ExamModelWithId = {
                     id,
+                    subjectId,
                     type: datum.type,
                     start: datum.start,
                     timeCreated: datum.timeCreated,
@@ -461,6 +463,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel):
                 const datum = (dataObject[id] as TaskModel);
                 const data: TaskModelWithId = {
                     id,
+                    subjectId,
                     type: datum.type,
                     timestamps: datum.timestamps,
                     timestampsDone: datum.timestampsDone,
@@ -649,7 +652,7 @@ const useSubjectData = <T extends SubjectDataModel>(
             saving: state.saving,
             error: state.error,
             changed: state.dataChanged,
-            items: mapDataObjectToArray(dataTypeId, state.data),
+            items: mapDataObjectToArray(dataTypeId, state.data, subjectId),
         },
     };
 

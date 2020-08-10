@@ -1,8 +1,8 @@
 import * as actionTypes from './actionTypes';
 import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC } from './data.d';
-import { ExamModelWithId, EventModelWithId, TaskModel } from '../../firebase/model';
+import { ExamModelWithId, EventModelWithId, TaskModel, TaskModelWithId } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
-import { SubjectModelWithId, TaskModelWithIdAndSubjectId } from './../../firebase/model';
+import { SubjectModelWithId } from './../../firebase/model';
 import { DataTypeId } from '../../hooks/useSubjectData';
 
 export const fetchTasks = (): FetchTasksAC => {
@@ -17,7 +17,7 @@ export const refreshTasks = (): RefreshTasksAC => {
     };
 };
 
-export const fetchTasksSuccess = (tasks: TaskModelWithIdAndSubjectId[]): FetchTasksSuccessAC => {
+export const fetchTasksSuccess = (tasks: TaskModelWithId[]): FetchTasksSuccessAC => {
     return {
         type: actionTypes.FETCH_TASKS_SUCCESS,
         tasks,
@@ -57,7 +57,7 @@ export const uncheckTask = (subjectId: string, taskId: string, timestampSeconds:
     };
 };
 
-export const setTasksLocally = (tasks: TaskModelWithIdAndSubjectId[]): SetTasksLocallyAC => {
+export const setTasksLocally = (tasks: TaskModelWithId[]): SetTasksLocallyAC => {
     return {
         type: actionTypes.SET_TASKS_LOCALLY,
         tasks,
@@ -135,7 +135,7 @@ export const addAndSaveNewTask = (task: TaskModel, subjectId: string, close: Fun
     };
 };
 
-export const addAndSaveNewTaskSuccess = (task: TaskModelWithIdAndSubjectId, close: Function | undefined, reset: Function | undefined): AddAndSaveNewTaskSuccessAC => {
+export const addAndSaveNewTaskSuccess = (task: TaskModelWithId, close: Function | undefined, reset: Function | undefined): AddAndSaveNewTaskSuccessAC => {
     return {
         type: actionTypes.ADD_AND_SAVE_NEW_TASK_SUCCESS,
         task,

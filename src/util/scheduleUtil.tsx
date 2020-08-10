@@ -1,14 +1,14 @@
-import { EventModel } from "../firebase/model";
+import { EventModelWithId, ExamModelWithId } from "../firebase/model";
 import { getDateFromTimestamp, getSecondsFromIntervalType, getDateFromSeconds } from "./timeUtil";
-import { ExamModel } from './../firebase/model';
 
 export interface ConfigType {
     title: string;
     start: Date;
     end: Date;
+    subjectId: string;
 }
 
-export const getFullCalendarEventConfigFromEvent = (event: EventModel): ConfigType[] => {
+export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): ConfigType[] => {
     const duration = event.firstEnd.seconds - event.firstStart.seconds;
     if (event.interval === 'once') {
 
@@ -16,6 +16,7 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModel): ConfigTy
             title: event.type,
             start: getDateFromTimestamp(event.firstStart),
             end: getDateFromTimestamp(event.firstEnd),
+            subjectId: event.subjectId,
         }];
 
     } else {
@@ -30,6 +31,7 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModel): ConfigTy
                 title: event.type,
                 start: getDateFromSeconds(curSecs),
                 end: getDateFromSeconds(curSecs + duration),
+                subjectId: event.subjectId,
             });
             curSecs += delta;
         }
@@ -38,15 +40,16 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModel): ConfigTy
     }
 }
 
-export const getFullCalendarConfigFromExam = (exam: ExamModel): ConfigType => {
+export const getFullCalendarConfigFromExam = (exam: ExamModelWithId): ConfigType => {
     return {
         title: exam.type,
         start: getDateFromTimestamp(exam.start),
         end: getDateFromTimestamp(exam.start),
+        subjectId: exam.subjectId,
     };
 }
 
-export const getAllConfigFromEvents = (events: EventModel[]): Array<ConfigType> => {
+export const getAllConfigFromEvents = (events: EventModelWithId[]): Array<ConfigType> => {
     let out: ConfigType[] = [];
     events.forEach(event => {
         out = [
@@ -56,7 +59,7 @@ export const getAllConfigFromEvents = (events: EventModel[]): Array<ConfigType> 
     });
     return out;
 }
-export const getAllConfigFromExams = (exams: ExamModel[]): Array<ConfigType> => {
+export const getAllConfigFromExams = (exams: ExamModelWithId[]): Array<ConfigType> => {
     let out: ConfigType[] = [];
     exams.forEach(exam => {
         out = [

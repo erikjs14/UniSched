@@ -130,6 +130,7 @@ export const fetchExams = async (subjectId: string): Promise<models.ExamModelWit
 
     data.forEach(dataWithId => exams.push({
         id: dataWithId.id,
+        subjectId,
         start: dataWithId.data?.start,
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
@@ -142,6 +143,7 @@ export const fetchExam = async (subjectId: string, examId: string): Promise<mode
     const docWithId: DocDataWithId = await fetchDocument(exam_ref(subjectId, examId));
     return {
         id: docWithId.id,
+        subjectId,
         start: docWithId.data?.start,
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
@@ -154,6 +156,7 @@ export const fetchEvents = async (subjectId: string): Promise<models.EventModelW
 
     data.forEach(dataWithId => events.push({
         id: dataWithId.id,
+        subjectId,
         firstStart: dataWithId.data?.firstStart,
         firstEnd: dataWithId.data?.firstEnd,
         endAt: dataWithId.data?.endAt,
@@ -169,6 +172,7 @@ export const fetchEvent = async (subjectId: string, eventId: string): Promise<mo
     const docWithId: DocDataWithId = await fetchDocument(event_ref(subjectId, eventId));
     return {
         id: docWithId.id,
+        subjectId,
         firstStart: docWithId.data?.firstStart,
         firstEnd: docWithId.data?.firstEnd,
         endAt: docWithId.data?.endAt,
@@ -184,6 +188,7 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
 
     data.forEach(dataWithId => tasks.push({
         id: dataWithId.id,
+        subjectId,
         timestamps: dataWithId.data?.timestamps,
         timestampsDone: dataWithId.data?.timestampsDone,
         type: dataWithId.data?.type,
@@ -200,6 +205,7 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
     const docWithId: DocDataWithId = await fetchDocument(task_ref(subjectId, taskId));
     return {
         id: docWithId.id,
+        subjectId,
         timestamps: docWithId.data?.timestamps,
         timestampsDone: docWithId.data?.timestampsDone,
         type: docWithId.data?.type,

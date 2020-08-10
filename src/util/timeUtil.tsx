@@ -1,4 +1,4 @@
-import { Timestamp, TaskModel, IntervalType, TaskModelWithIdAndSubjectId } from './../firebase/model';
+import { Timestamp, TaskModel, IntervalType, TaskModelWithId } from './../firebase/model';
 import { getResult } from './util';
 import { format, formatDistanceToNow } from 'date-fns';
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, TIME_INTERVAL_SELECT, DEFAULT_DATETIME_FORMAT } from './../config/timeConfig';
@@ -129,7 +129,7 @@ export const dayIsInLimit = (date: Date, limitDaysInFuture: number): boolean => 
     return endOfLimitDay.getTime() >= date.getTime();
 }
 
-export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined, onlyStars: boolean = false): TaskSemantic[] => {
+export const getRelevantTaskSemantics = (rawTasks: TaskModelWithId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined, onlyStars: boolean = false): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
     const endOfLimitDay = limitFutureBy === undefined ? undefined : endOf(addDays(new Date(), limitFutureBy));
     const limitInSec = endOfLimitDay ? getSecondsFromDate(endOfLimitDay) : undefined;
@@ -157,13 +157,13 @@ export const getRelevantTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]
     return out.flat().sort((ts1, ts2) => ts1.dueAt.getTime() - ts2.dueAt.getTime());
 }
 export const getRelevantTaskSemanticsGrouped = (
-    rawTasks: TaskModelWithIdAndSubjectId[], 
+    rawTasks: TaskModelWithId[], 
     forceAppendFuture: boolean, 
     limitFutureBy: number | undefined = undefined,
     onlyStars: boolean = false,
 ): [TaskSemantic[][], number[]] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars));
 
-export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[]): TaskSemantic[] => {
+export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
 
     rawTasks.forEach(task => {
@@ -183,8 +183,8 @@ export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithIdAndSubjectId[
 
     return out.flat().sort((ts1, ts2) => ts1.subjectId.localeCompare(ts2.subjectId));
 }
-export const getUncheckedTaskSemanticsGrouped = (rawTasks: TaskModelWithIdAndSubjectId[]): [TaskSemantic[][], number[]] => groupTaskSemanticsBySubject(getUncheckedTaskSemantics(rawTasks));
-export const getUncheckedTaskSemanticsGroupedObject = (rawTasks: TaskModelWithIdAndSubjectId[]): {[subjectId: string]: TaskSemantic[]} => {
+export const getUncheckedTaskSemanticsGrouped = (rawTasks: TaskModelWithId[]): [TaskSemantic[][], number[]] => groupTaskSemanticsBySubject(getUncheckedTaskSemantics(rawTasks));
+export const getUncheckedTaskSemanticsGroupedObject = (rawTasks: TaskModelWithId[]): {[subjectId: string]: TaskSemantic[]} => {
     const out: {[subjectId: string]: TaskSemantic[]} = {};
 
     for (const semPerSubject of getUncheckedTaskSemanticsGrouped(rawTasks)[0]) {

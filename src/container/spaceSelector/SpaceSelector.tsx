@@ -43,6 +43,7 @@ export default function(props: SpaceSelectorProps): JSX.Element | null {
                 value={selectedSpace}
                 onChange={e => {
                     props.onChanged?.();
+                    localStorage.setItem('spaceId', e.target.value);
                     dispatch(setSpace(e.target.value));
                 }}
             >

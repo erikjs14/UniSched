@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
 import { toaster } from 'evergreen-ui';
@@ -16,7 +16,7 @@ import '@fullcalendar/timegrid/main.css';
 import '@fullcalendar/list/main.css';
 import '../../style/override.scss';
 import 'react-datepicker/dist/react-datepicker.css';
-import { toCss } from './../../util/util';
+import { toCss, filterSubjectsForSpace } from './../../util/util';
 
 import CSS from './Schedule.module.scss';
 import { useSelector, useDispatch } from 'react-redux';
@@ -37,6 +37,9 @@ const availableViews: {[id: string]: string} = {
     listWeek: 'List',
 };
 export default function() {
+
+    const spaces = useSelector((state: RootState) => state.user.spaces);
+    const selectedSpaceId = useSelector((state: RootState) => state.user.selectedSpace);
 
     const [calendarView, setCalendarView] = useState(window.innerWidth < 600 ? 'timeGridDay' : 'timeGridWeek');
     const calAspectRatio = React.useMemo(() => window.innerWidth < 900 ? undefined : 2.2, []);
@@ -61,6 +64,10 @@ export default function() {
         config: eventsConfig,
         timestamp: eventsTimestamp,
     } = useSelector((state: RootState) => state.data.events);
+
+    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId) : null, [selectedSpaceId, subjects]);
+    const filteredExamsConfig = useMemo(() => filteredSubjects && examsConfig ? examsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [examsConfig, filteredSubjects]);
+    const filteredEventsConfig = useMemo(() => filteredSubjects && eventsConfig ? eventsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [eventsConfig, filteredSubjects]);
 
     const dispatch = useDispatch();
 
@@ -103,7 +110,7 @@ export default function() {
 
     if (eventsLoading || examsLoading) {
         return <Loader />;
-    } else if (eventsError || examsError || !eventsConfig || !examsConfig) {
+    } else if (eventsError || examsError || !filteredSubjects || !filteredEventsConfig || !filteredExamsConfig) {
         return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
@@ -113,6 +120,7 @@ export default function() {
             <SiteHeader 
                 type='schedule' 
                 title='Schedule'
+                subTitle={spaces && selectedSpaceId !== 'all' ? spaces.find(s => s.id === selectedSpaceId).name : undefined} 
                 onRefresh={refreshHandler}
                 refreshing={eventsRefreshing || examsRefreshing} 
             />
@@ -135,7 +143,7 @@ export default function() {
                     plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
                     nowIndicator
                     aspectRatio={calAspectRatio}
-                    events={[...eventsConfig, ...examsConfig]}
+                    events={[...filteredEventsConfig, ...filteredExamsConfig]}
                     eventClick={eventClickHandler}
                     {...DEFAULT_SCHEDULE_CALENDAR_PROPS}
                 />

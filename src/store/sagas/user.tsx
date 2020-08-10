@@ -8,6 +8,7 @@ import { fetchUser, updatePreference, addDefaultSpace } from './../../firebase/f
 import { getTimestampFromSeconds, getTimestampFromDate } from '../../util/timeUtil';
 import { getSecondsFromDate } from './../../util/timeUtil';
 import { PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, FetchSpacesAC } from '../actions/user.d';
+import { SpaceModelWithId } from '../../firebase/model';
 
 export function* signOut() {
     try {
@@ -20,7 +21,7 @@ export function* signOut() {
 
 export function* fetchSpaces(action: FetchSpacesAC) {
     try {
-        const data = yield fetchSpaces_fs();
+        const data: SpaceModelWithId[] = yield fetchSpaces_fs();
         let spaceId;
         if (data.length === 0) {
             // add first space
@@ -29,7 +30,12 @@ export function* fetchSpaces(action: FetchSpacesAC) {
             spaceId = defaultSpace.id;
             yield put(actions.setSpace(spaceId));
         } else {
-            spaceId = data[0].id;
+            const savedId = localStorage.getItem('spaceId');
+            if (savedId && data.some(s => s.id === savedId)) {
+                spaceId = savedId;
+            } else {
+                spaceId = data[0].id;
+            }
         }
         yield put(actions.fetchSpacesSuccess(data, action.selectedSpace || spaceId));
     } catch (error) {

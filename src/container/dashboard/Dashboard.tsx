@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import Loader from '../../components/ui/loader/Loader';
 import DueTasks from '../../components/todo/dueTasks/DueTasks';
-import { subjectsToObject, toCss } from '../../util/util';
+import { subjectsToObject, toCss, filterSubjectsForSpace } from '../../util/util';
 import FullCalendar from '@fullcalendar/react';
 import { DEFAULT_SCHEDULE_CALENDAR_PROPS, CALENDAR_DEFAULT_TIME_FORMAT } from '../../config/timeConfig';
 import {Responsive, WidthProvider} from 'react-grid-layout';
@@ -53,6 +53,9 @@ const gridLayouts = {
 
 export default function(): JSX.Element {
 
+    const spaces = useSelector((state: RootState) => state.user.spaces);
+    const selectedSpaceId = useSelector((state: RootState) => state.user.selectedSpace);
+
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const {
         loading: examsLoading,
@@ -75,6 +78,11 @@ export default function(): JSX.Element {
         timestamp: tasksTimestamp,
         data: tasks,
     } = useSelector((state: RootState) => state.data.tasks);
+
+    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId) : null, [selectedSpaceId, subjects]);
+    const filteredExamsConfig = useMemo(() => filteredSubjects && examsConfig ? examsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [examsConfig, filteredSubjects]);
+    const filteredEventsConfig = useMemo(() => filteredSubjects && eventsConfig ? eventsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [eventsConfig, filteredSubjects]);
+    const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
 
     const dispatch = useDispatch();
 
@@ -139,7 +147,7 @@ export default function(): JSX.Element {
 
     if (eventsLoading || examsLoading || tasksLoading) {
         return <Loader />;
-    } else if (eventsError || examsError || tasksError || !eventsConfig || !examsConfig || !tasks || !subjects) {
+    } else if (eventsError || examsError || tasksError || !filteredEventsConfig || !filteredExamsConfig || !filteredTasks || !filteredSubjects) {
         return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
@@ -149,6 +157,7 @@ export default function(): JSX.Element {
             <SiteHeader 
                 type='dashboard' 
                 title='Dashboard'
+                subTitle={spaces && selectedSpaceId !== 'all' ? spaces.find(s => s.id === selectedSpaceId).name : undefined} 
                 onRefresh={refreshHandler}
                 refreshing={eventsRefreshing || examsRefreshing || tasksRefreshing}
             />
@@ -165,8 +174,8 @@ export default function(): JSX.Element {
                 <div key='tasks' className={toCss(s_gridArea, s_tasksArea)} >
                     <h3 className={toCss(s_areaHeader)} >Check out your current tasks</h3>
                     <DueTasks
-                        dueTasks={tasks}
-                        subjects={subjectsToObject(subjects)}
+                        dueTasks={filteredTasks}
+                        subjects={subjectsToObject(filteredSubjects)}
                         onTaskChecked={checkTaskHandler}
                         limitDaysInFuture={0}
                         dayStartsAtHour={userPrefersDayStartsAt || 0}
@@ -183,7 +192,7 @@ export default function(): JSX.Element {
                         plugins={[timeGridPlugin]}
                         nowIndicator
                         height='auto'
-                        events={[...eventsConfig, ...examsConfig]}
+                        events={[...filteredEventsConfig, ...filteredExamsConfig]}
                         eventClick={eventClickHandler}
                         {...DEFAULT_SCHEDULE_CALENDAR_PROPS}
                     />
@@ -196,7 +205,7 @@ export default function(): JSX.Element {
                         plugins={[listPlugin]}
                         nowIndicator
                         height='auto'
-                        events={examsConfig.filter(examConfig => isInFuture((examConfig as ExamConfigType).start))}
+                        events={filteredExamsConfig.filter(examConfig => isInFuture((examConfig as ExamConfigType).start))}
                         eventTimeFormat={CALENDAR_DEFAULT_TIME_FORMAT}
                     />
                 </div>

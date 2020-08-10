@@ -1,6 +1,6 @@
 import { put, all, select } from 'redux-saga/effects';
 import * as actions from '../actions';
-import { SubjectModelWithId, TaskModelWithId, TaskModelWithIdAndSubjectId, Timestamp, ExamModelWithId, EventModelWithId } from '../../firebase/model';
+import { SubjectModelWithId, TaskModelWithId, Timestamp, ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { fetchTasks as fetchTasks_firestore, fetchExams as fetchExams_firestore, fetchEvents as fetchEvents_firestore, saveTaskUnchecked } from '../../firebase/firestore';
 import { CheckTaskAC, UncheckTaskAC, AddAndSaveNewTaskAC } from './../actions/data.d';
 import { getTimestampFromSeconds, getCurrentTimestamp } from '../../util/timeUtil';
@@ -118,7 +118,7 @@ export function* addAndSaveNewTask(action: AddAndSaveNewTaskAC) {
     }
 }
 
-const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
+const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithId[] => {
     const result = oldTasks.map(oldTask => {
         if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
             return oldTask;
@@ -134,7 +134,7 @@ const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithIdAndSubjectId[], subj
     })
     return result;
 }
-const getUpdatedTasksAfterUncheck = (oldTasks: TaskModelWithIdAndSubjectId[], subjectId: string, taskId: string, timestampToUncheck: Timestamp): TaskModelWithIdAndSubjectId[] => {
+const getUpdatedTasksAfterUncheck = (oldTasks: TaskModelWithId[], subjectId: string, taskId: string, timestampToUncheck: Timestamp): TaskModelWithId[] => {
     const result =  oldTasks.map(oldTask => {
         if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
             return oldTask;

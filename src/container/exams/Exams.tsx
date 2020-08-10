@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useRef } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import FullCalendar from '@fullcalendar/react';
 import Loader from '../../components/ui/loader/Loader';
@@ -8,7 +8,7 @@ import { RootState } from '../..';
 import * as actions from '../../store/actions';
 
 import CSS from './Exams.module.scss';
-import { toCss } from '../../util/util';
+import { toCss, filterSubjectsForSpace } from '../../util/util';
 import { CALENDAR_DEFAULT_TIME_FORMAT } from '../../config/timeConfig';
 import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
 
@@ -34,6 +34,9 @@ const availableViews: {[id: string]: string} = {
 
 export default function() {
 
+    const spaces = useSelector((state: RootState) => state.user.spaces);
+    const selectedSpaceId = useSelector((state: RootState) => state.user.selectedSpace);
+
     const [calendarView, setCalendarView] = useState('listMonth');
     const calAspectRatio = React.useMemo(() => window.innerWidth < 900 ? undefined : 2.2, []);
     const calRef = useRef<FullCalendar>(null);
@@ -50,6 +53,9 @@ export default function() {
         timestamp,
     } = useSelector((state: RootState) => state.data.exams);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
+    
+    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId) : null, [selectedSpaceId, subjects]);
+    const filteredExamsConfig = useMemo(() => filteredSubjects && examsConfig ? examsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [examsConfig, filteredSubjects]);
 
     const dispatch = useDispatch();
 
@@ -71,7 +77,7 @@ export default function() {
 
     if (loading) {
         return <Loader />;
-    } else if (error || !examsConfig) {
+    } else if (error || !filteredSubjects || !filteredExamsConfig) {
         return <h2>An unexpected error has occurred. Try reloading the page.</h2>
     }
 
@@ -81,6 +87,7 @@ export default function() {
             <SiteHeader 
                 type='exams' 
                 title='Exams' 
+                subTitle={spaces && selectedSpaceId !== 'all' ? spaces.find(s => s.id === selectedSpaceId).name : undefined} 
                 onRefresh={refreshHandler}
                 refreshing={refreshing} 
             />
@@ -103,8 +110,8 @@ export default function() {
                     nowIndicator
                     aspectRatio={calAspectRatio}
                     events={userPrefersOnlyFutureExams
-                        ? examsConfig.filter(examConfig => isInFuture((examConfig as ExamConfigType).start))
-                        : examsConfig 
+                        ? filteredExamsConfig.filter(examConfig => isInFuture((examConfig as ExamConfigType).start))
+                        : filteredExamsConfig 
                     }
                     eventTimeFormat={CALENDAR_DEFAULT_TIME_FORMAT}
                 />
