@@ -3,7 +3,7 @@ import React, { PropsWithChildren, useState, useMemo, useCallback, Fragment, use
 import CSS from './AddTaskDialog.module.scss';
 import { AddTaskDialogProps } from './AddTaskDialog.d';
 import { Dialog } from 'evergreen-ui';
-import { toCss, arrayToN } from '../../../util/util';
+import { toCss, arrayToN, filterSubjectsForSpace } from '../../../util/util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../../components/ui/input/Input';
@@ -39,28 +39,33 @@ const {
     firstDeadlineInput: s_firstDeadlineInput,
     intervalOptions: s_intervalOptions,
     addTextField: s_addTextField,
+    spacesSelect: s_spacesSelect,
+    space: s_space,
+    spaceSelected: s_spaceSelected,
 } = CSS;
 
 // !!! ALWAYS UPDATE
-const pageLen = 6;
+const pageLen = 7;
 export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element | null{
 
     const {data: tasks, timestamp, } = useSelector((state: RootState) => state.data.tasks);
+    const spaces = useSelector((state: RootState) => state.user.spaces);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const {loading, error} = useSelector((state: RootState) => state.data.tasks);
     const dispatch = useDispatch();
 
     // fetch all tasks if not already loaded
     useEffect(() => {
-        if ((props.isShown && subjects && !tasks && !error) || (props.isShown && !loading && Date.now() - timestamp > TIME_BEFORE_DATA_REFRESH_MS)) { //fetch on first mount and when timespan has elapsed
+        if ((props.isShown && subjects && spaces && !tasks && !error) || (props.isShown && !loading && Date.now() - timestamp > TIME_BEFORE_DATA_REFRESH_MS)) { //fetch on first mount and when timespan has elapsed
             dispatch(fetchTasks());
         }
-    }, [dispatch, error, loading, props.isShown, subjects, tasks, timestamp]);
+    }, [dispatch, error, loading, props.isShown, spaces, subjects, tasks, timestamp]);
 
-    const [pageCnt, setPageCnt] = useState(0);
+    const [pageCnt, setPageCnt] = useState(spaces && spaces.length > 1 ? 0 : 1);
     const [addEnabled, setAddEnabled] = useState(false);
     const [markTypeInput, setMarkTypeInput] = useState(false);
 
+    const [spaceId, setSpaceId] = useState(spaces && spaces.length === 1 ? spaces[0] : null);
     const [subjectId, setSubjectId] = useState<string|null>(null);
     const [taskConfig, setTaskConfig] = useState(
         getTaskStartState()
@@ -82,7 +87,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     const typeInputRef = useRef<HTMLInputElement>(null);
     const addTextInputRef = useRef<HTMLTextAreaElement>(null);
     useEffect(() => {
-        if (props.isShown && pageCnt === 1){
+        if (props.isShown && pageCnt === 2){
             // evergreen dialog focuses on cancel by default --> wait and override
             setTimeout(() => typeInputRef.current?.focus(), 350);
         } else if (props.isShown && pageCnt === pageLen - 1) {
@@ -130,7 +135,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
 
     const onChangePageCnt = useCallback((amount: number, force: boolean = false) => {
         // check type input
-        if (amount !== 0 && pageCnt === 1) {
+        if (amount !== 0 && pageCnt === 2) {
             if (taskConfig.type.trim().length === 0) {
                 setMarkTypeInput(true);
                 return;
@@ -142,11 +147,11 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         else if (newCnt >= pageLen) newCnt = pageLen - 1;
 
         // check if last deadline is to be skipped
-        if (!force && newCnt === 4 && interval === 'once') {
+        if (!force && newCnt === 5 && interval === 'once') {
             if (amount > 0)
-                newCnt = 5;
+                newCnt = 6;
             else if (amount < 0)
-                newCnt = 3;
+                newCnt = 4;
         }
 
         setPageCnt(newCnt);
@@ -167,7 +172,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                 timestamps: [...taskConfig.timestamps],
                 timestampsDone: [...taskConfig.timestampsDone],
             };
-            if (pageCnt === 1 && interval === 'once') {
+            if (pageCnt === 2 && interval === 'once') {
                 const spec = chrono.parse(taskConfig.type);
                 if (spec?.length > 0) {
                     const typeWithoutDate = taskConfig.type.replace(spec[0].text, '');
@@ -189,8 +194,23 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
 
     const pages = useMemo(() => [
         <Fragment>
+            <div className={toCss(s_spacesSelect)} >
+                {spaces?.map(s => (
+                    <span 
+                        className={toCss(s_space, s.id === spaceId ? s_spaceSelected : '')}
+                        onClick={() => {
+                            setSpaceId(s.id);
+                            onChangePageCnt(1);
+                        }}
+                    >
+                        {s.name}
+                    </span> 
+                ))}
+            </div>
+        </Fragment>,
+        <Fragment>
             <div className={toCss(s_subjectScrollPane)}>
-                {subjects?.map(subject => (
+                {filterSubjectsForSpace(subjects || [], spaceId).map(subject => (
                     <SimpleSettingsRow 
                         key={subject.id}
                         title={subject.name}
@@ -309,7 +329,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             />
             { error && <span className={toCss(s_error)}>{error}</span> }
         </Fragment>,
-    ], [changeHandler, error, firstDeadline, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, subjectId, subjects, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
+    ], [changeHandler, error, firstDeadline, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaces, subjectId, subjects, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
     
     if (!props.isShown) return null;
 
@@ -333,7 +353,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     className={toCss(s_wrapper)}
                     tabIndex={-1}
                     onKeyDown={event => {
-                        if (pageCnt !== 1) {
+                        if (pageCnt !== 2) {
                             if (event.key === 'ArrowLeft')
                                 onChangePageCnt(-1);
                             else if (event.key === 'ArrowRight')
@@ -351,7 +371,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     /> 
                     <FontAwesomeIcon 
                         icon={faAngleRight}
-                        className={toCss(s_angleRight, (pageCnt >= pages.length - 1 || pageCnt === 0 ? s_hidden : ''))}
+                        className={toCss(s_angleRight, (pageCnt >= pages.length - 1 || pageCnt <= 1 ? s_hidden : ''))}
                         onClick={() => onChangePageCnt(1)}
                     /> 
 

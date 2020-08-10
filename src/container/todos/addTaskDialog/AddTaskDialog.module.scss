@@ -49,10 +49,46 @@
             padding: 1.5rem;
             @include mobileKeyboardOpen { padding: 0; }
 
+            .spacesSelect {
+                display: flex;
+                align-items: stretch;
+                flex-direction: column;
+
+                .space {
+                    width: 100%;
+                    font-size: 2rem;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    padding: .5rem 2rem;
+                    box-shadow: 0 0 3px rgba(#000, .3);
+                    border-radius: 6px;
+
+                    &:not(:last-child) {
+                        margin-bottom: 2rem;
+                    }
+
+                    transition: all .2s;
+                    &:hover {
+                        letter-spacing: 2px;
+                        background-color: rgba(#000, .1);
+                    }
+
+                     &.spaceSelected {
+                        background-color: rgba(#000, .1);
+                     }
+                }
+            }
+
             .subjectScrollPane {
+                display: flex;
+                align-items: stretch;
+                flex-direction: column;
                 overflow-x: hidden;
-                overflow-y: scroll;
+                // overflow-y: auto;
+                height: 100%;
                 max-height: 100%;
+                width: 100%;
                 padding: 0 3rem;
                 @include respond(phone) { padding: 0 2rem;}
                 font-size: .7em;
