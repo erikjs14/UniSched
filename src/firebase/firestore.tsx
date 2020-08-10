@@ -3,10 +3,14 @@ import { db } from './firebase';
 import * as models from './model';
 import * as fields from './fields';
 import { PreferenceId } from '../config/userPreferences';
+import { getCurrentTimestamp } from './../util/timeUtil';
 
 const users_ref = db.collection(fields.USER_COL);
 const user_ref = () => users_ref.doc(firebase.auth().currentUser?.uid);
 const subjects_ref = () => user_ref().collection(fields.SUBJECTS_COL);
+const spaces_ref = () => user_ref().collection(fields.SPACES_COL);
+const spaces_q_by_name = () => user_ref().collection(fields.SPACES_COL).orderBy('name');
+const space_ref = (spaceId: string) => spaces_ref().doc(spaceId);
 const subjects_q_by_name = () => user_ref().collection(fields.SUBJECTS_COL).orderBy('name');
 const subject_ref = (subjectId: string) => subjects_ref().doc(subjectId);
 const exams_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.EXAMS_COL);
@@ -64,6 +68,19 @@ export const fetchUser = async (): Promise<models.UserModelWithId> => {
     };
 }
 
+export const fetchSpaces = async (): Promise<models.SpaceModelWithId[]> => {
+    const data: DocDataWithId[] = await fetchCollection(spaces_q_by_name());
+    const spaces: models.SpaceModelWithId[] = [];
+
+    data.forEach(dataWithId => spaces.push({
+        id: dataWithId.id,
+        timeCreated: dataWithId.data?.timeCreated,
+        name: dataWithId.data?.name,
+    }));
+
+    return spaces;
+}
+
 export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[]> => {
     const data: DocDataWithId[] = await fetchCollection(subjects_q_by_name());
     const subjects: models.SubjectModelWithId[] = [];
@@ -72,6 +89,7 @@ export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[
         id: dataWithId.id,
         color: dataWithId.data?.color,
         name: dataWithId.data?.name,
+        spaceId: dataWithId.data?.spaceId ? dataWithId.data?.spaceId : 'mainSpace',
         timeCreated: dataWithId.data?.timeCreated,
     }));
 
@@ -84,6 +102,7 @@ export const fetchSubject = async (subjectId: string): Promise<models.SubjectMod
         id: docWithId.id,
         color: docWithId.data?.color,
         name: docWithId.data?.name,
+        spaceId: docWithId.data?.spaceId ? docWithId.data?.spaceId : 'mainSpace',
         timeCreated: docWithId.data?.timeCreated,
     };
 }
@@ -202,6 +221,26 @@ export const addUser = async (user: models.UserModel): Promise<void> => {
     return await user_ref().set(user, {merge: true});
 }
 
+export const addDefaultSpace = async (): Promise<models.SpaceModelWithId> => {
+    const defaultSpaceId = 'mainSpace';
+    const defaultSpace = {
+        timeCreated: getCurrentTimestamp(),
+        name: 'General',
+    };
+    await space_ref(defaultSpaceId).set({
+        timeCreated: getCurrentTimestamp(),
+        name: 'General',
+    });
+    return {
+        id: defaultSpaceId,
+        ...defaultSpace,
+    };
+}
+
+export const addSpace = async (space: models.SpaceModel): Promise<string> => {
+    return await addDoc(spaces_ref(), space);
+}
+
 export const addSubject = async (subject: models.SubjectModel): Promise<string> => {
     return await addDoc(subjects_ref(), subject);
 }
@@ -226,6 +265,10 @@ const updateDoc = async <T extends models.BaseModel, D extends keyof T>(docRef: 
 
 export const updateSubject = async <D extends keyof models.SubjectModel>(subjectId: string, subject: Pick<models.SubjectModel, D>): Promise<void> => {
     await updateDoc(subject_ref(subjectId), subject);
+}
+
+export const updateSpace = async <D extends keyof models.SpaceModel>(spaceId: string, space: Pick<models.SpaceModel, D>): Promise<void> => {
+    await updateDoc(space_ref(spaceId), space);
 }
 
 export const updatePreference = async (id: PreferenceId, value: any): Promise<void> => {
@@ -267,6 +310,13 @@ export const saveTaskUnchecked = async (subjectId: string, id: string, timestamp
 
 const deleteDoc = async (docRef: DocRef): Promise<void> => {
     await docRef.delete();
+}
+
+export const deleteSpace = async (spaceId: string, subjectIds: string[]): Promise<void> => {
+    await Promise.all(
+        subjectIds.map(id => deleteSubject(id))
+            .concat([deleteDoc(space_ref(spaceId))])
+    );
 }
 
 export const deleteSubject = async (subjectId: string): Promise<void> => {

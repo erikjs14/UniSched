@@ -2,7 +2,7 @@ import React, { useReducer, useState, useEffect, useCallback, useRef, Fragment }
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Button, Dialog } from 'evergreen-ui';
+import { Button, Dialog, Select } from 'evergreen-ui';
 
 import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
@@ -13,7 +13,7 @@ import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './../../../firebase/firestore';
 import { useLocation, useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
-import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew } from './state';
+import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew, setSpace } from './state';
 import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/subjects/examCard/ExamCard';
@@ -22,13 +22,14 @@ import { ICON_SCHEDULE_TYPE } from './../../../config/globalTypes.d';
 import EventCard from '../../../components/subjects/eventCard/EventCard';
 import TaskCard from '../../../components/subjects/taskCard/TaskCard';
 import { removeSubjectLocally, addSubjectLocally, forceRefresh } from '../../../store/actions';
-import { SubjectModel } from '../../../firebase/model';
-import { useDispatch } from 'react-redux';
+import { SubjectModel, SpaceModelWithId } from '../../../firebase/model';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateSubjectLocally } from '../../../store/actions/user';
 import { toaster } from 'evergreen-ui';
 import { getTimestampFromDate } from '../../../util/timeUtil';
 import '../../../style/override.scss';
 import 'react-datepicker/dist/react-datepicker.css';
+import { RootState } from '../../..';
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -42,6 +43,9 @@ const {
     footer: s_footerArea,
     saveBtn: s_saveBtn,
     backArrow: s_backArrow,
+    spaceSelectArea: s_spaceSelectArea,
+    select: s_select,
+    label: s_label,
 } = CSS;
 
 
@@ -51,10 +55,14 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const history = useHistory();
 
     const dispatchToStore = useDispatch();
+
+    const globalSelectedSpaceId = useSelector((state: RootState) => state.user.selectedSpace);
+    const spaces: SpaceModelWithId[] | null = useSelector((state: RootState) => state.user.spaces);
     
     const [state, dispatch] = props.new
-        ? useReducer(reducer, initialStateNew)
+        ? useReducer(reducer, initialStateNew(!globalSelectedSpaceId || globalSelectedSpaceId === 'all' ? 'mainSpace' : globalSelectedSpaceId))
         : useReducer(reducer, initialState);
+
 
     const [wantDelete, setWantDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -98,6 +106,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         id: data.id,
                         name: data.name,
                         color: data.color,
+                        spaceId: data.spaceId,
                         timeCreated: data.timeCreated,
                     }, {
                         exams: data.exams,
@@ -176,6 +185,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                 const sub: SubjectModel = {
                     name: state.subject.name,
                     color: state.subject.color.newColor.name,
+                    spaceId: state.subject.spaceId,
                     timeCreated: getTimestampFromDate(new Date()),
                 };
                 addSubject(sub)
@@ -199,6 +209,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                     {
                         name: state.subject.name,
                         color: state.subject.color.newColor.name,
+                        spaceId: state.subject.spaceId,
                     }
                 ).then(() => {
                     if (state.subject) {
@@ -206,6 +217,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                             id: state.subject.id,
                             name: state.subject.name,
                             color: state.subject.color.newColor.name,
+                            spaceId: state.subject.spaceId,
                             timeCreated: state.subject.timeCreated,
                         }));
                     }
@@ -219,7 +231,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
     if (state.loading) {
         return <Loader />;
-    } else if (state.error || !state.subject) {
+    } else if (state.error || !state.subject || !spaces) {
         return <span>An Error has occurred. Try refreshing the page.</span>;
     }
 
@@ -288,6 +300,19 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                     selectedColorName={state.subject?.color.newColor.name || defaultColor()}
                                 />
 
+                                <div className={toCss(s_spaceSelectArea)} >
+                                    <h3 className={toCss(s_label)}>Space</h3> 
+                                    <Select
+                                        className={toCss(s_select)} 
+                                        value={state.subject?.spaceId}
+                                        onChange={e => {
+                                            dispatch(setSpace(e.target.value));
+                                        }}
+                                    >
+                                        {spaces.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                                    </Select>
+                                </div>
+                                
                                 <div className={toCss(s_settingsArea)}>
 
                                     <div className={toCss(s_tasksArea)}>

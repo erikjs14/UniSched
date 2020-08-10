@@ -1,9 +1,9 @@
 @import '../../style/abstract/mixins';
-@import '../../style/abstract/variables';
 
-.wrapper {
+.row {
     width: 50%;
-    margin: auto;
+
+    margin: 1.5rem auto;
 
     @include respond(tab-land) {
         width: 80%;

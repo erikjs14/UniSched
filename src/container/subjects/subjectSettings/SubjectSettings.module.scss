@@ -64,6 +64,24 @@
         }
     }
 
+    .spaceSelectArea {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 30rem;
+        max-width: 100%;
+
+        .label {
+            margin-right: 3rem;
+
+            @include respond(small-phone) { margin-right: 1rem;}
+        }
+
+        .select {
+            
+        }
+    }
+
     .settingsArea {
         margin-top: 4rem;
         position: relative;

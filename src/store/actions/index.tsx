@@ -1,4 +1,11 @@
 export {
+    setSpace,
+    fetchSpaces,
+    fetchSpacesFail,
+    fetchSpacesSuccess,
+    addSpaceLocally,
+    removeSpaceLocally,
+    alterSpaceLocally,
     setSignedIn,
     setSignedOut,
     startSignOut,

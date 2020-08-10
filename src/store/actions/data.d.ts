@@ -36,3 +36,7 @@ export interface FetchEventsSuccessAC extends BaseActionCreator {eventsPerSubjec
 export interface FetchEventsFailAC extends BaseActionCreator {error: string}
 
 export interface ForceRefreshAC extends BaseActionCreator {dataTypeId: DataTypeId}
+
+export interface RemoveTaskLocallyAC extends BaseActionCreator {taskId: string}
+export interface RemoveExamLocallyAC extends BaseActionCreator {examId: string}
+export interface RemoveEventLocallyAC extends BaseActionCreator {eventId: string}

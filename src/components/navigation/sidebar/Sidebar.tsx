@@ -13,8 +13,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import FloatingButton from '../../ui/floatingButton/FloatingButton';
+import SpaceSelector from '../../../container/spaceSelector/SpaceSelector';
 const {
     sidebar: s_sidebar,
+    spaceSelect: s_spaceSelect,
     userArea: s_userArea,
     userImg: s_userImg,
     username: s_username,
@@ -42,6 +44,13 @@ export default React.memo(function(props: SidebarProps): JSX.Element {
                 }
                 <span className={toCss(s_username)}>{props.displayName}</span>
             </div>
+
+            { history.location.pathname !== '/subjects/new' &&
+              history.location.pathname !== '/settings' &&
+                <SpaceSelector 
+                    wrapCss={toCss(s_spaceSelect)}
+                />
+            }
 
             <div className={toCss(s_navArea)}>
                 <NavigationItems 

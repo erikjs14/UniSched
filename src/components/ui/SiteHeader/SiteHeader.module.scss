@@ -17,6 +17,26 @@
 
     .title {
         font-size: 4em;
+        text-align: center;
+
+        span {
+            font-size: .7em;
+
+            &::before {
+                content: ' - ';
+            }
+        }
+
+        @include respond(tab-land) {
+            span {
+                display: block;
+                margin: 0 auto;
+
+                &::before {
+                    content: '';
+                }
+            }
+        }
 
         @include respond(small-phone) {
             font-size: 2.5em;

@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
-import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC } from '../actions/user.d';
+import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC, SetSpaceAC, FetchSpacesAC, FetchSpacesSuccessAC, FetchSpacesFailAC, AddSpaceLocallyAC, RemoveSpaceLocallyAC, AlterSpaceLocallyAC } from '../actions/user.d';
 import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC, AddUserAndDataAC } from './../actions/user.d';
 import { DEFAULT_PREFERENCES_STATE } from '../../config/userPreferences';
 
@@ -14,10 +14,19 @@ const initialState: UserState = {
     error: null,
     preferences: null,
     preferenceError: null,
+    spaces: null,
+    selectedSpace: null,
 };
 
 export default (state: UserState = initialState, action: BaseActionCreator) => {
     switch (action.type) {
+        case actionTypes.SET_SPACE: return setSpace(state, action as SetSpaceAC);
+        case actionTypes.FETCH_SPACES: return fetchSpaces(state, action as FetchSpacesAC);
+        case actionTypes.FETCH_SPACES_SUCCESS: return fetchSpacesSuccess(state, action as FetchSpacesSuccessAC);
+        case actionTypes.FETCH_SPACES_FAIL: return fetchSpacesFail(state, action as FetchSpacesFailAC);
+        case actionTypes.ADD_SPACE_LOCALLY: return addSpaceLocally(state, action as AddSpaceLocallyAC);
+        case actionTypes.REMOVE_SPACE_LOCALLY: return removeSpaceLocally(state, action as RemoveSpaceLocallyAC);
+        case actionTypes.ALTER_SPACE_LOCALLY: return alterSpaceLocally(state, action as AlterSpaceLocallyAC);
         case actionTypes.USER_SET_SIGNED_IN: return setSignedIn(state, action as SetSignedInAC);
         case actionTypes.USER_SET_SIGNED_OUT: return setSignedOut(state, action as SetSignedOutAC);
         case actionTypes.USER_START_SIGN_OUT: return startSignOut(state, action as StartSignOutAC);
@@ -37,6 +46,58 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
         default: return state;
     }
 }
+
+const setSpace = (state: UserState, action: SetSpaceAC): UserState => {
+    return updateObject(state, {
+        selectedSpace: action.space,
+    });
+};
+
+const fetchSpaces = (state: UserState, action: FetchSpacesAC): UserState => {
+    return updateObject(state, {
+        globalLoading: true,
+    });
+};
+
+const fetchSpacesSuccess = (state: UserState, action: FetchSpacesSuccessAC): UserState => {
+    return updateObject(state, {
+        globalLoading: state.error || (state.username && state.shallowSubjects) ? false : true,
+        spaces: action.spaces,
+        selectedSpace: action.selectedSpace,
+        error: null,
+    });
+};
+
+const fetchSpacesFail = (state: UserState, action: FetchSpacesFailAC): UserState => {
+    return updateObject(state, {
+        globalLoading: state.error || (state.username && state.shallowSubjects) ? false : true,
+        error: action.error,
+    });
+};
+
+const addSpaceLocally = (state: UserState, action: AddSpaceLocallyAC): UserState => {
+    return updateObject(state, {
+        spaces: state.spaces
+            ? [
+                ...state.spaces,
+                action.space
+            ] : [action.space],
+    });
+};
+
+const removeSpaceLocally = (state: UserState, action: RemoveSpaceLocallyAC): UserState => {
+    return updateObject(state, {
+        spaces: state.spaces?.filter(s => s.id !== action.spaceId),
+        selectedSpace: state.selectedSpace === action.spaceId ? 'all' : state.selectedSpace,
+        shallowSubjects: state.shallowSubjects?.filter(s => s.spaceId !== action.spaceId),
+    });
+};
+
+const alterSpaceLocally = (state: UserState, action: AlterSpaceLocallyAC): UserState => {
+    return updateObject(state, {
+        spaces: state.spaces?.map(s => s.id === action.space.id ? action.space : s),
+    });
+};
 
 const setSignedIn = (state: UserState, action: SetSignedInAC): UserState => {
     return updateObject(state, {
@@ -76,7 +137,7 @@ const fetchShallowSubjects = (state: UserState, action: FetchShallowSubjectsAC):
 
 const fetchShallowSubjectsSuccess = (state: UserState, action: FetchShallowSubjectsSuccessAC): UserState => {
     return updateObject(state, {
-        globalLoading: state.username ? false : true,
+        globalLoading: state.error || (state.username && state.shallowSubjects) ? false : true,
         shallowSubjects: action.shallowSubjects,
         error: null,
     });
@@ -84,7 +145,7 @@ const fetchShallowSubjectsSuccess = (state: UserState, action: FetchShallowSubje
 
 const fetchShallowSubjectsFail = (state: UserState, action: FetchShallowSubjectsFailAC): UserState => {
     return updateObject(state, {
-        globalLoading: false,
+        globalLoading: state.error || (state.username && state.shallowSubjects) ? false : true,
         error: action.error,
     });
 };

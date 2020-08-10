@@ -10,6 +10,11 @@ export interface BaseModel {
 }
 export interface Timestamp {seconds: number, nanoseconds: number}
 
+export interface SpaceModel extends BaseModel {
+    name: string;
+}
+export interface SpaceModelWithId extends SpaceModel, ModelWithId {}
+
 export interface UserModel extends BaseModel {
     preferences: PreferencesState | null;
 }
@@ -18,6 +23,7 @@ export interface UserModelWithId extends UserModel, ModelWithId {}
 export interface SubjectModel extends BaseModel {
     color: string;
     name: string;
+    spaceId?: string;
 }
 export interface SubjectModelWithId extends SubjectModel, ModelWithId {}
 

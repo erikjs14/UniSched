@@ -1,0 +1,42 @@
+@import '../../../style/abstract/mixins';
+@import '../../../style/abstract/variables';
+
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    .select {
+        margin-right: auto;
+        margin-bottom: .5rem;
+    }
+
+    .textInput {
+        max-width: calc(100% - 20rem);
+    }
+
+    .btn {
+        margin-left: auto;
+        min-width: 16rem;
+    }
+
+    @include respond(phone) {
+        
+        &:not(:last-child) {
+            padding-bottom: 1rem;
+            border-bottom: $settings-line;
+        }
+
+        .select {
+            min-width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .textInput {
+            
+        }
+
+        .btn {
+            margin-left: auto;
+        }
+    }
+}

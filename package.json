@@ -29,7 +29,7 @@
     "firebase": "^7.14.4",
     "firebase-tools": "^8.2.0",
     "firebaseui": "^4.5.0",
-    "grommet": "^2.13.0",
+    "grommet": "^2.14.0",
     "grommet-icons": "^4.4.0",
     "react": "^16.13.1",
     "react-animate-height": "^2.0.21",

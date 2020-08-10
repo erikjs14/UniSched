@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import FloatingButton from '../../ui/floatingButton/FloatingButton';
+import SpaceSelector from '../../../container/spaceSelector/SpaceSelector';
 const {
     drawer: s_drawer,
     toggled: s_toggled,
@@ -25,6 +26,7 @@ const {
     bottomArea: s_bottomArea,
     settingsIcon: s_settingsIcon,
     plusBtn: s_plusBtn,
+    spaceSelect: s_spaceSelect,
 } = CSS;
 
 export default React.memo(function(props: SideDrawerProps): JSX.Element {
@@ -39,7 +41,7 @@ export default React.memo(function(props: SideDrawerProps): JSX.Element {
     return (
         <div className={drawerCSS}>
             <div className={toCss(s_toggle)}>
-                <Toggle 
+                <Toggle
                     onClick={() => setToggled(prevToggled => !prevToggled)}
                     toggled={toggled}  
                 />
@@ -58,6 +60,14 @@ export default React.memo(function(props: SideDrawerProps): JSX.Element {
                     }
                     <span className={toCss(s_username)}>{props.displayName}</span>
                 </div>
+
+                {   history.location.pathname !== '/subjects/new' &&
+                    history.location.pathname !== '/settings' &&
+                        <SpaceSelector 
+                            wrapCss={toCss(s_spaceSelect)}
+                            onChanged={() => setToggled(false)}
+                        />
+                }
 
                 <NavigationItems 
                     items={props.navItems} 

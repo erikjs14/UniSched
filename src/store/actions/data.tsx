@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC } from './data.d';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC } from './data.d';
 import { ExamModelWithId, EventModelWithId, TaskModel } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
 import { SubjectModelWithId, TaskModelWithIdAndSubjectId } from './../../firebase/model';
@@ -148,5 +148,26 @@ export const addAndSaveNewTaskFail = (error: string): AddAndSaveNewTaskFailAC =>
     return {
         type: actionTypes.ADD_AND_SAVE_NEW_TASK_FAIL,
         error,
+    };
+};
+
+export const removeTaskLocally = (taskId: string): RemoveTaskLocallyAC => {
+    return {
+        type: actionTypes.REMOVE_TASK_LOCALLY,
+        taskId,
+    };
+};
+
+export const removeExamLocally = (examId: string): RemoveExamLocallyAC => {
+    return {
+        type: actionTypes.REMOVE_EXAM_LOCALLY,
+        examId,
+    };
+};
+
+export const removeEventLocally = (eventId: string): RemoveEventLocallyAC => {
+    return {
+        type: actionTypes.REMOVE_EVENT_LOCALLY,
+        eventId,
     };
 };

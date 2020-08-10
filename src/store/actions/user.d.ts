@@ -1,8 +1,16 @@
-import { SubjectModelWithId, Timestamp } from './../../firebase/model';
+import { SubjectModelWithId, SpaceModelWithId, Timestamp } from './../../firebase/model';
 import { PreferenceId } from '../../config/userPreferences';
 import { PreferencesState } from './../../config/userPreferences';
 
 export interface BaseActionCreator {type: string}
+
+export interface SetSpaceAC extends BaseActionCreator {space: string}
+export interface FetchSpacesAC extends BaseActionCreator {selectedSpace: string | undefined}
+export interface FetchSpacesSuccessAC extends BaseActionCreator {spaces: SpaceModelWithId[], selectedSpace: string | undefined}
+export interface FetchSpacesFailAC extends BaseActionCreator {error: string}
+export interface AddSpaceLocallyAC extends BaseActionCreator {space: SpaceModelWithId}
+export interface RemoveSpaceLocallyAC extends BaseActionCreator {spaceId: string}
+export interface AlterSpaceLocallyAC extends BaseActionCreator {space: SpaceMdoelWithId}
 
 export interface SetSignedInAC extends BaseActionCreator {user: firebase.User}
 export interface SetSignedOutAC extends BaseActionCreator {}

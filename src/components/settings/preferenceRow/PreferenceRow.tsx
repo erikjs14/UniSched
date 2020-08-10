@@ -13,7 +13,6 @@ const {
 
 export default function(props: PreferenceRowProps): JSX.Element | null {
 
-    console.log(props)
     let inputEl;
     switch (props.config.type) {
         case 'boolean':

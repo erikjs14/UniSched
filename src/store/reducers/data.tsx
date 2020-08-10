@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { DataState } from './data.d';
-import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, AddAndSaveNewTaskSuccessAC } from '../actions/data.d';
+import { BaseActionCreator, FetchTasksAC, FetchTasksFailAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsSuccessAC, FetchExamsFailAC, RefreshTasksAC, FetchTasksSuccessAC, FetchExamsAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, AddAndSaveNewTaskSuccessAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC } from '../actions/data.d';
 import { ExamModelWithId, EventModelWithId } from '../../firebase/model';
 import { getAllConfigFromExams, getAllConfigFromEvents, ConfigType } from '../../util/scheduleUtil';
 import { findColorConfig } from '../../config/colorChoices';
@@ -53,6 +53,9 @@ export default (state: DataState = initialState, action: BaseActionCreator) => {
         case actionTypes.ADD_AND_SAVE_NEW_TASK: return addAndSaveNewTask(state, action as AddAndSaveNewTaskAC);
         case actionTypes.ADD_AND_SAVE_NEW_TASK_SUCCESS: return addAndSaveNewTaskSuccess(state, action as AddAndSaveNewTaskSuccessAC);
         case actionTypes.ADD_AND_SAVE_NEW_TASK_FAIL: return addAndSaveNewTaskFail(state, action as AddAndSaveNewTaskFailAC);
+        case actionTypes.REMOVE_TASK_LOCALLY: return removeTaskLocally(state, action as RemoveTaskLocallyAC);
+        case actionTypes.REMOVE_EVENT_LOCALLY: return removeEventLocally(state, action as RemoveEventLocallyAC);
+        case actionTypes.REMOVE_EXAM_LOCALLY: return removeExamLocally(state, action as RemoveExamLocallyAC);
         default: return state;
     }
 }
@@ -245,6 +248,29 @@ const addAndSaveNewTaskFail = (state: DataState, action: AddAndSaveNewTaskFailAC
     });
 };
 
+const removeTaskLocally = (state: DataState, action: RemoveTaskLocallyAC): DataState => {
+    return updateObject(state, {
+        tasks: updateObject(state.tasks, {
+            data: state.tasks.data?.filter(t => t.id !== action.taskId),
+        }),
+    });
+};
+
+const removeEventLocally = (state: DataState, action: RemoveEventLocallyAC): DataState => {
+    return updateObject(state, {
+        events: updateObject(state.events, {
+            dataPerSubject: state.events.dataPerSubject?.filter(e => e.id !== action.eventId),
+        }),
+    });
+};
+
+const removeExamLocally = (state: DataState, action: RemoveExamLocallyAC): DataState => {
+    return updateObject(state, {
+        exams: updateObject(state.exams, {
+            dataPerSubject: state.exams.dataPerSubject?.map(exams => exams.filter(e => e.id !== action.examId)),
+        }),
+    });
+};
 
 export interface ExamConfigType extends ConfigType {backgroundColor: string}
 const mapExamsPerSubjectToConfig = (examsPerSubject: ExamModelWithId[][], subjects: SubjectModelWithId[]): ExamConfigType[] => {

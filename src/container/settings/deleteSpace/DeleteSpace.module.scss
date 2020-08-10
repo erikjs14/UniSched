@@ -1,0 +1,33 @@
+@import '../../../style/abstract/mixins';
+@import '../../../style/abstract/variables';
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .select {
+        margin-right: 2rem;
+    }
+
+    .btn {
+        min-width: 16rem;
+    }
+
+    @include respond(phone) {
+        flex-wrap: wrap;
+        
+        &:not(:last-child) {
+            padding-bottom: 1rem;
+            border-bottom: $settings-line;
+        }
+
+        .select {
+            min-width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            margin-left: auto;
+        }
+    }
+}

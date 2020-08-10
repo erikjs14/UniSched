@@ -5,6 +5,21 @@
     display: flex;
     flex-direction: column;
 
+    .mobileOnly {
+        display: none;
+    }
+
+    @include respond(tab-port) {
+        .mobileOnly {
+            display: block;
+            margin: 0 auto;
+        }
+    }
+
+    .noSubjects {
+        margin-bottom: 3rem;
+    }
+
     .subjects {
         width: 80%;
         margin: 5rem auto;

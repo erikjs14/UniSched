@@ -14,6 +14,7 @@ interface StateModel {
     subject: {
         id: string;
         name: string;
+        spaceId: string;
         color: ColorConfig;
         timeCreated: Timestamp | undefined;
         changed: boolean;
@@ -26,6 +27,17 @@ interface StateModel {
 
 interface ActionModel {
     type: string;
+}
+
+interface SetSpaceActionModel extends ActionModel {
+    spaceId: string;
+}
+const ACTION_SET_SPACE = 'ACTION_SET_SPACE';
+export const setSpace = (spaceId: string): SetSpaceActionModel => {
+    return {
+        type: ACTION_SET_SPACE,
+        spaceId,
+    };
 }
 
 interface SetSubjectActionModel extends ActionModel {
@@ -106,7 +118,7 @@ export const initialState: StateModel = {
     error: null,
     saving: false,
 };
-export const initialStateNew: StateModel = {
+export const initialStateNew = (spaceId: string): StateModel => ({
     subject: {
         name: '',
         color: {
@@ -116,6 +128,7 @@ export const initialStateNew: StateModel = {
         changed: false,
         id: '',
         timeCreated: undefined,
+        spaceId: spaceId,
     },
     initialData: {
         events: [],
@@ -125,7 +138,7 @@ export const initialStateNew: StateModel = {
     error: null,
     loading: false,
     saving: false,
-}
+});
 
 export const reducer = (state: StateModel, action: ActionModel & any): StateModel => {
     switch (action.type) {
@@ -145,6 +158,16 @@ export const reducer = (state: StateModel, action: ActionModel & any): StateMode
                 },
                 initialData: action.initialData,
             }
+        case ACTION_SET_SPACE:
+            if (!state.subject) return state;
+            return {
+                ...state,
+                subject: {
+                    ...state.subject,
+                    spaceId: action.spaceId,
+                    changed: true,
+                },
+            };
         case ACTION_SET_ERROR: return {
             ...state,
             loading: false,

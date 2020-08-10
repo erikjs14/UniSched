@@ -3,11 +3,11 @@ import * as actions from '../actions';
 import * as actionTypes from '../actions/actionTypes';
 
 import firebase from 'firebase';
-import { fetchSubjectsShallow, updateUser, addUser } from '../../firebase/firestore';
-import { fetchUser, updatePreference } from './../../firebase/firestore';
+import { fetchSubjectsShallow, updateUser, addUser, fetchSpaces as fetchSpaces_fs } from '../../firebase/firestore';
+import { fetchUser, updatePreference, addDefaultSpace } from './../../firebase/firestore';
 import { getTimestampFromSeconds, getTimestampFromDate } from '../../util/timeUtil';
 import { getSecondsFromDate } from './../../util/timeUtil';
-import { PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC } from '../actions/user.d';
+import { PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, FetchSpacesAC } from '../actions/user.d';
 
 export function* signOut() {
     try {
@@ -18,12 +18,32 @@ export function* signOut() {
     }
 }
 
+export function* fetchSpaces(action: FetchSpacesAC) {
+    try {
+        const data = yield fetchSpaces_fs();
+        let spaceId;
+        if (data.length === 0) {
+            // add first space
+            const defaultSpace = yield addDefaultSpace();
+            data.push(defaultSpace);
+            spaceId = defaultSpace.id;
+            yield put(actions.setSpace(spaceId));
+        } else {
+            spaceId = data[0].id;
+        }
+        yield put(actions.fetchSpacesSuccess(data, action.selectedSpace || spaceId));
+    } catch (error) {
+        yield put(actions.fetchSpacesFail(error.message || error));
+    }
+}
+
 export function* fetchShallowSubjects() {
     try {
         const data = yield fetchSubjectsShallow();
+        console.log(data);
         yield put(actions.fetchShallowSubjectsSuccess(data));
     } catch (error) {
-        yield put(actions.fetchShallowSubjectsFail(error.message));
+        yield put(actions.fetchShallowSubjectsFail(error.message || error));
     }
 }
 

@@ -9,7 +9,7 @@ import Loader from './components/ui/loader/Loader';
 import { Helmet } from 'react-helmet';
 
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
-import {fetchUserData, setSignedIn, fetchShallowSubjects, setSignedOut} from './store/actions';
+import {fetchUserData, setSignedIn, fetchShallowSubjects, setSignedOut, fetchSpaces} from './store/actions';
 import { RootState } from '.';
 
 const Layout = React.lazy(() => import('./hoc/layout/Layout'));
@@ -41,6 +41,7 @@ function App() {
                 dispatch(fetchUserData());
                 dispatch(setSignedIn(user));
                 dispatch(fetchShallowSubjects());
+                dispatch(fetchSpaces(undefined));
             } else {
                 dispatch(setSignedOut());
             }

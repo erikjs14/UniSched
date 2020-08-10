@@ -1,8 +1,58 @@
 import * as actionTypes from './actionTypes';
-import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC } from './user.d';
-import { SubjectModelWithId, Timestamp } from '../../firebase/model';
+import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC, SetSpaceAC, FetchSpacesAC, FetchSpacesSuccessAC, FetchSpacesFailAC, AddSpaceLocallyAC, RemoveSpaceLocallyAC, AlterSpaceLocallyAC } from './user.d';
+import { SubjectModelWithId, Timestamp, SpaceModelWithId } from '../../firebase/model';
 import { PreferenceId } from '../../config/userPreferences';
 import { PreferencesState } from './../../config/userPreferences';
+
+export const fetchSpaces = (selectedSpace: string | undefined): FetchSpacesAC  => {
+    return {
+        type: actionTypes.FETCH_SPACES,
+        selectedSpace,
+    };
+};
+
+export const fetchSpacesSuccess = (spaces: SpaceModelWithId[], selectedSpace: string | undefined): FetchSpacesSuccessAC => {
+    return {
+        type: actionTypes.FETCH_SPACES_SUCCESS,
+        spaces,
+        selectedSpace,
+    };
+};
+
+export const fetchSpacesFail = (error: string): FetchSpacesFailAC => {
+    return {
+        type: actionTypes.FETCH_SPACES_FAIL,
+        error,
+    };
+};
+
+export const setSpace = (space: string): SetSpaceAC => {
+    return {
+        type: actionTypes.SET_SPACE,
+        space,
+    };
+};
+
+export const addSpaceLocally = (space: SpaceModelWithId): AddSpaceLocallyAC => {
+    return {
+        type: actionTypes.ADD_SPACE_LOCALLY,
+        space,
+    };
+};
+
+export const removeSpaceLocally = (spaceId: string): RemoveSpaceLocallyAC => {
+    return {
+        type: actionTypes.REMOVE_SPACE_LOCALLY,
+        spaceId,
+    };
+};
+
+export const alterSpaceLocally = (space: SpaceModelWithId): AlterSpaceLocallyAC => {
+    return {
+        type: actionTypes.ALTER_SPACE_LOCALLY,
+        space,
+    };
+};
 
 export const setSignedIn = (user: firebase.User): SetSignedInAC => {
     return {

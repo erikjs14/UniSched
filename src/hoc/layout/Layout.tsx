@@ -30,7 +30,7 @@ import FloatingButton from '../../components/ui/floatingButton/FloatingButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddTaskDialog from '../../container/todos/addTaskDialog/AddTaskDialog';
-import { Route } from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
 const {
     navDesktop: s_navDesktop,
     navMobile: s_navMobile,
@@ -39,6 +39,8 @@ const {
 } = CSS;
 
 export default function(props: PropsWithChildren<{}>): JSX.Element {
+
+    const history = useHistory();
 
     const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
 
@@ -69,7 +71,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     displayName={displayName}
                     imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
                     showQuickAddToggle
-                    onQuickAdd={() => setShowAddTaskDialog(true)}
+                    onQuickAdd={() => subjects && subjects.length > 0 ? setShowAddTaskDialog(true) : history.push('/subjects/new')}
                 />
             </nav>
 
@@ -81,7 +83,7 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
                     displayName={displayName}
                     imgUrl={imgUrl && !useRandomAvatar ? imgUrl : randomUserIconUrl}
                     showQuickAddToggle
-                    onQuickAdd={() => setShowAddTaskDialog(true)}
+                    onQuickAdd={() => subjects && subjects.length > 0 ? setShowAddTaskDialog(true) : history.push('/subjects/new')}
                 />
             </nav>
 

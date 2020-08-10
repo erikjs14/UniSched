@@ -7,7 +7,9 @@ export interface UserState {
     userImgUrl: string | null;
     globalLoading: boolean;
     shallowSubjects: SubjectModelWithId[] | null;
+    spaces: SpaceModelWithId[] | null;
     error: string | null;
     preferences: PreferencesState | null;
     preferenceError: string | null;
+    selectedSpace: string | null;
 }

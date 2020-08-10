@@ -51,3 +51,16 @@ export const arrayToN = (n: number): number[] => {
         out.push(i);
     return out;
 }
+
+export const filterSubjectsForSpace = (subjects: SubjectModelWithId[], selectedSpaceId: string | null): SubjectModelWithId[] => {
+    return subjects
+        .filter(subject => {
+            if (selectedSpaceId === 'all') {
+                return true;
+            } else if (selectedSpaceId === 'mainSpace') {
+                return !subject.spaceId || subject.spaceId === 'mainSpace';
+            } else {
+                return subject.spaceId === selectedSpaceId;
+            }
+        });
+}

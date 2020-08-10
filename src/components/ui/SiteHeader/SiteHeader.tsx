@@ -24,7 +24,12 @@ export default function(props: SiteHeaderProps): JSX.Element {
                 className={toCss(s_icon)}
             />
 
-            <h1 className={toCss(s_title)}>{props.title}</h1>
+            <h1 className={toCss(s_title)}>
+                {props.title}
+                {props.subTitle &&
+                    <span>{props.subTitle}</span>
+                }
+            </h1>
 
             {props.onRefresh ? 
                 (
