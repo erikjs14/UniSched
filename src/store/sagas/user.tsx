@@ -31,7 +31,7 @@ export function* fetchSpaces(action: FetchSpacesAC) {
             yield put(actions.setSpace(spaceId));
         } else {
             const savedId = localStorage.getItem('spaceId');
-            if (savedId && data.some(s => s.id === savedId)) {
+            if (savedId && (savedId === 'all' || data.some(s => s.id === savedId))) {
                 spaceId = savedId;
             } else {
                 spaceId = data[0].id;
