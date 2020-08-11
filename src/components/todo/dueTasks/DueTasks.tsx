@@ -33,8 +33,8 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [onlyStars, setOnlyStars] = useState(props.onlyStars);
 
     const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
-            props.dueTasks, false, undefined, false
-        ), [props.dueTasks]);
+            props.dueTasks, false, undefined, false, props.onlyRelevantTasks || false, props.forceShowAllTasksForXDays || undefined 
+        ), [props.dueTasks, props.forceShowAllTasksForXDays, props.onlyRelevantTasks]);
     const containsStars = React.useMemo(() => {
         return starsPerDay.some(nr => nr > 0);
     }, [starsPerDay]);
@@ -160,6 +160,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             {todayView}
             {allTasks}
             {!onlyStars &&
+                props.limitDaysInFuture && !dayIsInLimit(semTasks?.[semTasks.length-1]?.[0].dueAt, props.limitDaysInFuture) &&
                 <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>
                     {!showAll ? 'Show all' : 'Show less'}
                 </span>

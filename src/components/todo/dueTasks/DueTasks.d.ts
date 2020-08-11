@@ -9,4 +9,6 @@ export interface DueTasksProps {
     onlyStars?: boolean;
     dayStartsAtHour?: number;
     expandAllVisibleDays?: boolean;
+    onlyRelevantTasks?: boolean;
+    forceShowAllTasksForXDays?: number;
 }

@@ -30,39 +30,66 @@ export const containsDay = (toCheck: Date[], date: Date): boolean => {
     return false;
 }
 
-export const getRelevantTimestamps = (timestamps: Timestamp[], timestampsDone: Timestamp[], forceAppendFuture: boolean): Timestamp[] => {
+export const getRelevantTimestamps = (
+    timestamps: Timestamp[], 
+    timestampsDone: Timestamp[], 
+    forceAppendFuture: boolean,
+    onlyRelevantTasks: boolean = false,
+    forceShowXDaysInFuture: number | undefined = undefined,
+): Timestamp[] => {
     const now = Date.now() / 1000;
 
-    // all timestamps from past that haven't been checked
-    const relevantFromPast =  timestamps.reduce<Timestamp[]>((acc, cur) => {
-        if (cur.seconds < now && !containsTimestamp(cur, timestampsDone)) {
-            return [...acc, cur];
+    if (onlyRelevantTasks) {
+        // all timestamps from past that haven't been checked
+        const relevantFromPast =  timestamps.reduce<Timestamp[]>((acc, cur) => {
+            if (cur.seconds < now && !containsTimestamp(cur, timestampsDone)) {
+                return [...acc, cur];
+            }
+            return acc;
+        }, []);
+
+        const firstInFuture: Timestamp | undefined = timestamps.find(t => t.seconds > now);
+
+        let toAdd: Timestamp[] = [];
+        if (forceShowXDaysInFuture) {
+            const limitSeconds = getSecondsFromDate(addDays(endOf(new Date()), forceShowXDaysInFuture));
+            toAdd = timestamps.filter(ts => (
+                firstInFuture?.seconds !== ts.seconds && ts.seconds >= now && ts.seconds <= limitSeconds && !containsTimestamp(ts, timestampsDone)
+            ));
         }
-        return acc;
-    }, []);
 
-    const firstInFuture: Timestamp | undefined = timestamps.find(t => t.seconds > now);
-
-    if (forceAppendFuture) {
-        // append first timestamp from future
-        
-        if (!firstInFuture) {
-            return relevantFromPast;
+        if (forceAppendFuture) {
+            // append first timestamp from future
+            
+            if (!firstInFuture) {
+                return [
+                    ...relevantFromPast,
+                    ...toAdd,
+                ];
+            } else {
+                return [
+                    ...relevantFromPast,
+                    firstInFuture,
+                    ...toAdd,
+                ];
+            }
         } else {
-            return [
-                ...relevantFromPast,
-                firstInFuture
-            ];
+            if (!firstInFuture || containsTimestamp(firstInFuture, timestampsDone)) {
+                return [
+                    ...relevantFromPast,
+                    ...toAdd,
+                ];
+            } else {
+                return [
+                    ...relevantFromPast,
+                    firstInFuture,
+                    ...toAdd,
+                ];
+            }
         }
+
     } else {
-        if (!firstInFuture || containsTimestamp(firstInFuture, timestampsDone)) {
-            return relevantFromPast;
-        } else {
-            return [
-                ...relevantFromPast,
-                firstInFuture,
-            ];
-        }
+        return timestamps.filter(ts => !containsTimestamp(ts, timestampsDone));
     }
 }
 
@@ -129,7 +156,14 @@ export const dayIsInLimit = (date: Date, limitDaysInFuture: number): boolean => 
     return endOfLimitDay.getTime() >= date.getTime();
 }
 
-export const getRelevantTaskSemantics = (rawTasks: TaskModelWithId[], forceAppendFuture: boolean, limitFutureBy: number | undefined = undefined, onlyStars: boolean = false): TaskSemantic[] => {
+export const getRelevantTaskSemantics = (
+    rawTasks: TaskModelWithId[], 
+    forceAppendFuture: boolean, 
+    limitFutureBy: number | undefined = undefined, 
+    onlyStars: boolean = false,
+    onlyRelevantTasks: boolean = false,
+    forceShowXDaysInFuture: number | undefined = undefined,
+): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
     const endOfLimitDay = limitFutureBy === undefined ? undefined : endOf(addDays(new Date(), limitFutureBy));
     const limitInSec = endOfLimitDay ? getSecondsFromDate(endOfLimitDay) : undefined;
@@ -140,7 +174,7 @@ export const getRelevantTaskSemantics = (rawTasks: TaskModelWithId[], forceAppen
             : task.timestamps;
         if (!onlyStars || task.star) { 
             out.push(
-                getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture).map(tstamp => ({
+                getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture, onlyRelevantTasks, forceShowXDaysInFuture).map(tstamp => ({
                     name: task.type,
                     taskId: task.id,
                     subjectId: task.subjectId,
@@ -161,7 +195,9 @@ export const getRelevantTaskSemanticsGrouped = (
     forceAppendFuture: boolean, 
     limitFutureBy: number | undefined = undefined,
     onlyStars: boolean = false,
-): [TaskSemantic[][], number[]] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars));
+    onlyRelevantTasks: boolean = false,
+    forceShowXDaysInFuture: number | undefined = undefined,
+): [TaskSemantic[][], number[]] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars, onlyRelevantTasks, forceShowXDaysInFuture));
 
 export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];

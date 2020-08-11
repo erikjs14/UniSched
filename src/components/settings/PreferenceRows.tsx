@@ -12,14 +12,20 @@ export default function(props: PreferenceRowsProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper)}>
-            {props.preferenceConfigs.map(config => (
-                <PreferenceRow
-                    key={config.id}
-                    config={config}
-                    value={props.preferences[config.id]}
-                    onChange={val => props.onChange(config.id, val)}
-                />
-            ))}
+            {props.preferenceConfigs.map(config => {
+                if (config.constraint) {
+                    if (props.preferences[config.constraint.id] !== config.constraint.value) return null;
+                }
+
+                return (
+                    <PreferenceRow
+                        key={config.id}
+                        config={config}
+                        value={props.preferences[config.id]}
+                        onChange={val => props.onChange(config.id, val)}
+                    />
+                )
+            })}
         </div>
     );
 }

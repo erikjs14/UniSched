@@ -160,9 +160,10 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     const reset = useCallback(() => {
         setPageCnt(0);
         setMarkTypeInput(false);
+        setSpaceId(spaces && spaces.length === 1 ? spaces[0] : null);
         setSubjectId(null);
         setTaskConfig(getTaskStartState());
-    }, []);
+    }, [spaces]);
 
     const addTaskHandler = useCallback((closeDialog: Function) => {
         if (taskConfig?.type?.length > 0 && subjectId) {

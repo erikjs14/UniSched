@@ -178,6 +178,8 @@ export default function(): JSX.Element {
                         subjects={subjectsToObject(filteredSubjects)}
                         onTaskChecked={checkTaskHandler}
                         limitDaysInFuture={0}
+                        onlyRelevantTasks
+                        forceShowAllTasksForXDays={3}
                         dayStartsAtHour={userPrefersDayStartsAt || 0}
                         small
                     />
