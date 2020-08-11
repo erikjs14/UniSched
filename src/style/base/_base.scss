@@ -1,4 +1,5 @@
 @import '../abstract/mixins';
+@import '../abstract/variables';
 
 *,
 *::after,
@@ -29,6 +30,12 @@ body {
 
     font-size: 1.5rem;
     font-family: 'Cantarell', sans-serif;
+}
+
+::selection {
+    background-color: $col-primary-light;
+    color: $col-primary-light-text;
+    text-shadow: none;
 }
 
 h1 {
