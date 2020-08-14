@@ -42,6 +42,7 @@ const {
     spacesSelect: s_spacesSelect,
     space: s_space,
     spaceSelected: s_spaceSelected,
+    nosubs: s_nosubs,
 } = CSS;
 
 // !!! ALWAYS UPDATE
@@ -211,18 +212,25 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         </Fragment>,
         <Fragment>
             <div className={toCss(s_subjectScrollPane)}>
-                {filterSubjectsForSpace(subjects || [], spaceId).map(subject => (
-                    <SimpleSettingsRow 
-                        key={subject.id}
-                        title={subject.name}
-                        bgColor={subject.color}
-                        onClick={() => {
-                            setSubjectId(subject.id);
-                            onChangePageCnt(1);
-                        }}
-                        outline={subject.id === subjectId}
-                    />
-                ))}
+                {(() => {
+                    const filteredSubs = filterSubjectsForSpace(subjects || [], spaceId);
+                    if (!filteredSubs || filteredSubs.length === 0) {
+                        return <h3 className={toCss(s_nosubs)} >No Subjects in this space!</h3>
+                    } else {
+                        return (filteredSubs.map(subject => (
+                            <SimpleSettingsRow 
+                                key={subject.id}
+                                title={subject.name}
+                                bgColor={subject.color}
+                                onClick={() => {
+                                    setSubjectId(subject.id);
+                                    onChangePageCnt(1);
+                                }}
+                                outline={subject.id === subjectId}
+                            />
+                        )));
+                    }
+                })()}
             </div> 
         </Fragment>,
         <Fragment>

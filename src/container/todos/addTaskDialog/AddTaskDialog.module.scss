@@ -43,6 +43,7 @@
 
         .page {
             height: 100%;
+            overflow-y: auto;
             flex-basis: 100%;
             max-width: 100%;
             flex-shrink: 0;
@@ -67,6 +68,9 @@
                     &:not(:last-child) {
                         margin-bottom: 2rem;
                     }
+                    &:last-child {
+                        margin-bottom: 1rem;
+                    }
 
                     transition: all .2s;
                     &:hover {
@@ -84,17 +88,25 @@
                 display: flex;
                 align-items: stretch;
                 flex-direction: column;
-                overflow-x: hidden;
-                // overflow-y: auto;
-                height: 100%;
-                max-height: 100%;
+                overflow: hidden;
                 width: 100%;
                 padding: 0 3rem;
+                padding-bottom: 2rem;
                 @include respond(phone) { padding: 0 2rem;}
                 font-size: .7em;
 
                 div span {
                     white-space: normal;
+                }
+
+                .nosubs {
+                    position: absolute;
+                    top: 50%;
+                    left: 150%;
+                    transform: translate(-50%, -50%);
+                    font-size: 1.5rem;
+                    width: 80%;
+                    text-align: center;
                 }
             }
 
