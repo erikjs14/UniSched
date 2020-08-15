@@ -47,6 +47,7 @@ const {
 
 // !!! ALWAYS UPDATE
 const pageLen = 7;
+const keyMap: {[key: string]: boolean} = {};
 export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element | null{
 
     const {data: tasks, timestamp, } = useSelector((state: RootState) => state.data.tasks);
@@ -83,6 +84,13 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             setAddEnabled(false);
         }
     }, [subjectId, taskConfig.type]);
+
+    const handleKey = useCallback(
+        (e) => {
+            keyMap[e.key] = e.type === 'keydown';
+        },
+        [],
+    );
 
     // set focus to input when rendered
     const typeInputRef = useRef<HTMLInputElement>(null);
@@ -194,7 +202,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     
     const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
 
-    const pages = useMemo(() => [
+    const pages = useCallback((closeDialog: Function) => [
         <Fragment>
             <div className={toCss(s_spacesSelect)} >
                 {spaces?.map(s => (
@@ -247,9 +255,12 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     elementConfig={{
                         onKeyPress: (event: React.KeyboardEvent) => {
                             if (event.key === 'Enter') {
-                                onChangePageCnt(1);
+                                if (keyMap.Shift || keyMap.Control) addTaskHandler(closeDialog);
+                                else onChangePageCnt(1);
                             }
                         },
+                        onKeyDown: handleKey,
+                        onKeyUp: handleKey,
                     }}
                 />
                 <FontAwesomeIcon 
@@ -338,7 +349,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             />
             { error && <span className={toCss(s_error)}>{error}</span> }
         </Fragment>,
-    ], [changeHandler, error, firstDeadline, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaces, subjectId, subjects, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
+    ], [addTaskHandler, changeHandler, error, firstDeadline, handleKey, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaces, subjectId, subjects, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
     
     if (!props.isShown) return null;
 
@@ -362,6 +373,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     className={toCss(s_wrapper)}
                     tabIndex={-1}
                     onKeyDown={event => {
+                        handleKey(event);
                         if (pageCnt !== 2) {
                             if (event.key === 'ArrowLeft')
                                 onChangePageCnt(-1);
@@ -371,6 +383,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                                 addTaskHandler(close);
                         }
                     }}
+                    onKeyUp={handleKey}
                 >
                     
                     <FontAwesomeIcon 
@@ -390,7 +403,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                             transform: 'translateX(-' + (pageCnt*100) + '%)',
                         }}
                     >
-                        {pages.map(pageContent => (
+                        {pages(close).map(pageContent => (
                             <div className={toCss(s_page)} >
                                 {pageContent}
                             </div>
