@@ -353,6 +353,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     
     if (!props.isShown) return null;
 
+    console.log(pageCnt)
     return (
         <Dialog
             isShown={props.isShown}
@@ -393,7 +394,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     /> 
                     <FontAwesomeIcon 
                         icon={faAngleRight}
-                        className={toCss(s_angleRight, (pageCnt >= pages.length - 1 || pageCnt <= 1 ? s_hidden : ''))}
+                        className={toCss(s_angleRight, ((pageCnt <= 1 || pageCnt >= pageLen - 1) ? s_hidden : ''))}
                         onClick={() => onChangePageCnt(1)}
                     /> 
 
