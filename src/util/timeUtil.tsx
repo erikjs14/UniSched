@@ -1,6 +1,6 @@
 import { Timestamp, TaskModel, IntervalType, TaskModelWithId } from './../firebase/model';
 import { getResult } from './util';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, differenceInMonths, addMonths, getDaysInMonth } from 'date-fns';
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, TIME_INTERVAL_SELECT, DEFAULT_DATETIME_FORMAT } from './../config/timeConfig';
 
 export const containsTimestamp = (toCheck: Timestamp, array: Timestamp[]): boolean => {
@@ -306,24 +306,46 @@ export const getDateFromSeconds = (secs: number): Date => new Date(secs * 1000);
 export const getDateFromTimestamp = (t: Timestamp): Date => getDateFromSeconds(t.seconds);
 export const getTimestampFromDate = (date: Date): Timestamp => ({seconds: Math.round(date.getTime() / 1000), nanoseconds: 0});
 
-export const getIntervalTypeFromSeconds = (secs: number): IntervalType => {
+export const getIntervalTypeFromSeconds = (secs: number, refTimestamp?: Timestamp): IntervalType => {
     switch (secs) {
         case 0: return 'once';
         case DAY_IN_SEC: return 'daily';
         case 2*DAY_IN_SEC: return 'twice-daily';
         case WEEK_IN_SEC: return 'weekly';
         case BIWEEK_IN_SEC: return 'biweekly';
-        default: throw new Error('Malformed timestamps.');
+        case MAX_MONTH_IN_SEC: return 'monthly';
+        default: 
+            if (refTimestamp) {
+                const startSecs = refTimestamp.seconds;
+                const endSecs = startSecs + secs;
+                const startDate = getDateFromSeconds(startSecs);
+                const endDate = getDateFromSeconds(endSecs);
+                console.log(startDate)
+                console.log(endDate)
+                if (
+                    (startDate.getDate() === endDate.getDate() && differenceInMonths(endDate, startDate) === 1)
+                    ||
+                    (startDate.getDate() > getDaysInMonth(endDate) && getDaysInMonth(endDate) === endDate.getDate())
+                )
+                    return 'monthly';
+                else
+                    throw new Error('Malformed timestamps.');
+            } else
+                throw new Error('No reference timestmap provided.');
     }
 }
 
-export const getSecondsFromIntervalType = (interval: IntervalType): number => {
+export const getSecondsFromIntervalType = (interval: IntervalType, refTimestamp?: Timestamp, initialStartTimestamp?: Timestamp): number => {
     switch (interval) {
         case 'once': return 0;
         case 'daily': return DAY_IN_SEC;
         case 'twice-daily': return 2*DAY_IN_SEC;
         case 'weekly': return WEEK_IN_SEC;
         case 'biweekly': return BIWEEK_IN_SEC;
+        case 'monthly': 
+            if (!refTimestamp) return MAX_MONTH_IN_SEC;
+            else if (refTimestamp && initialStartTimestamp) return getSecondsFromDate(addMonths(getDateFromTimestamp(refTimestamp), 1)) - refTimestamp.seconds + (DAY_IN_SEC * Math.max(0, (getDateFromTimestamp(initialStartTimestamp).getDate() - getDateFromTimestamp(refTimestamp).getDate())));
+            else return getSecondsFromDate(addMonths(getDateFromTimestamp(refTimestamp), 1)) - refTimestamp.seconds;
         default: throw new Error('Prohibited by typescript');
     }
 }
@@ -331,6 +353,7 @@ export const getSecondsFromIntervalType = (interval: IntervalType): number => {
 export const DAY_IN_SEC = 60 * 60 * 24;
 export const WEEK_IN_SEC = DAY_IN_SEC * 7;
 export const BIWEEK_IN_SEC = WEEK_IN_SEC * 2;
+export const MAX_MONTH_IN_SEC = 31 * 24 * 60 * 60;
 
 export interface TaskConfig {
     firstDeadline: Timestamp;
@@ -349,7 +372,7 @@ export const getConfigDataFromTimestamps = (timestamps: Timestamp[], timestampsD
                 return 'daily';
             } else {
                 const intervalSeconds = timestamps[timestamps.length-1].seconds - timestamps[timestamps.length-2].seconds;
-                return getIntervalTypeFromSeconds(intervalSeconds);
+                return getIntervalTypeFromSeconds(intervalSeconds, timestamps[timestamps.length - 2]);
             }
         }
     }),
@@ -360,10 +383,11 @@ export const getTimestampsFromConfig = ({firstDeadline, lastDeadline, interval}:
 
     if (interval === 'once') return [getTimestampFromSeconds(firstDeadline.seconds)];
 
-    const intervalSeconds = getSecondsFromIntervalType(interval);
+    let intervalSeconds;
     let cur = firstDeadline.seconds;
     while (cur <= lastDeadline.seconds) {
         timestamps.push(getTimestampFromSeconds(cur));
+        intervalSeconds = getSecondsFromIntervalType(interval, getTimestampFromSeconds(cur));
         cur += intervalSeconds;
     }
 
@@ -389,7 +413,7 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
     if (newConfig.interval !== 'once' && timestampsOut.length === 1) {
         timestampsOut.push(
             getTimestampFromSeconds(
-                timestampsOut[0].seconds + getSecondsFromIntervalType(newConfig.interval)
+                timestampsOut[0].seconds + getSecondsFromIntervalType(newConfig.interval, timestampsOut[0])
             )
         );
     }
@@ -410,6 +434,11 @@ export const getFilterForInterval = (startSecs: number, interval: IntervalType):
         // check for range plus minus one hour due to daylight savings
         if (interval === 'once')
             return plusMinus(difference_s, 3600);
+        else if (interval === 'monthly')
+            return (
+                startDate.getDate() === d.getDate()
+                || (startDate.getDate() > getDaysInMonth(d) && d.getDate() === getDaysInMonth(d))
+            );
         else
             return plusMinus(difference_s % getSecondsFromIntervalType(interval), 3600);
     }
@@ -418,11 +447,10 @@ export const getFilterForInterval = (startSecs: number, interval: IntervalType):
 export const getNDatesAsSecondsForInterval = (excludedStartDateSeconds: number, interval: IntervalType, n: number): number[] => {
     if (interval === 'once') return [];
     const out = [];
-    const secsToAdd = getSecondsFromIntervalType(interval);
+    let curSecs = excludedStartDateSeconds + getSecondsFromIntervalType(interval, getTimestampFromSeconds(excludedStartDateSeconds));
     for (let i = 1; i <= n; i++) {
-        out.push(
-            excludedStartDateSeconds + i * secsToAdd
-        );
+        out.push(curSecs);
+        curSecs += getSecondsFromIntervalType(interval, getTimestampFromSeconds(out[out.length-1]), getTimestampFromSeconds(excludedStartDateSeconds));
     }
     return out;
 }
@@ -497,8 +525,11 @@ export const findNextDayForInterval = (start: Date, cur: Date, interval: Interva
     let curSec = getSecondsFromDate(startOf(cur))
         + (sameDay(start, cur) ? DAY_IN_SEC : 0);
 
-    while (((curSec - startSec) % getSecondsFromIntervalType(interval)) !== 0) {
+    // do not do infinite loops
+    let i = 0;
+    while (((curSec - startSec) % getSecondsFromIntervalType(interval, getTimestampFromDate(cur))) !== 0) {
         curSec += DAY_IN_SEC;
+        if (i++ > 1000) throw new Error('Next date could not be found.');
     }
     return getDateFromSeconds(curSec);
 }
