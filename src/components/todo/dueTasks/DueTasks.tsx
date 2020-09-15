@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment } from 'react';
+import React, { useState, useEffect, useCallback, Fragment, useMemo } from 'react';
 
 import WeekdaySeperator from './weekdaySeperator/WeekdaySeperator';
 import Collapsible from '../../ui/collapsible/Collapsible';
@@ -30,9 +30,6 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const [fadeTaskOut, setFadeTaskOut] = useState<[string, number][]>([]);
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
 
-    const [showAll, setShowAll] = useState(false);
-    const [onlyStars, setOnlyStars] = useState(props.onlyStars);
-
     const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
             props.dueTasks, false, undefined, false, props.onlyRelevantTasks || false, props.forceShowAllTasksForXDays || undefined 
         ), [props.dueTasks, props.forceShowAllTasksForXDays, props.onlyRelevantTasks]);
@@ -42,6 +39,41 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const amountStars = React.useMemo(() => {
         return starsPerDay.reduce((prev, cur) => prev + cur, 0);
     }, [starsPerDay]);
+
+    const minShowDayLimit = useMemo((() => {
+        if (!props.limitDaysInFuture) 
+            return 5;
+        let limit = 0;
+        for (let tasksOneDay of semTasks) {
+            if (dayIsInLimit(tasksOneDay[0].dueAt, props.limitDaysInFuture)) {
+                limit++;
+            } else {
+                break;
+            }
+        }
+        return limit;
+    }), [props.limitDaysInFuture, semTasks]);
+    const [showDays, setShowDays] = useState<number>(
+        props.limitDaysInFuture
+            ? minShowDayLimit
+            : semTasks.length
+    );
+    const showLess = useCallback(() => {
+        const newAmount = showDays - 7;
+        if (newAmount < minShowDayLimit)
+            setShowDays(minShowDayLimit);
+        else 
+            setShowDays(newAmount);
+    }, [minShowDayLimit, showDays]);
+    const showMore = useCallback(() => {
+        const newAmount = showDays + 7;
+        if (newAmount > semTasks.length)
+            setShowDays(semTasks.length);
+        else 
+            setShowDays(newAmount);
+    }, [semTasks.length, showDays]);
+
+    const [onlyStars, setOnlyStars] = useState(props.onlyStars);
     
     useEffect(() => {
         for (const tasksOneDay of semTasks) {
@@ -91,7 +123,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     const allTasks = semTasks.map((tasksOneDay, idx) => {
         //check if limit reached
-        if (!showAll && !onlyStars && props.limitDaysInFuture && !dayIsInLimit(tasksOneDay[0].dueAt, props.limitDaysInFuture)) return null;
+        if (idx + 1 > showDays) return null;
         //check for stars
         if (onlyStars && starsPerDay[idx] < 1) return null;
 
@@ -169,10 +201,14 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             }
             {todayView}
             {allTasks}
-            {!onlyStars &&
-                props.limitDaysInFuture && !dayIsInLimit(semTasks?.[semTasks.length-1]?.[0].dueAt, props.limitDaysInFuture) &&
-                <span className={toCss(s_showAll)}  onClick={() => setShowAll(prev => !prev)}>
-                    {!showAll ? 'Show all' : 'Show less'}
+            {showDays < semTasks.length - 1 &&
+                <span className={toCss(s_showAll)}  onClick={showMore}>
+                    Show More
+                </span>
+            }
+            {showDays > minShowDayLimit &&
+                <span className={toCss(s_showAll)}  onClick={showLess}>
+                    Show Less
                 </span>
             }
         </div>
