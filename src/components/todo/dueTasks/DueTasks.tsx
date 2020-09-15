@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 
 import WeekdaySeperator from './weekdaySeperator/WeekdaySeperator';
 import Collapsible from '../../ui/collapsible/Collapsible';
@@ -8,7 +8,7 @@ import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
 import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate, subtractHours, dayIsInLimit } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
-import { faSmileBeam } from '@fortawesome/free-solid-svg-icons';
+import { faSmileBeam, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toaster } from 'evergreen-ui';
 const {
@@ -22,6 +22,7 @@ const {
     showAll: s_showAll,
     filterStar: s_filterStar,
     enabled: s_enabled,
+    amountStars: s_amountStars,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
@@ -37,6 +38,9 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         ), [props.dueTasks, props.forceShowAllTasksForXDays, props.onlyRelevantTasks]);
     const containsStars = React.useMemo(() => {
         return starsPerDay.some(nr => nr > 0);
+    }, [starsPerDay]);
+    const amountStars = React.useMemo(() => {
+        return starsPerDay.reduce((prev, cur) => prev + cur);
     }, [starsPerDay]);
     
     useEffect(() => {
@@ -155,7 +159,13 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     return (
         <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
             {containsStars &&
-                <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
+                <Fragment>
+                    <span className={toCss(s_amountStars)} >
+                        <FontAwesomeIcon icon={faStar} />
+                        { amountStars }
+                    </span>
+                    <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
+                </Fragment>
             }
             {todayView}
             {allTasks}

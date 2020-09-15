@@ -26,6 +26,22 @@
         border-bottom: 2px solid #30475e;
     }
 
+    .amountStars {
+        margin-left: 3rem;
+        text-align: right;
+
+        svg {
+            margin-right: .5rem;
+            color: $col-primary-light;
+            transition: .5s all;
+        }
+
+        &:hover svg {
+            filter: drop-shadow(1px 1px 2px rgba($col-primary-light, .5));
+            transform: scale(1.03);
+        }
+    }
+
     .filterStar {
         cursor: pointer;
         opacity: .2;
