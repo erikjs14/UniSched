@@ -40,7 +40,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         return starsPerDay.some(nr => nr > 0);
     }, [starsPerDay]);
     const amountStars = React.useMemo(() => {
-        return starsPerDay.reduce((prev, cur) => prev + cur);
+        return starsPerDay.reduce((prev, cur) => prev + cur, 0);
     }, [starsPerDay]);
     
     useEffect(() => {

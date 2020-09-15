@@ -1,6 +1,6 @@
 import { Timestamp, TaskModel, IntervalType, TaskModelWithId } from './../firebase/model';
 import { getResult } from './util';
-import { format, formatDistanceToNow, differenceInMonths, addMonths, getDaysInMonth } from 'date-fns';
+import { format, formatDistanceToNow, differenceInMonths, addMonths, getDaysInMonth, differenceInDays, differenceInWeeks, differenceInYears } from 'date-fns';
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, TIME_INTERVAL_SELECT, DEFAULT_DATETIME_FORMAT } from './../config/timeConfig';
 
 export const containsTimestamp = (toCheck: Timestamp, array: Timestamp[]): boolean => {
@@ -266,14 +266,18 @@ export const uncheckTask = (timestamp: Timestamp, task: TaskModel): TaskModel =>
     };
 }
 
+let TODAY: Timestamp|null = null; 
 export const todaysTimestamp = (): Timestamp => {
+    if (TODAY) return TODAY;
+    
     const today = new Date();
     today.setHours(23);
     today.setMinutes(59);
-    return {
+    TODAY = {
         seconds: Math.round(today.getTime() / 1000), 
         nanoseconds: 0
     }
+    return TODAY;
 };
 export const startOf = (date: Date): Date => {
     const out = new Date(date);
@@ -500,7 +504,24 @@ export const getDayIdentifier = (date: Date, dayStartsAtHour: number): string =>
     if (isToday(date, dayStartsAtHour)) return 'today';
     else if (isTomorrow(date, dayStartsAtHour)) return 'tomorrow';
     else if (isYesterday(date, dayStartsAtHour)) return 'yesterday';
-    else return getWeekDay(date);
+    else {
+        const adjustedDate = subtractHours(getDateFromTimestamp(todaysTimestamp()), dayStartsAtHour);
+        const diffDays = differenceInDays(date, adjustedDate);
+        if (diffDays < 0) 
+            return (-diffDays) + " days ago";
+        else if (diffDays > 365){
+            const diffYears = differenceInYears(date, adjustedDate);
+            return "in " + diffYears + (diffYears > 1 ? " years" : " year");
+        }
+        else if (diffDays > 100)
+            return "in " + differenceInMonths(date, adjustedDate) + " months";
+        else if (diffDays > 30)
+            return "in " + differenceInWeeks(date, adjustedDate) + " weeks";
+        else if (diffDays > 6)
+            return "in " + diffDays + " days";
+        else
+            return getWeekDay(date);
+    }
 }
 
 export const getExcludedTimes = (date: Date): Date[] => {
