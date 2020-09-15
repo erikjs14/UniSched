@@ -19,10 +19,12 @@ const {
     noTodoToday: s_noTodoToday,
     animMargin: s_animMargin,
     small: s_small,
-    showAll: s_showAll,
     filterStar: s_filterStar,
     enabled: s_enabled,
     amountStars: s_amountStars,
+    showMore: s_showMore,
+    showLess: s_showLess,
+    showMoreLessArea: s_showMoreLessArea,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
@@ -201,16 +203,18 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             }
             {todayView}
             {allTasks}
-            {showDays < semTasks.length - 1 &&
-                <span className={toCss(s_showAll)}  onClick={showMore}>
-                    Show More
-                </span>
-            }
-            {showDays > minShowDayLimit &&
-                <span className={toCss(s_showAll)}  onClick={showLess}>
-                    Show Less
-                </span>
-            }
+            <div className={toCss(s_showMoreLessArea)} >
+                {showDays < semTasks.length - 1 &&
+                    <span className={toCss(s_showMore)}  onClick={showMore}>
+                        Show More
+                    </span>
+                }
+                {showDays > minShowDayLimit &&
+                    <span className={toCss(s_showLess)}  onClick={showLess}>
+                        Show Less
+                    </span>
+                }
+            </div>
         </div>
     );
 });

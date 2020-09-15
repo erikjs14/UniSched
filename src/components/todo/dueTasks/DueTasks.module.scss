@@ -18,12 +18,20 @@
         margin-bottom: 2rem;
     }
 
-    .showAll {
-        cursor: pointer;
-        display: inline-block;
-        font-size: 1.2em;
-        margin: 1rem 10rem;
-        border-bottom: 2px solid #30475e;
+    .showMoreLessArea {
+        display: flex;
+
+        .showMore,
+        .showLess {
+            cursor: pointer;
+            font-size: 1.2em;
+            margin: 1rem 10rem;
+            border-bottom: 2px solid #30475e;
+        }
+
+        .showLess {
+            margin-left: auto;
+        }
     }
 
     .amountStars {
