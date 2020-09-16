@@ -163,6 +163,7 @@ export const fetchEvents = async (subjectId: string): Promise<models.EventModelW
         interval: dataWithId.data?.interval,
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
+        exclusions: dataWithId.data?.exclusions || [],
     }));
 
     return events;
@@ -179,6 +180,7 @@ export const fetchEvent = async (subjectId: string, eventId: string): Promise<mo
         interval: docWithId.data?.interval,
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
+        exclusions: docWithId.data?.exclusions || [],
     };
 }
 
@@ -196,6 +198,7 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
         star: dataWithId.data?.star ? true : false,
         additionalInfo: dataWithId.data?.additionalInfo || null,
         deleted: dataWithId.data?.deleted,
+        exclusions: dataWithId.data?.exclusions || [],
     }));
     
     return tasks;
@@ -213,6 +216,7 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
         star: docWithId.data?.star,
         additionalInfo: docWithId.data?.additionalInfo || null,
         deleted: docWithId.data?.deleted,
+        exclusions: docWithId.data?.exclusions || [],
     };
 }
 

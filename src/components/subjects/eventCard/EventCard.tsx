@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DateTimePicker from 'react-datepicker';
 
 import CSS from '../settingsCard/SettingsCard.module.scss';
@@ -10,7 +10,9 @@ import { DATETIMEPICKER_DEFAULT_PROPS, DATEPICKER_DEFAULT_PROPS } from './../../
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from '../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
-import { Tooltip, InfoSignIcon } from 'evergreen-ui';
+import { Tooltip, InfoSignIcon, Button } from 'evergreen-ui';
+import ExclusionsDialog from '../exclusionsDialog/ExclusionsDialog';
+import { getAllTimestampsFromEvent } from '../../../util/scheduleUtil';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
@@ -18,6 +20,8 @@ const {
 } = CSS;
 
 export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
+    
+    const [exclDialogShown, setExclDialogShown] = useState(false);
 
     return (
         <SettingsCard
@@ -119,6 +123,30 @@ export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
                         addClass={toCss(s_intervalOptions)}
                     />
                 </div>
+
+                {props.data.interval !== 'once' &&
+                    <div className={toCss(s_row)} >
+                        <span>
+                            Exclusions
+                            <Tooltip content='Select dates that you wish to be excluded.'>
+                                <InfoSignIcon className={toCss(s_infoIcon)} />
+                            </Tooltip>
+                        </span>
+                        <Button
+                            iconBefore='edit'
+                            onClick={() => setExclDialogShown(prev => !prev)}
+                        >
+                            Edit
+                        </Button>
+                        <ExclusionsDialog 
+                            show={exclDialogShown} 
+                            onCloseComplete={() => setExclDialogShown(false)}
+                            availableDates={getAllTimestampsFromEvent(props.data)}
+                            selectedExclusions={props.data.exclusions}
+                            onChangeConfirmed={exclusions => props.onChange<Timestamp[]>('exclusions', exclusions)}
+                        />
+                    </div>
+                }
 
         </SettingsCard>
     );

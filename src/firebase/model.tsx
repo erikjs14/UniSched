@@ -49,6 +49,7 @@ export interface EventModel extends SubjectDataModel {
     firstEnd: Timestamp;
     endAt: Timestamp;
     interval: IntervalType;
+    exclusions: Timestamp[];
 }
 export interface EventModelWithId extends EventModel, SubjectDataModelWithId {}
 
@@ -65,5 +66,6 @@ export interface TaskModel extends SubjectDataModel {
         text: string;
     } | null;
     deleted: boolean;
+    exclusions: Timestamp[];
 }
 export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}

@@ -36,25 +36,26 @@ export const getRelevantTimestamps = (
     forceAppendFuture: boolean,
     onlyRelevantTasks: boolean = false,
     forceShowXDaysInFuture: number | undefined = undefined,
+    exclusions: Timestamp[] = [],
 ): Timestamp[] => {
     const now = Date.now() / 1000;
 
     if (onlyRelevantTasks) {
         // all timestamps from past that haven't been checked
         const relevantFromPast =  timestamps.reduce<Timestamp[]>((acc, cur) => {
-            if (cur.seconds < now && !containsTimestamp(cur, timestampsDone)) {
+            if (cur.seconds < now && !containsTimestamp(cur, timestampsDone) && !containsTimestamp(cur, exclusions)) {
                 return [...acc, cur];
             }
             return acc;
         }, []);
 
-        const firstInFuture: Timestamp | undefined = timestamps.find(t => t.seconds > now);
+        const firstInFuture: Timestamp | undefined = timestamps.find(t => t.seconds > now && !containsTimestamp(t, exclusions));
 
         let toAdd: Timestamp[] = [];
         if (forceShowXDaysInFuture) {
             const limitSeconds = getSecondsFromDate(addDays(endOf(new Date()), forceShowXDaysInFuture));
             toAdd = timestamps.filter(ts => (
-                firstInFuture?.seconds !== ts.seconds && ts.seconds >= now && ts.seconds <= limitSeconds && !containsTimestamp(ts, timestampsDone)
+                firstInFuture?.seconds !== ts.seconds && ts.seconds >= now && ts.seconds <= limitSeconds && !containsTimestamp(ts, timestampsDone) && !containsTimestamp(ts, exclusions)
             ));
         }
 
@@ -89,7 +90,7 @@ export const getRelevantTimestamps = (
         }
 
     } else {
-        return timestamps.filter(ts => !containsTimestamp(ts, timestampsDone));
+        return timestamps.filter(ts => !containsTimestamp(ts, timestampsDone) && !containsTimestamp(ts, exclusions));
     }
 }
 
@@ -174,7 +175,7 @@ export const getRelevantTaskSemantics = (
             : task.timestamps;
         if (!onlyStars || task.star) { 
             out.push(
-                getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture, onlyRelevantTasks, forceShowXDaysInFuture).map(tstamp => ({
+                getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture, onlyRelevantTasks, forceShowXDaysInFuture, task.exclusions).map(tstamp => ({
                     name: task.type,
                     taskId: task.id,
                     subjectId: task.subjectId,
@@ -324,8 +325,6 @@ export const getIntervalTypeFromSeconds = (secs: number, refTimestamp?: Timestam
                 const endSecs = startSecs + secs;
                 const startDate = getDateFromSeconds(startSecs);
                 const endDate = getDateFromSeconds(endSecs);
-                console.log(startDate)
-                console.log(endDate)
                 if (
                     (startDate.getDate() === endDate.getDate() && differenceInMonths(endDate, startDate) === 1)
                     ||

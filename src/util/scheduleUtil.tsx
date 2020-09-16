@@ -1,11 +1,30 @@
-import { EventModelWithId, ExamModelWithId } from "../firebase/model";
-import { getDateFromTimestamp, getSecondsFromIntervalType, getDateFromSeconds } from "./timeUtil";
+import { EventModel, EventModelWithId, ExamModelWithId, Timestamp } from "../firebase/model";
+import { getDateFromTimestamp, getSecondsFromIntervalType, getDateFromSeconds, containsTimestamp, getTimestampFromSeconds } from "./timeUtil";
 
 export interface ConfigType {
     title: string;
     start: Date;
     end: Date;
     subjectId: string;
+}
+
+export const getAllTimestampsFromEvent = (event: EventModel): Timestamp[] => {
+    if (event.interval === 'once') {
+        return [event.firstStart];
+    } else {
+
+        let curSecs = event.firstStart.seconds;
+        const endSecs = event.endAt.seconds;
+        const delta = getSecondsFromIntervalType(event.interval);
+
+        const out = [];
+        while (curSecs <= endSecs) {
+            out.push(getTimestampFromSeconds(curSecs));
+            curSecs += delta;
+        }
+        return out;
+
+    }
 }
 
 export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): ConfigType[] => {
@@ -27,12 +46,13 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
 
         const out = [];
         while (curSecs <= endSecs) {
-            out.push({
-                title: event.type,
-                start: getDateFromSeconds(curSecs),
-                end: getDateFromSeconds(curSecs + duration),
-                subjectId: event.subjectId,
-            });
+            if (!containsTimestamp(getTimestampFromSeconds(curSecs), event.exclusions))
+                out.push({
+                    title: event.type,
+                    start: getDateFromSeconds(curSecs),
+                    end: getDateFromSeconds(curSecs + duration),
+                    subjectId: event.subjectId,
+                });
             curSecs += delta;
         }
         return out;

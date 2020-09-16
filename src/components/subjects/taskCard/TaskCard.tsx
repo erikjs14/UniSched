@@ -3,27 +3,30 @@ import DateTimePicker from 'react-datepicker';
 
 import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
-import { TaskModel, IntervalOptions } from '../../../firebase/model';
+import { TaskModel, IntervalOptions, Timestamp } from '../../../firebase/model';
 import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo, allTasksChecked } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
 import Input from '../../ui/input/Input';
-import { toaster } from 'evergreen-ui';
+import { toaster, Button, Tooltip, InfoSignIcon } from 'evergreen-ui';
+import ExclusionsDialog from '../exclusionsDialog/ExclusionsDialog';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
     checkAddInfo: s_checkAddInfo,
     addInfoTextarea: s_addInfoTextarea,
+    infoIcon: s_infoIcon,
 } = CSS;
 
 export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
 
     const [inputTouched, setInputTouched] = useState(false);
+    const [exclDialogShown, setExclDialogShown] = useState(false);
 
     const { onChange } = props;
-    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, star, additionalInfo } = props.data;
+    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, star, additionalInfo, exclusions } = props.data;
     const changeHandler = useCallback((config: TaskConfig) => {
         const [timestamps, timestampsDone] = getEditedTimestamps(config, oldTimestamps, oldTimestampsDone);
         onChange('timestamps', timestamps);
@@ -121,27 +124,51 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                     />
                 </div>
 
+                {interval !== 'once' &&
                     <div className={toCss(s_row)} >
                         <span>
-                            Add Info
-                            <Input 
-                                addClass={s_checkAddInfo} 
-                                label='' 
-                                elementType='simple-checkbox' 
-                                value={additionalInfo ? true : false} 
-                                onChange={() => !additionalInfo ? onChange('additionalInfo', {text: ''}) : onChange('additionalInfo', null)} 
-                            />
+                            Exclusions
+                            <Tooltip content='Select dates that you wish to be excluded.'>
+                                <InfoSignIcon className={toCss(s_infoIcon)} />
+                            </Tooltip>
                         </span>
-                        {additionalInfo && 
-                            <Input
-                                addClass={s_addInfoTextarea} 
-                                label='Add Info'
-                                elementType='text-area'
-                                value={additionalInfo.text}
-                                onChange={newText => onChange('additionalInfo', {text: newText})}
-                            />
-                        }
+                        <Button
+                            iconBefore='edit'
+                            onClick={() => setExclDialogShown(prev => !prev)}
+                        >
+                            Edit
+                        </Button>
+                        <ExclusionsDialog 
+                            show={exclDialogShown} 
+                            onCloseComplete={() => setExclDialogShown(false)}
+                            availableDates={oldTimestamps}
+                            selectedExclusions={exclusions}
+                            onChangeConfirmed={exclusions => props.onChange<Timestamp[]>('exclusions', exclusions)}
+                        />
                     </div>
+                }
+
+                <div className={toCss(s_row)} >
+                    <span>
+                        Add Info
+                        <Input 
+                            addClass={s_checkAddInfo} 
+                            label='' 
+                            elementType='simple-checkbox' 
+                            value={additionalInfo ? true : false} 
+                            onChange={() => !additionalInfo ? onChange('additionalInfo', {text: ''}) : onChange('additionalInfo', null)} 
+                        />
+                    </span>
+                    {additionalInfo && 
+                        <Input
+                            addClass={s_addInfoTextarea} 
+                            label='Add Info'
+                            elementType='text-area'
+                            value={additionalInfo.text}
+                            onChange={newText => onChange('additionalInfo', {text: newText})}
+                        />
+                    }
+                </div>
 
         </SettingsCard>
     );

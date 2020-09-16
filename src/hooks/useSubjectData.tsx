@@ -390,6 +390,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     endAt: event.endAt,
                     interval: event.interval,
                     timeCreated: event.timeCreated,
+                    exclusions: event.exclusions,
                 };
                 out[event.id] = data;
             });
@@ -416,6 +417,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     star: task.star,
                     additionalInfo: task.additionalInfo,
                     deleted: task.deleted,
+                    exclusions: task.exclusions,
                 };
                 out[task.id] = data;
             });
@@ -441,6 +443,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                     endAt: datum.endAt,
                     interval: datum.interval,
                     timeCreated: datum.timeCreated,
+                    exclusions: datum.exclusions,
                 };
                 out.push(data);
             }
@@ -471,6 +474,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                     star: datum.star,
                     additionalInfo: datum.additionalInfo,
                     deleted: datum.deleted,
+                    exclusions: datum.exclusions,
                 };
                 out.push(data);
             }

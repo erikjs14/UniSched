@@ -19,6 +19,7 @@ export const EVENTS_START_STATE: EventModel = {
     interval: 'weekly',
     type: '',
     timeCreated: undefined,
+    exclusions: [],
 };
 
 export const EXAM_START_STATE: ExamModel = {
@@ -38,6 +39,7 @@ export const TASK_START_STATE: TaskModel = {
     star: false,
     additionalInfo: null,
     deleted: false,
+    exclusions: [],
 }
 export const getTaskStartState = (): TaskModel => ({
     type: '',
@@ -47,6 +49,7 @@ export const getTaskStartState = (): TaskModel => ({
     star: false,
     additionalInfo: null,
     deleted: false,
+    exclusions: [],
 });
 
 export const TOASTER_SHOW_DURATION = 4;
