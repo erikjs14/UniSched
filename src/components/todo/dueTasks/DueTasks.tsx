@@ -125,7 +125,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     const allTasks = semTasks.map((tasksOneDay, idx) => {
         //check if limit reached
-        if (idx + 1 > showDays) return null;
+        if ((!onlyStars && idx + 1 > showDays) || ( onlyStars && starsPerDay.reduce((prev, cur, lidx) => lidx <= idx && cur > 0 ? prev + 1 : prev , 0) > showDays ) ) return null;
         //check for stars
         if (onlyStars && starsPerDay[idx] < 1) return null;
 
@@ -204,7 +204,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             {todayView}
             {allTasks}
             <div className={toCss(s_showMoreLessArea)} >
-                {showDays < semTasks.length - 1 &&
+                {(!onlyStars ? (showDays < semTasks.length - 1) : (showDays < amountStars) ) &&
                     <span className={toCss(s_showMore)}  onClick={showMore}>
                         Show More
                     </span>
