@@ -46,7 +46,6 @@ export function* fetchSpaces(action: FetchSpacesAC) {
 export function* fetchShallowSubjects() {
     try {
         const data = yield fetchSubjectsShallow();
-        console.log(data);
         yield put(actions.fetchShallowSubjectsSuccess(data));
     } catch (error) {
         yield put(actions.fetchShallowSubjectsFail(error.message || error));

@@ -5,7 +5,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 
 firebase.initializeApp(firebaseConfig);
-export const db = firebase.firestore();
+export let db = firebase.firestore();
 
 export const authUI: auth.AuthUI = new auth.AuthUI(firebase.auth());
 

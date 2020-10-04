@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, Suspense, useState } from 'react';
 import './App.scss';
 import { Switch, Redirect, Route, useLocation } from 'react-router-dom';
 import AntiProtectedRoute from './components/util/AntiProtectedRoute/AntiProtectedRoute';
@@ -11,6 +11,8 @@ import { Helmet } from 'react-helmet';
 import ProtectedRoute from './components/util/ProtectedRoute/ProtectedRoute';
 import {fetchUserData, setSignedIn, fetchShallowSubjects, setSignedOut, fetchSpaces} from './store/actions';
 import { RootState } from '.';
+import { USER_COL } from './firebase/fields';
+import { db } from './firebase/firebase';
 
 const Layout = React.lazy(() => import('./hoc/layout/Layout'));
 const AnimatedSwitch = React.lazy(() => import('./hoc/AnimatedRoutes/AnimatedSwitch'));
@@ -34,14 +36,28 @@ function App() {
 
     const dispatch = useDispatch();
 
+    const [connError, setConnError] = useState(false);
+
     // set listener once
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
-                dispatch(fetchUserData());
                 dispatch(setSignedIn(user));
-                dispatch(fetchShallowSubjects());
-                dispatch(fetchSpaces(undefined));
+
+                // Check if connection is stable, if not, some error has occurred
+                db.collection(USER_COL).doc(firebase.auth().currentUser?.uid).get()
+                .then((snap) => {
+                    if (snap.exists && !snap.metadata.fromCache) {
+                        dispatch(fetchUserData());
+                        dispatch(fetchShallowSubjects());
+                        dispatch(fetchSpaces(undefined));
+                    } else {
+                        throw Error;
+                    }
+                })
+                .catch(e => {
+                    setConnError(true);
+                })
             } else {
                 dispatch(setSignedOut());
             }
@@ -49,8 +65,12 @@ function App() {
     }, [dispatch]);
 
     const location = useLocation();
-
     const loading = useSelector((state: RootState) => state.user?.globalLoading);
+
+    if (connError) {
+        return <h4>Connection Error. Refresh page!</h4>
+    }
+
     if (loading && location.pathname !== '/') {
         // display global page load animation here
         return <h1>LOADING...</h1>;
