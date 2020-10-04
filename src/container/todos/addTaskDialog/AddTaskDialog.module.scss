@@ -5,7 +5,7 @@
     position: relative;
     height: 30rem;
     @include respond(phone) { height: 40rem;}
-    max-height: calc(100vh - 36vmin - 128px);
+    max-height: calc(100vh - 36vmin - 150px);
     overflow: hidden;
 
     .angleLeft,

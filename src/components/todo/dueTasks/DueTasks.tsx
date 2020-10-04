@@ -43,7 +43,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     }, [starsPerDay]);
 
     const minShowDayLimit = useMemo((() => {
-        if (!props.limitDaysInFuture) 
+        if (!props.limitDaysInFuture && props.limitDaysInFuture !== 0) 
             return 5;
         let limit = 0;
         for (let tasksOneDay of semTasks) {
