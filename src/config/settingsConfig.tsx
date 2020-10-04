@@ -20,6 +20,7 @@ export const EVENTS_START_STATE: EventModel = {
     type: '',
     timeCreated: undefined,
     exclusions: [],
+    additionalInfo: null,
 };
 
 export const EXAM_START_STATE: ExamModel = {
@@ -29,6 +30,7 @@ export const EXAM_START_STATE: ExamModel = {
         nanoseconds: 0
     },
     timeCreated: undefined,
+    additionalInfo: null,
 }
 
 export const TASK_START_STATE: TaskModel = {

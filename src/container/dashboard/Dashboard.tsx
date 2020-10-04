@@ -124,13 +124,13 @@ export default function(): JSX.Element {
     }, [dispatch]);
     
     const eventClickHandler = useCallback(({event}) => {
-        const {subjectName, eventName, startStr, endStr} = getSubAndTitleAndTimeFromEventTitle(event)
+        const {subjectName, eventName, timeStr} = getSubAndTitleAndTimeFromEventTitle(event)
         toaster.notify(
             eventName, 
             {
                 id: 'unique',
                 duration: 2,
-                description: `${startStr} - ${endStr} ${subjectName}`,
+                description: timeStr + ` ${subjectName}`,
             }
         );
     }, []);

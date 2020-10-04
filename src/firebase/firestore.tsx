@@ -134,6 +134,7 @@ export const fetchExams = async (subjectId: string): Promise<models.ExamModelWit
         start: dataWithId.data?.start,
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
+        additionalInfo: dataWithId.data?.additionalInfo || null,
     }));
 
     return exams;
@@ -147,6 +148,7 @@ export const fetchExam = async (subjectId: string, examId: string): Promise<mode
         start: docWithId.data?.start,
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
+        additionalInfo: docWithId.data?.additionalInfo || null,
     };
 }
 
@@ -164,6 +166,7 @@ export const fetchEvents = async (subjectId: string): Promise<models.EventModelW
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
         exclusions: dataWithId.data?.exclusions || [],
+        additionalInfo: dataWithId.data?.additionalInfo || null,
     }));
 
     return events;
@@ -181,6 +184,7 @@ export const fetchEvent = async (subjectId: string, eventId: string): Promise<mo
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
         exclusions: docWithId.data?.exclusions || [],
+        additionalInfo: docWithId.data?.additionalInfo || null,
     };
 }
 

@@ -17,10 +17,13 @@ const {
     row: s_row,
     intervalOptions: s_intervalOptions,
     infoIcon: s_infoIcon,
+    checkAddInfo: s_checkAddInfo,
+    addInfoTextarea: s_addInfoTextarea,
 } = CSS;
 
 export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
     
+    const { additionalInfo } = props.data;
     const [exclDialogShown, setExclDialogShown] = useState(false);
 
     return (
@@ -147,6 +150,28 @@ export default function(props: SubjectDataCardProps<EventModel>): JSX.Element {
                         />
                     </div>
                 }
+
+                <div className={toCss(s_row)} >
+                    <span>
+                        Add Info
+                        <Input 
+                            addClass={s_checkAddInfo} 
+                            label='' 
+                            elementType='simple-checkbox' 
+                            value={additionalInfo ? true : false} 
+                            onChange={() => !additionalInfo ? props.onChange<{text: string;}|null>('additionalInfo', {text: ''}) : props.onChange<{text: string;}|null>('additionalInfo', null)} 
+                        />
+                    </span>
+                    {additionalInfo && 
+                        <Input
+                            addClass={s_addInfoTextarea} 
+                            label='Add Info'
+                            elementType='text-area'
+                            value={additionalInfo.text}
+                            onChange={newText => props.onChange<{text: string;}|null>('additionalInfo', {text: newText as string})}
+                        />
+                    }
+                </div>
 
         </SettingsCard>
     );

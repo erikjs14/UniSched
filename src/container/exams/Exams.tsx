@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useMemo, Fragment } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import FullCalendar from '@fullcalendar/react';
 import Loader from '../../components/ui/loader/Loader';
@@ -21,6 +21,8 @@ import { ExamConfigType } from '../../store/reducers/data';
 import { isInFuture } from '../../util/timeUtil';
 import { PREF_ID_SHOW_ONLY_FUTURE_EXAMS } from './../../config/userPreferences';
 import Input from '../../components/ui/input/Input';
+import { getSubAndTitleAndTimeFromEventTitle } from '../../util/scheduleUtil';
+import { toaster } from 'evergreen-ui';
 
 const {
     wrapperCalendar: s_wrapperCalendar,
@@ -75,6 +77,27 @@ export default function() {
 
     const userPrefersOnlyFutureExams = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_SHOW_ONLY_FUTURE_EXAMS]);
 
+    const eventClickHandler = useCallback(({event}) => {
+        const {subjectName, eventName, timeStr} = getSubAndTitleAndTimeFromEventTitle(event);
+        const addInfoText = event.extendedProps?.additionalInfoText;
+
+        const descr = (
+            <Fragment>
+                <p> {`${timeStr} ${subjectName}`} </p>
+                {addInfoText && <p>{addInfoText}</p>}
+            </Fragment>
+        );
+
+        toaster.notify(
+            eventName, 
+            {
+                id: 'unique',
+                duration: 2,
+                description: descr,
+            }
+        );
+    }, []);
+
     if (loading) {
         return <Loader />;
     } else if (error || !filteredSubjects || !filteredExamsConfig) {
@@ -113,6 +136,7 @@ export default function() {
                         ? filteredExamsConfig.filter(examConfig => isInFuture((examConfig as ExamConfigType).start))
                         : filteredExamsConfig 
                     }
+                    eventClick={eventClickHandler}
                     eventTimeFormat={CALENDAR_DEFAULT_TIME_FORMAT}
                 />
             </div>

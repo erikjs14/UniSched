@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
 import { toaster } from 'evergreen-ui';
@@ -97,13 +97,22 @@ export default function() {
     }, [dispatch, examsConfig, examsError, examsLoading, examsTimestamp, subjects]);
 
     const eventClickHandler = useCallback(({event}) => {
-        const {subjectName, eventName, startStr, endStr} = getSubAndTitleAndTimeFromEventTitle(event)
+        const {subjectName, eventName, timeStr} = getSubAndTitleAndTimeFromEventTitle(event);
+        const addInfoText = event.extendedProps?.additionalInfoText;
+
+        const descr = (
+            <Fragment>
+                <p> {`${timeStr} ${subjectName}`} </p>
+                {addInfoText && <p>{addInfoText}</p>}
+            </Fragment>
+        );
+
         toaster.notify(
             eventName, 
             {
                 id: 'unique',
                 duration: 2,
-                description: `${startStr} - ${endStr} ${subjectName}`,
+                description: descr,
             }
         );
     }, []);

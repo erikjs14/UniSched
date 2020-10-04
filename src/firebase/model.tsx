@@ -38,6 +38,9 @@ export interface DeepSubjectModel extends SubjectModelWithId{
 
 export interface SubjectDataModel extends BaseModel {
     type: string;
+    additionalInfo: {
+        text: string;
+    } | null;
 }
 
 export interface SubjectDataModelWithId extends SubjectDataModel, ModelWithId, ModelWithSubjectId {}
@@ -62,9 +65,6 @@ export interface TaskModel extends SubjectDataModel {
     timestamps: Timestamp[];
     timestampsDone: Timestamp[];
     star: boolean;
-    additionalInfo: {
-        text: string;
-    } | null;
     deleted: boolean;
     exclusions: Timestamp[];
 }

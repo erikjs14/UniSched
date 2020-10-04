@@ -6,6 +6,7 @@ export interface ConfigType {
     start: Date;
     end: Date;
     subjectId: string;
+    additionalInfoText: string|null|undefined;
 }
 
 export const getAllTimestampsFromEvent = (event: EventModel): Timestamp[] => {
@@ -36,6 +37,7 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
             start: getDateFromTimestamp(event.firstStart),
             end: getDateFromTimestamp(event.firstEnd),
             subjectId: event.subjectId,
+            additionalInfoText: event.additionalInfo?.text,
         }];
 
     } else {
@@ -43,6 +45,8 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
         let curSecs = event.firstStart.seconds;
         const endSecs = event.endAt.seconds;
         const delta = getSecondsFromIntervalType(event.interval);
+
+        const additionalInfoText = event.additionalInfo?.text;
 
         const out = [];
         while (curSecs <= endSecs) {
@@ -52,6 +56,7 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
                     start: getDateFromSeconds(curSecs),
                     end: getDateFromSeconds(curSecs + duration),
                     subjectId: event.subjectId,
+                    additionalInfoText,
                 });
             curSecs += delta;
         }
@@ -66,6 +71,7 @@ export const getFullCalendarConfigFromExam = (exam: ExamModelWithId): ConfigType
         start: getDateFromTimestamp(exam.start),
         end: getDateFromTimestamp(exam.start),
         subjectId: exam.subjectId,
+        additionalInfoText: exam.additionalInfo?.text,
     };
 }
 
@@ -91,14 +97,18 @@ export const getAllConfigFromExams = (exams: ExamModelWithId[]): Array<ConfigTyp
 }
 
 const leadZero = (time: number): string => time < 10 ? `0${time}` : ''+time;
-export const getSubAndTitleAndTimeFromEventTitle = (event: any): {subjectName: string; eventName: string, startStr: string, endStr: string} => {
+export const getSubAndTitleAndTimeFromEventTitle = (event: any): {subjectName: string; eventName: string, timeStr: string} => {
     const [first, second] = event.title.split(']');
     const start: Date = event.start;
+    const startStr = `${leadZero(start.getHours())}:${leadZero(start.getMinutes())}`;
     const end: Date = event.end;
+
+    const timeStr = end
+        ? startStr + ` - ${leadZero(end.getHours())}:${leadZero(end.getMinutes())}`
+        : startStr;
     return {
         subjectName: first.slice(1),
         eventName: second,
-        startStr: `${leadZero(start.getHours())}:${leadZero(start.getMinutes())}`,
-        endStr: `${leadZero(end.getHours())}:${leadZero(end.getMinutes())}`,
+        timeStr,
     };
 }

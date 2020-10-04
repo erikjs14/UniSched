@@ -391,6 +391,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     interval: event.interval,
                     timeCreated: event.timeCreated,
                     exclusions: event.exclusions,
+                    additionalInfo: event.additionalInfo,
                 };
                 out[event.id] = data;
             });
@@ -402,6 +403,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     type: exam.type,
                     start: exam.start,
                     timeCreated: exam.timeCreated,
+                    additionalInfo: exam.additionalInfo,
                 };
                 out[exam.id] = data;
             });
@@ -444,6 +446,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                     interval: datum.interval,
                     timeCreated: datum.timeCreated,
                     exclusions: datum.exclusions,
+                    additionalInfo: datum.additionalInfo,
                 };
                 out.push(data);
             }
@@ -457,6 +460,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                     type: datum.type,
                     start: datum.start,
                     timeCreated: datum.timeCreated,
+                    additionalInfo: datum.additionalInfo,
                 };
                 out.push(data);
             }
