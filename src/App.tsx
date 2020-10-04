@@ -42,13 +42,13 @@ function App() {
     useEffect(() => {
         firebase.auth().onAuthStateChanged(user => {
             if (user) {
-                dispatch(setSignedIn(user));
 
                 // Check if connection is stable, if not, some error has occurred
                 db.collection(USER_COL).doc(firebase.auth().currentUser?.uid).get()
                 .then((snap) => {
                     if (snap.exists && !snap.metadata.fromCache) {
                         dispatch(fetchUserData());
+                        dispatch(setSignedIn(user));
                         dispatch(fetchShallowSubjects());
                         dispatch(fetchSpaces(undefined));
                     } else {
