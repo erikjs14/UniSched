@@ -32,6 +32,10 @@ export const PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT = 'futureTasksTodoViewLimit';
 export const PREF_ID_DAY_STARTS_AT = 'dayStartsAt';
 export const PREF_ID_SHOW_ONLY_RELEVANT_TASKS = 'showOnlyRelevantTasks';
 export const PREF_ID_SHOW_ALL_TASKS_FOR_X_DAYS = 'showAllTasksForXDays';
+export const PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EVENT = 'showReminderNotificationBeforeEvent';
+export const PREF_ID_MINUTES_BEFORE_EVENT_NOTIFICATION = 'remindBeforeEvent';
+export const PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM = 'showReminderNotificationBeforeExam';
+export const PREF_ID_HOURS_BEFORE_EXAM_NOTIFICATION = 'remindBeforeExam';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
 export const PREFERENCES_CONFIG: PreferenceConfig[] = [
@@ -105,6 +109,46 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
             id: PREF_ID_SHOW_ONLY_RELEVANT_TASKS,
             value: true,
         }
+    },
+    {
+      id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EVENT,
+      type: 'boolean',
+      name: 'Get notifications before events',
+      description: 'Push a notification to the user before every event',
+      default: false,
+    },
+    {
+      id: PREF_ID_MINUTES_BEFORE_EVENT_NOTIFICATION,
+      type: 'integer',
+      name: 'Minutes to event',
+      description: 'The amount of minutes before an event starts, when a reminding notification shall be pushed to the user.',
+      default: 0,
+      min: 0,
+      step: 1,
+      constraint: {
+        id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EVENT,
+        value: true
+      },
+    },
+    {
+      id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM,
+      type: 'boolean',
+      name: 'Get notifications before exams',
+      description: 'Push a notification to the user before every exam',
+      default: false,
+    },
+    {
+      id: PREF_ID_HOURS_BEFORE_EXAM_NOTIFICATION,
+      type: 'integer',
+      name: 'Hours to exam',
+      description: 'The amount of hours before an exam starts, when a reminding notification shall be pushed to the user.',
+      default: 0,
+      min: 0,
+      step: 1,
+      constraint: {
+        id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM,
+        value: true
+      },
     },
 ]
 
