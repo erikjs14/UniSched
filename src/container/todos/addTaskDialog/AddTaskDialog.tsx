@@ -353,7 +353,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     
     if (!props.isShown) return null;
 
-    console.log(pageCnt)
+    console.log(chrono.parse('15 minutes before'));
     return (
         <Dialog
             isShown={props.isShown}

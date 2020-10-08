@@ -4,6 +4,7 @@ import { Switch, Tooltip, InfoSignIcon } from 'evergreen-ui';
 import CSS from './PreferenceRow.module.scss';
 import { PreferenceRowProps } from './PreferenceRow.d';
 import { toCss } from '../../../util/util';
+import { registerNotificationsWorker } from '../../../util/subscription';
 const {
     wrapper: s_wrapper,
     name: s_name,
@@ -19,7 +20,12 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
             inputEl = (
                 <Switch
                     checked={props.value}
-                    onChange={e => props.onChange(e.target.checked)}
+                    onChange={e => {
+                        props.onChange(e.target.checked);
+                        if (props.config.uponActivation && e.target.checked) {
+                            registerNotificationsWorker();
+                        }
+                    }}
                 />
             );
             break;

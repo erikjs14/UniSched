@@ -108,6 +108,47 @@
                 max-width: initial;
             }
         }
+
+        .addNotificationsArea {
+            margin-left: 2rem;
+
+            .notRow {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                input {
+                    min-width: 30rem;
+                    background-color: rgba(#fff, .05);
+                    border-radius: 5px;
+                    padding: 2px 10px;
+                }
+
+                button {
+                    margin-left: 3rem;
+                }
+
+                &.notRowNots {
+                    flex-direction: column;
+
+                    .not {
+                        width: 100%;
+                        margin-top: 1rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+
+                        span {
+
+                        }
+
+                        button {
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .btnRow {

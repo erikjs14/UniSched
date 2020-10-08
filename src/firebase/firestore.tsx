@@ -203,6 +203,7 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
         additionalInfo: dataWithId.data?.additionalInfo || null,
         deleted: dataWithId.data?.deleted,
         exclusions: dataWithId.data?.exclusions || [],
+        notifications: dataWithId.data?.notifications || [],
     }));
     
     return tasks;
@@ -221,6 +222,7 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
         additionalInfo: docWithId.data?.additionalInfo || null,
         deleted: docWithId.data?.deleted,
         exclusions: docWithId.data?.exclusions || [],
+        notifications: docWithId.data?.exclusions || [],
     };
 }
 
@@ -290,6 +292,14 @@ export const updatePreference = async (id: PreferenceId, value: any): Promise<vo
     await user_ref().update({
         [fullId]: value,
     })
+}
+
+export const saveSubscription = async (sub: PushSubscriptionJSON): Promise<void> => {
+    // await user_ref().set(
+    //     { subscriptions: firebase.firestore.FieldValue.arrayUnion(sub)},
+    //     { merge: true },
+    // );
+    await user_ref().collection('subscriptions').add(sub);
 }
 
 export const updateUser = async <D extends keyof models.UserModel>(data: Pick<models.UserModel, D>): Promise<void> => {

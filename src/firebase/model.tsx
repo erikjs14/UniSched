@@ -67,5 +67,6 @@ export interface TaskModel extends SubjectDataModel {
     star: boolean;
     deleted: boolean;
     exclusions: Timestamp[];
+    notifications: number[]; // as number of seconds before task
 }
 export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}

@@ -42,6 +42,7 @@ export const TASK_START_STATE: TaskModel = {
     additionalInfo: null,
     deleted: false,
     exclusions: [],
+    notifications: [],
 }
 export const getTaskStartState = (): TaskModel => ({
     type: '',
@@ -52,6 +53,7 @@ export const getTaskStartState = (): TaskModel => ({
     additionalInfo: null,
     deleted: false,
     exclusions: [],
+    notifications: [],
 });
 
 export const TOASTER_SHOW_DURATION = 4;

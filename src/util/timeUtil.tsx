@@ -1,7 +1,8 @@
 import { Timestamp, TaskModel, IntervalType, TaskModelWithId } from './../firebase/model';
 import { getResult } from './util';
-import { format, formatDistanceToNow, differenceInMonths, addMonths, getDaysInMonth, differenceInDays, differenceInWeeks, differenceInYears } from 'date-fns';
+import { format, formatDistanceToNow, differenceInMonths, addMonths, getDaysInMonth, differenceInDays, differenceInWeeks, differenceInYears, formatDistanceStrict } from 'date-fns';
 import { DEFAULT_DATE_FORMAT, DEFAULT_TIME_FORMAT, TIME_INTERVAL_SELECT, DEFAULT_DATETIME_FORMAT } from './../config/timeConfig';
+const levenshtein = require('fast-levenshtein');
 
 export const containsTimestamp = (toCheck: Timestamp, array: Timestamp[]): boolean => {
     let contained = false;
@@ -576,3 +577,59 @@ export const HTMLStringToDate = (dateStr: string, hours: number, minutes: number
 }
 
 export const getCurrentTimestamp = (): Timestamp => getTimestampFromDate(new Date());
+
+export const toTimePriorNatural = (timeInSec: number): string => {
+    const now = new Date();
+    const then = addSeconds(now, timeInSec);
+    return formatDistanceStrict(now, then) + ' before';
+}
+
+const secTerms = ['second', 'sekunde', 'sec', 'sek'];
+const minTerms = ['minute', 'minutes', 'min'];
+const hourTerms = ['hour', 'stunde'];
+const dayTerms = ['day', 'tag'];
+const monthTerms = ['month', 'monat'];
+const yearTerms = ['year', 'jahr'];
+const termContained = (check: string, terms: string[]): boolean => {
+    let toCheck = check.toLowerCase();
+    if (toCheck[toCheck.length - 1] === ',') toCheck = toCheck.substring(0, toCheck.length - 1);
+    if (toCheck[toCheck.length - 1] === 's' || toCheck[toCheck.length - 1] === 'n') toCheck = toCheck.substring(0, toCheck.length - 1);
+    return terms.some(term => levenshtein.get(toCheck, term) <= 2);
+}
+export const naturalToTimePeriod = (text: string): number => {
+    let periodInSec = 0;
+
+    const parts = text.split(' ');
+    const secIdx = parts.findIndex(t => termContained(t, secTerms));
+    if (secIdx > 0) {
+        const num = Number(parts[secIdx-1]);
+        if (num) periodInSec += Math.floor(num);
+    }
+    const minIdx = parts.findIndex(t => termContained(t, minTerms));
+    if (minIdx > 0) {
+        const num = Number(parts[minIdx-1]);
+        if (num) periodInSec += Math.floor(num * 60);
+    }
+    const hourIdx = parts.findIndex(t => termContained(t, hourTerms));
+    if (hourIdx > 0) {
+        const num = Number(parts[hourIdx-1]);
+        if (num) periodInSec += Math.floor(num * 60 * 60);
+    }
+    const dayIdx = parts.findIndex(t => termContained(t, dayTerms));
+    if (dayIdx > 0) {
+        const num = Number(parts[dayIdx-1]);
+        if (num) periodInSec += Math.floor(num * 60 * 60 * 24);
+    }
+    const monthIdx = parts.findIndex(t => termContained(t, monthTerms));
+    if (monthIdx > 0) {
+        const num = Number(parts[monthIdx-1]);
+        if (num) periodInSec += Math.floor(num * 60 * 60 * 24 * 30.5);
+    }
+    const yearIdx = parts.findIndex(t => termContained(t, yearTerms));
+    if (yearIdx > 0) {
+        const num = Number(parts[yearIdx-1]);
+        if (num) periodInSec += Math.floor(num * 60 * 60 * 24 * 30.5 * 365);
+    }
+
+    return periodInSec;
+}

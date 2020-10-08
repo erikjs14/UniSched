@@ -420,6 +420,7 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     additionalInfo: task.additionalInfo,
                     deleted: task.deleted,
                     exclusions: task.exclusions,
+                    notifications: task.notifications,
                 };
                 out[task.id] = data;
             });
@@ -479,6 +480,7 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                     additionalInfo: datum.additionalInfo,
                     deleted: datum.deleted,
                     exclusions: datum.exclusions,
+                    notifications: datum.notifications,
                 };
                 out.push(data);
             }
