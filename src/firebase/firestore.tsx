@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import { db } from './firebase';
 import * as models from './model';
+import { withUserId } from './model';
 import * as fields from './fields';
 import { PreferenceId } from '../config/userPreferences';
 import { getCurrentTimestamp } from './../util/timeUtil';
@@ -262,15 +263,15 @@ export const addSubject = async (subject: models.SubjectModel): Promise<string> 
 }
 
 export const addTask = async (subjectId: string, task: models.TaskModel): Promise<string> => {
-    return await addDoc(tasks_ref(subjectId), task);
+    return await addDoc(tasks_ref(subjectId), withUserId(task));
 }
 
 export const addEvent = async (subjectId: string, event: models.EventModel): Promise<string> => {
-    return await addDoc(events_ref(subjectId), event);
+    return await addDoc(events_ref(subjectId), withUserId(event));
 }
 
 export const addExam = async (subjectId: string, exam: models.ExamModel): Promise<string> => {
-    return await addDoc(exams_ref(subjectId), exam);
+    return await addDoc(exams_ref(subjectId), withUserId(exam));
 }
 
 /************ UPDATING DATA ****************/

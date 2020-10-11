@@ -1,4 +1,5 @@
 /******** Data model used in firestore db **********/
+import firebase from 'firebase/app';
 import { PreferencesState } from './../config/userPreferences';
 
 export interface ModelWithId {
@@ -70,3 +71,14 @@ export interface TaskModel extends SubjectDataModel {
     notifications: number[]; // as number of seconds before task
 }
 export interface TaskModelWithId extends TaskModel, SubjectDataModelWithId {}
+
+export interface ModelWithUserId extends BaseModel {
+    userId: string;
+}
+export const withUserId = (data: any): ModelWithUserId => {
+    if (data.userId) return data;
+    return {
+        ...data,
+        userId: firebase.auth().currentUser?.uid,
+    };
+}

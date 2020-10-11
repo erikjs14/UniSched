@@ -22,7 +22,7 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                     checked={props.value}
                     onChange={e => {
                         props.onChange(e.target.checked);
-                        if (props.config.uponActivation && e.target.checked) {
+                        if (props.config.uponActivation === 'activateNotifications' && e.target.checked) {
                             registerNotificationsWorker();
                         }
                     }}
