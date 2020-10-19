@@ -19,16 +19,19 @@ const getTimeTil = (from, to) => {
         return 'In ' + ( Math.round(diff/60000) ) + ' minutes';
     } else if (diff < 86400000) { // less than one day
         const h = Math.floor(diff/3600000);
-        return 'In ' + ( h ) + ' hours and ' + ( Math.round((diff-h*3600000)/60000) ) + ' minutes';
+        return 'In ' + ( h ) + ( h > 1 ? ' hours and' : ' hour and ') + ( Math.round((diff-h*3600000)/60000) ) + ' minutes';
     } else if (diff < 2592000000) { // less than a month (30 days)
         const d = Math.floor(diff/86400000);
-        return 'In ' + ( d ) + ' days and ' + ( Math.round((diff-d*86400000)/3600000)) + ' hours';
+        const h = Math.round((diff-d*86400000)/3600000);
+        return 'In ' + ( d ) + ( d > 1 ? ' days and ' : ' day and ') + ( h ) + ( h > 1 ? ' hours' : ' hour');
     } else if (diff < 31557600000) { // less than a year
         const m = Math.floor(diff/2592000000);
-        return 'In ' + ( m ) + ' months and ' + ( Math.round((diff - m*2592000000)/86400000) ) + ' days';
+        const d = Math.round((diff - m*2592000000)/86400000);
+        return 'In ' + ( m ) + ( m > 1 ? ' months and ' : ' month and ') + ( d ) + ( d > 1 ? ' days' : ' day');
     } else {
         const y = Math.floor(diff/31557600000);
-        return 'In ' + ( y ) + ' years and ' + ( Math.round((diff - y*31557600000)/2592000000)) + ' months';
+        const m = Math.round((diff - y*31557600000)/2592000000);
+        return 'In ' + ( y ) + ( y > 1 ? ' years and ' : ' year and ') + ( m ) + ( m > 1 ? ' months' : ' month');
     }
 }
 const getOptionsFromEvent = eventData => {
