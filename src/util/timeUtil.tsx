@@ -634,3 +634,26 @@ export const naturalToTimePeriod = (text: string): number => {
 
     return periodInSec * 1000; // saved in ms
 }
+
+export const periodToNatural = (ms: number): string => {
+    if (ms < 60000) {// less than a minute
+        return '1 min';
+    } else if (ms < 3600000) { // less than one hour
+        return ( Math.round(ms/60000) ) + ' min';
+    } else if (ms < 86400000) { // less than one day
+        const h = Math.floor(ms/3600000);
+        return ( h ) + ( h > 1 ? ' hours, ' : ' hour, ') + ( Math.round((ms-h*3600000)/60000) ) + ' min';
+    } else if (ms < 2592000000) { // less than a month (30 days)
+        const d = Math.floor(ms/86400000);
+        const h = Math.round((ms-d*86400000)/3600000);
+        return ( d ) + ( d > 1 ? ' days, ' : ' day, ') + ( h ) + ( h > 1 ? ' hours' : ' hour');
+    } else if (ms < 31557600000) { // less than a year
+        const m = Math.floor(ms/2592000000);
+        const d = Math.round((ms - m*2592000000)/86400000);
+        return ( m ) + ( m > 1 ? ' months, ' : ' month, ') + ( d ) + ( d > 1 ? ' days' : ' day');
+    } else {
+        const y = Math.floor(ms/31557600000);
+        const m = Math.round((ms - y*31557600000)/2592000000);
+        return ( y ) + ( y > 1 ? ' years, ' : ' year, ') + ( m ) + ( m > 1 ? ' months' : ' month');
+    }
+}

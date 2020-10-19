@@ -24,10 +24,10 @@ const getTimeTil = (from, to) => {
         const d = Math.floor(diff/86400000);
         return 'In ' + ( d ) + ' days and ' + ( Math.round((diff-d*86400000)/3600000)) + ' hours';
     } else if (diff < 31557600000) { // less than a year
-        const m = Math.floow(diff/2592000000);
-        return 'In ' ( m ) + ' months and ' + ( Math.round((diff - m*2592000000)/86400000) ) + ' days';
+        const m = Math.floor(diff/2592000000);
+        return 'In ' + ( m ) + ' months and ' + ( Math.round((diff - m*2592000000)/86400000) ) + ' days';
     } else {
-        const y = Math.floow(diff/31557600000);
+        const y = Math.floor(diff/31557600000);
         return 'In ' + ( y ) + ' years and ' + ( Math.round((diff - y*31557600000)/2592000000)) + ' months';
     }
 }

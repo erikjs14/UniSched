@@ -4,7 +4,7 @@ import DateTimePicker from 'react-datepicker';
 import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
 import { TaskModel, IntervalOptions, Timestamp } from '../../../firebase/model';
-import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo, allTasksChecked, toTimePriorNatural, naturalToTimePeriod } from './../../../util/timeUtil';
+import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo, allTasksChecked, naturalToTimePeriod, periodToNatural } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
@@ -213,7 +213,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         <div className={toCss(s_notRow, s_notRowNots)} >
                             {notifications.map((not, idx) => (
                                 <div className={toCss(s_not)} >
-                                    <span>{toTimePriorNatural(not)}</span>
+                                    <span>{periodToNatural(not)}</span>
                                     <IconButton    
                                         appearance="minimal"
                                         height={24}
