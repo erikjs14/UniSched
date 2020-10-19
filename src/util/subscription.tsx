@@ -29,7 +29,7 @@ export const registerNotificationsWorker = async () => {
             const serviceWorker = await navigator.serviceWorker.ready;
             const subscription = await serviceWorker.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: urlB64ToUint8Array('BFTpOSbLs8ZLXZhH_xRvSUKiLx5jxxxFlVY41Osz2f3jjt77l0lsrap_EfX4baQZdmzTdAzfxffTDrKx8-nkcXg')
+                applicationServerKey: urlB64ToUint8Array('BOuROBOa0bQWb9DToxTi86XnMV73cYyKgO6AzUcrVfTabWKE4BFEXZI2QlXkJyiIXpCF50iiTxuQXYkq0tixgKQ')
             });
             console.log(subscription.toJSON());
             saveSubscription(subscription.toJSON());

@@ -302,6 +302,7 @@ export const addDays = (date: Date, days: number): Date => subtractDays(date, -d
 export const addHours = (date: Date, hours: number): Date => new Date(date.getTime() + hours * 60 * 60 * 1000);
 export const subtractHours = (date: Date, hours: number): Date => new Date(date.getTime() - hours * 60 * 60 * 1000);
 export const addSeconds = (date: Date, seconds: number): Date => new Date(date.getTime() + seconds * 1000);
+export const addMilliseconds = (date: Date, ms: number): Date => new Date(date.getTime() + ms);
 export const subtractSeconds = (date: Date, seconds: number): Date => subtractSeconds(date, -seconds);
 
 export const isInFuture = (d: Date): boolean => Date.now() < d.getTime();
@@ -578,9 +579,9 @@ export const HTMLStringToDate = (dateStr: string, hours: number, minutes: number
 
 export const getCurrentTimestamp = (): Timestamp => getTimestampFromDate(new Date());
 
-export const toTimePriorNatural = (timeInSec: number): string => {
+export const toTimePriorNatural = (timeInMs: number): string => {
     const now = new Date();
-    const then = addSeconds(now, timeInSec);
+    const then = addMilliseconds(now, timeInMs);
     return formatDistanceStrict(now, then) + ' before';
 }
 
@@ -631,5 +632,5 @@ export const naturalToTimePeriod = (text: string): number => {
         if (num) periodInSec += Math.floor(num * 60 * 60 * 24 * 30.5 * 365);
     }
 
-    return periodInSec;
+    return periodInSec * 1000; // saved in ms
 }
