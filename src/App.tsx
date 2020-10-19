@@ -64,6 +64,14 @@ function App() {
         })
     }, [dispatch]);
 
+    // set id to identify the device (almost unique)
+    useEffect(() => {
+        const unisched_id = localStorage.getItem('unisched_id');
+        if (!unisched_id) {
+            localStorage.setItem('unisched_id', 'usid_'+(new Date().getTime()));
+        }
+    }, []);
+
     const location = useLocation();
     const loading = useSelector((state: RootState) => state.user?.globalLoading);
 

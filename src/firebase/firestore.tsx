@@ -300,7 +300,12 @@ export const saveSubscription = async (sub: PushSubscriptionJSON): Promise<void>
     //     { subscriptions: firebase.firestore.FieldValue.arrayUnion(sub)},
     //     { merge: true },
     // );
-    await user_ref().collection('subscriptions').add(sub);
+    const unid = localStorage.getItem('unisched_id');
+    if (unid) {
+        await user_ref().collection('subscriptions').doc(unid).set(sub);
+    } else {
+        await user_ref().collection('subscriptions').add(sub);
+    }
 }
 
 export const updateUser = async <D extends keyof models.UserModel>(data: Pick<models.UserModel, D>): Promise<void> => {
