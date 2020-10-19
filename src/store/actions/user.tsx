@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC, SetSpaceAC, FetchSpacesAC, FetchSpacesSuccessAC, FetchSpacesFailAC, AddSpaceLocallyAC, RemoveSpaceLocallyAC, AlterSpaceLocallyAC } from './user.d';
+import { SetSignedInAC, SetSignedOutAC, FetchShallowSubjectsSuccessAC, FetchShallowSubjectsFailAC, FetchShallowSubjectsAC, RemoveSubjectLocallyAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, FetchUserDataAC, SetUserDataAC, PostUserDataAC, AddUserAndDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC, SetSpaceAC, FetchSpacesAC, FetchSpacesSuccessAC, FetchSpacesFailAC, AddSpaceLocallyAC, RemoveSpaceLocallyAC, AlterSpaceLocallyAC, ResetPermissionPreferencesAC } from './user.d';
 import { SubjectModelWithId, Timestamp, SpaceModelWithId } from '../../firebase/model';
 import { PreferenceId } from '../../config/userPreferences';
 import { PreferencesState } from './../../config/userPreferences';
@@ -161,5 +161,11 @@ export const setUserPreferenceFail = (error: string): SetUserPreferenceFailAC =>
     return {
         type: actionTypes.SET_USER_PREFERENCE_FAIL,
         error,
+    };
+};
+
+export const resetPermissionPreferences = (): ResetPermissionPreferencesAC => {
+    return {
+        type: actionTypes.RESET_PERMISSION_PREFERENCES,
     };
 };

@@ -21,6 +21,7 @@ export {
     addUserAndData,
     setUserPreference,
     setUserPreferenceFail,
+    resetPermissionPreferences,
 } from './user';
 export {
     fetchTasks,

@@ -33,8 +33,12 @@ export const registerNotificationsWorker = async () => {
             });
             console.log(subscription.toJSON());
             saveSubscription(subscription.toJSON());
+            return true;
+        } else {
+            return false;
         }
     } else {
         console.log('already granted');
+        return true;
     }
 }

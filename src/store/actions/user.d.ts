@@ -1,6 +1,7 @@
 import { SubjectModelWithId, SpaceModelWithId, Timestamp } from './../../firebase/model';
 import { PreferenceId } from '../../config/userPreferences';
 import { PreferencesState } from './../../config/userPreferences';
+import { BaseActionCreator } from './data.d';
 
 export interface BaseActionCreator {type: string}
 
@@ -31,3 +32,4 @@ export interface UpdateSubjectLocallyAC extends BaseActionCreator {subject: Subj
 
 export interface SetUserPreferenceAC extends BaseActionCreator {id: PreferenceId; value: any}
 export interface SetUserPreferenceFailAC extends BaseActionCreator {error: string}
+export interface ResetPermissionPreferencesAC extends BaseActionCreator {}

@@ -1,9 +1,9 @@
 import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../../util/util';
 import { UserState } from './user.d';
-import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC, SetSpaceAC, FetchSpacesAC, FetchSpacesSuccessAC, FetchSpacesFailAC, AddSpaceLocallyAC, RemoveSpaceLocallyAC, AlterSpaceLocallyAC } from '../actions/user.d';
+import { BaseActionCreator, SetSignedInAC, StartSignOutAC, FetchShallowSubjectsAC, FetchShallowSubjectsFailAC, AddSubjectLocallyAC, UpdateSubjectLocallyAC, SetUserDataAC, FetchUserDataAC, PostUserDataAC, SetUserPreferenceAC, SetUserPreferenceFailAC, SetSpaceAC, FetchSpacesAC, FetchSpacesSuccessAC, FetchSpacesFailAC, AddSpaceLocallyAC, RemoveSpaceLocallyAC, AlterSpaceLocallyAC, ResetPermissionPreferencesAC } from '../actions/user.d';
 import { SetSignedOutAC, SignOutFailAC, FetchShallowSubjectsSuccessAC, RemoveSubjectLocallyAC, AddUserAndDataAC } from './../actions/user.d';
-import { DEFAULT_PREFERENCES_STATE } from '../../config/userPreferences';
+import { BooleanPreferenceConfig, DEFAULT_PREFERENCES_STATE, PreferencesState, PREFERENCES_CONFIG } from '../../config/userPreferences';
 
 const initialState: UserState = {
     username: null,
@@ -43,6 +43,7 @@ export default (state: UserState = initialState, action: BaseActionCreator) => {
         case actionTypes.ADD_USER_AND_DATA: return addUserAndData(state, action as AddUserAndDataAC);
         case actionTypes.SET_USER_PREFERENCE: return setUserPreference(state, action as SetUserPreferenceAC);
         case actionTypes.SET_USER_PREFERENCE_FAIL: return setUserPreferenceFail(state, action as SetUserPreferenceFailAC);
+        case actionTypes.RESET_PERMISSION_PREFERENCES: return resetPermissionPreferences(state, action as ResetPermissionPreferencesAC);
         default: return state;
     }
 }
@@ -209,5 +210,17 @@ const setUserPreference = (state: UserState, action: SetUserPreferenceAC): UserS
 const setUserPreferenceFail = (state: UserState, action: SetUserPreferenceFailAC): UserState => {
     return updateObject(state, {
         preferenceError: action.error,
+    });
+};
+
+const resetPermissionPreferences = (state: UserState, action: ResetPermissionPreferencesAC): UserState => {
+    const prefs: PreferencesState = {...state.preferences};
+    PREFERENCES_CONFIG.forEach(conf => {
+        if ((conf as BooleanPreferenceConfig).uponActivation === 'activateNotifications') {
+            prefs[conf.id] = false;
+        }
+    });
+    return updateObject(state, {
+        preferences: prefs,
     });
 };
