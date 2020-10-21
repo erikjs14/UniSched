@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Switch, Tooltip, InfoSignIcon, CornerDialog } from 'evergreen-ui';
 
@@ -7,6 +7,7 @@ import { PreferenceRowProps } from './PreferenceRow.d';
 import { toCss } from '../../../util/util';
 import { registerNotificationsWorker } from '../../../util/subscription';
 import { resetPermissionPreferences } from '../../../store/actions';
+import useUnischedId from '../../../hooks/useUnischedId';
 const {
     wrapper: s_wrapper,
     name: s_name,
@@ -14,10 +15,16 @@ const {
     info: s_info,
 } = CSS;
 
-let pressedConfirm = false;
 export default function(props: PreferenceRowProps): JSX.Element | null {
 
-    const [showNotificationDialog, setShowNotificationDialog] = useState(false);
+    const unisched_id = useUnischedId();
+
+    const [showNotificationDialog, setShowNotificationDialog] = useState({
+        shown: false,
+        idChanged: '',
+        newVal: null,
+        keepTrue: false,
+    });
 
     const dispatch = useDispatch();
 
@@ -30,7 +37,34 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                     onChange={e => {
                         props.onChange(e.target.checked);
                         if (props.config.uponActivation === 'activateNotifications' && e.target.checked && Notification.permission !== 'granted') {
-                            setShowNotificationDialog(true);
+                            setShowNotificationDialog(prev => ({...prev, show: true}));
+                        }
+                    }}
+                />
+            );
+            break;
+        case 'deviceBoolean':
+            inputEl = (
+                <Switch
+                    checked={showNotificationDialog.shown || showNotificationDialog.keepTrue || props.value[unisched_id] || false}
+                    onChange={e => {
+                        if (props.config.uponActivation === 'activateNotifications' && e.target.checked && Notification.permission !== 'granted') {
+                            setShowNotificationDialog({
+                                shown: true,
+                                idChanged: props.config.id,
+                                newVal: {
+                                    ...props.value,
+                                    [unisched_id]: e.target.checked
+                                },
+                                keepTrue: false,
+                            });
+                        } else {
+                            props.onChange(
+                                {
+                                    ...props.value,
+                                    [unisched_id]: e.target.checked
+                                }
+                            );
                         }
                     }}
                 />
@@ -78,23 +112,26 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
             <CornerDialog
                 title={Notification.permission === 'denied' ? 'Permission permanently denied' : 'Request permission to send notifications'}
                 confirmLabel='Alright!'
-                isShown={showNotificationDialog}
+                isShown={showNotificationDialog.shown}
                 onCloseComplete={() => {
-                    setShowNotificationDialog(false);
-                    if (!pressedConfirm) {
-                        dispatch(resetPermissionPreferences());
-                    }
-                    pressedConfirm = false;
+                    setShowNotificationDialog(prev => ({...prev, shown: false}));
                 }}
                 onCancel={(close) => {
                     // dispatch(resetPermissionPreferences());
                     close();
                 }}
                 onConfirm={(close) => {
-                    pressedConfirm = true;
+                    setShowNotificationDialog(prev => ({...prev, keepTrue: true}));
                     registerNotificationsWorker()
                     .then(success => {
                         if (!success) dispatch(resetPermissionPreferences());
+                        else props.onChange(showNotificationDialog.newVal);
+                        setShowNotificationDialog(({
+                            shown: false,
+                            keepTrue: false,
+                            idChanged: '',
+                            newVal: null,
+                        }));
                     });
                     close();
                 }}

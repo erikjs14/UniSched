@@ -22,8 +22,13 @@ export interface IntegerPreferenceConfig extends BasePreferenceConfig {
     max?: number;
     step?: number;
 }
+export interface DeviceSpecificBoolPreferenceConfig extends BasePreferenceConfig {
+    type: 'deviceBoolean';
+    default: { [id: string]: boolean };
+    uponActivation?: Function | string;
+}
 
-export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig;
+export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig | DeviceSpecificBoolPreferenceConfig;
 
 export const PREF_ID_ACTIVATE_RANDOM_AVATAR = 'activateRandomAvatar';
 export const PREF_ID_SHOW_ONLY_FUTURE_EXAMS = 'showOnlyFutureExams';
@@ -114,10 +119,10 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
     },
     {
       id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EVENT,
-      type: 'boolean',
+      type: 'deviceBoolean',
       name: 'Get notifications before events',
       description: 'Push a notification to the user before every event',
-      default: false,
+      default: {},
       uponActivation: 'activateNotifications',
     },
     {
@@ -135,10 +140,10 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
     },
     {
       id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM,
-      type: 'boolean',
+      type: 'deviceBoolean',
       name: 'Get notifications before exams',
       description: 'Push a notification to the user before every exam',
-      default: false,
+      default: {},
       uponActivation: 'activateNotifications',
     },
     {
@@ -156,10 +161,10 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
     },
     {
         id: PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS,
-        type: 'boolean',
+        type: 'deviceBoolean',
         name: 'Enable notifications for tasks',
         description: 'If enabled, notifications for tasks can be configured.',
-        default: false,
+        default: {},
         uponActivation: 'activateNotifications',
     },
 ]
