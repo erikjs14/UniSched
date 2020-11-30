@@ -120,7 +120,8 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     interval: key === 'interval' ? newVal as string : interval,
                 },
                 taskConfig.timestamps,
-                taskConfig.timestampsDone
+                taskConfig.timestampsDone,
+                taskConfig.tasksTickedAt,
             );
             setTaskConfig(prev => ({
                 ...prev,
@@ -140,7 +141,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     : null,
             }));
         }
-    }, [firstDeadline, interval, lastDeadline, taskConfig.timestamps, taskConfig.timestampsDone]);
+    }, [firstDeadline, interval, lastDeadline, taskConfig.timestamps, taskConfig.timestampsDone, taskConfig.tasksTickedAt]);
 
     const onChangePageCnt = useCallback((amount: number, force: boolean = false) => {
         // check type input

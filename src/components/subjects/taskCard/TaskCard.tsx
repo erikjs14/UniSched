@@ -36,12 +36,13 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
     const [exclDialogShown, setExclDialogShown] = useState(false);
 
     const { onChange } = props;
-    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, star, additionalInfo, exclusions, notifications } = props.data;
+    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, tasksTickedAt: oldTasksTickedAt, star, additionalInfo, exclusions, notifications } = props.data;
     const changeHandler = useCallback((config: TaskConfig) => {
-        const [timestamps, timestampsDone] = getEditedTimestamps(config, oldTimestamps, oldTimestampsDone);
+        const [timestamps, timestampsDone, tasksTickedAt] = getEditedTimestamps(config, oldTimestamps, oldTimestampsDone, oldTasksTickedAt);
         onChange('timestamps', timestamps);
         onChange('timestampsDone', timestampsDone);
-    }, [onChange, oldTimestamps, oldTimestampsDone]);
+        onChange('tasksTickedAt', tasksTickedAt);
+    }, [onChange, oldTimestamps, oldTimestampsDone, oldTasksTickedAt]);
 
     const {firstDeadline, lastDeadline, interval} = getConfigDataFromTimestamps(oldTimestamps, oldTimestampsDone);
 

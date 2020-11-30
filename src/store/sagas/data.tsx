@@ -67,13 +67,15 @@ export function* checkTask(action: CheckTaskAC) {
     try {
         const oldTasks = yield select(state => state.data.tasks.data);
         const timestampToCheck = getTimestampFromSeconds(action.timestampSeconds);
-        yield saveTaskChecked(action.subjectId, action.taskId, timestampToCheck);
+        const tickedAtTs = {seconds: action.tickedAtSeconds, nanoseconds: action.tickedAtMilliseconds*1000 + Math.round(Math.random()*1000)};
+        yield saveTaskChecked(action.subjectId, action.taskId, timestampToCheck, tickedAtTs);
         yield put(actions.setTasksLocally(
             getUpdatedTasksAfterCheck(
                 oldTasks,
                 action.subjectId,
                 action.taskId,
-                timestampToCheck
+                timestampToCheck,
+                tickedAtTs,
             )
         ));
     } catch (error) {
@@ -85,13 +87,16 @@ export function* uncheckTask(action: UncheckTaskAC) {
     try {
         const oldTasks = yield select(state => state.data.tasks.data);
         const timestampToUncheck = getTimestampFromSeconds(action.timestampSeconds);
-        yield saveTaskUnchecked(action.subjectId, action.taskId, timestampToUncheck);
+        const taskToChange: TaskModelWithId = oldTasks.find((t: TaskModelWithId) => t.subjectId === action.subjectId && t.id === action.taskId);
+        const taskTickedAt = taskToChange.tasksTickedAt.find((ts, idx) => taskToChange.timestampsDone[idx].seconds===timestampToUncheck.seconds && taskToChange.timestampsDone[idx].nanoseconds===timestampToUncheck.nanoseconds);
+        if (!taskTickedAt) throw Error('timestampsDone and tasksTickedAt dimensions do not match');
+        yield saveTaskUnchecked(action.subjectId, action.taskId, timestampToUncheck, taskTickedAt);
         yield put(actions.setTasksLocally(
             getUpdatedTasksAfterUncheck(
                 oldTasks,
                 action.subjectId,
                 action.taskId,
-                timestampToUncheck
+                timestampToUncheck,
             )
         ));
     } catch (error) {
@@ -118,7 +123,7 @@ export function* addAndSaveNewTask(action: AddAndSaveNewTaskAC) {
     }
 }
 
-const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithId[], subjectId: string, taskId: string, timestampToCheck: Timestamp): TaskModelWithId[] => {
+const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithId[], subjectId: string, taskId: string, timestampToCheck: Timestamp, tickedAt: Timestamp): TaskModelWithId[] => {
     const result = oldTasks.map(oldTask => {
         if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
             return oldTask;
@@ -128,6 +133,10 @@ const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithId[], subjectId: strin
                 timestampsDone: [
                     ...oldTask.timestampsDone,
                     timestampToCheck,
+                ],
+                tasksTickedAt: [
+                    ...oldTask.tasksTickedAt,
+                    tickedAt,
                 ],
             };
         }
@@ -142,6 +151,7 @@ const getUpdatedTasksAfterUncheck = (oldTasks: TaskModelWithId[], subjectId: str
             return {
                 ...oldTask,
                 timestampsDone: oldTask.timestampsDone.filter(ts => ts.seconds !== timestampToUncheck.seconds || ts.nanoseconds !== timestampToUncheck.nanoseconds),
+                tasksTickedAt: oldTask.tasksTickedAt.filter((ts, idx) => oldTask.timestampsDone[idx].seconds !== timestampToUncheck.seconds || oldTask.timestampsDone[idx].nanoseconds !== timestampToUncheck.nanoseconds),
             };
         }
     })

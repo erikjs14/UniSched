@@ -18,6 +18,8 @@ export interface CheckTaskAC extends BaseActionCreator {
     subjectId: string;
     taskId: string; 
     timestampSeconds: number;
+    tickedAtSeconds: number;
+    tickedAtMilliseconds: number;
 }
 export interface UncheckTaskAC extends BaseActionCreator {
     subjectId: string;

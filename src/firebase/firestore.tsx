@@ -198,6 +198,7 @@ export const fetchTasks = async (subjectId: string): Promise<models.TaskModelWit
         subjectId,
         timestamps: dataWithId.data?.timestamps,
         timestampsDone: dataWithId.data?.timestampsDone,
+        tasksTickedAt: dataWithId.data?.tasksTickedAt || new Array(dataWithId.data?.timestampsDone.length || 0).fill({seconds:0,nanoseconds:0}),
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
         star: dataWithId.data?.star ? true : false,
@@ -217,6 +218,7 @@ export const fetchTask = async (subjectId: string, taskId: string): Promise<mode
         subjectId,
         timestamps: docWithId.data?.timestamps,
         timestampsDone: docWithId.data?.timestampsDone,
+        tasksTickedAt: docWithId.data?.tasksTickedAt || new Array(docWithId.data?.timestampsDone.length || 0).fill({seconds:0,nanoseconds:0}),
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
         star: docWithId.data?.star,
@@ -324,15 +326,17 @@ export const updateTask = async <D extends keyof models.TaskModel>(subjectId: st
     await updateDoc(task_ref(subjectId, id), task);
 }
 
-export const saveTaskChecked = async (subjectId: string, id: string, timestamp: models.Timestamp): Promise<void> => {
+export const saveTaskChecked = async (subjectId: string, id: string, timestamp: models.Timestamp, tickedAt: models.Timestamp): Promise<void> => {
     await task_ref(subjectId, id).update({
         timestampsDone: firebase.firestore.FieldValue.arrayUnion(timestamp),
+        tasksTickedAt: firebase.firestore.FieldValue.arrayUnion(tickedAt),
     });
 }
 
-export const saveTaskUnchecked = async (subjectId: string, id: string, timestamp: models.Timestamp): Promise<void> => {
+export const saveTaskUnchecked = async (subjectId: string, id: string, timestamp: models.Timestamp, taskTickedAt: models.Timestamp): Promise<void> => {
     await task_ref(subjectId, id).update({
         timestampsDone: firebase.firestore.FieldValue.arrayRemove(timestamp),
+        tasksTickedAt: firebase.firestore.FieldValue.arrayRemove(taskTickedAt),
     });
 }
 

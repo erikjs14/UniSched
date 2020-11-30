@@ -399,7 +399,7 @@ export const getTimestampsFromConfig = ({firstDeadline, lastDeadline, interval}:
     return timestamps;
 }
 
-export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timestamp[], timestampsDoneOld: Timestamp[]): [Timestamp[], Timestamp[]] => {
+export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timestamp[], timestampsDoneOld: Timestamp[], tasksTickedAtOld: Timestamp[]): [Timestamp[], Timestamp[], Timestamp[]] => {
     const timestampsOut = getTimestampsFromConfig({
         firstDeadline: newConfig.firstDeadline,
         lastDeadline: newConfig.lastDeadline.seconds < newConfig.firstDeadline.seconds ? newConfig.firstDeadline : newConfig.lastDeadline,
@@ -410,9 +410,16 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
         ? timestampsOld[0].seconds - timestampsOut[0].seconds
         : 0;
 
-    const timestampsDoneOut = timestampsDoneOld
-        .map(ts => getTimestampFromSeconds(ts.seconds - shift))
-        .filter(ts => containsTimestamp(ts, timestampsOut));
+    // only works if interval changes not allowed after task has been saved (only constant time shifts assumed)  
+    let timestampsDoneOut = [];
+    let tasksTickedAtOut = [];
+    for (let i = 0; i < timestampsDoneOld.length; i++) {
+        const shiftedTs = getTimestampFromSeconds(timestampsDoneOld[i].seconds - shift);
+        if (containsTimestamp(shiftedTs, timestampsOut)) {
+            timestampsDoneOut.push(shiftedTs);
+            tasksTickedAtOut.push(tasksTickedAtOld[i]);
+        }
+    }
 
     // if only one timestamp is contained and interval it not 'once' --> add one extra timestamp
     if (newConfig.interval !== 'once' && timestampsOut.length === 1) {
@@ -423,7 +430,7 @@ export const getEditedTimestamps = (newConfig: TaskConfig, timestampsOld: Timest
         );
     }
 
-    return [timestampsOut, timestampsDoneOut];
+    return [timestampsOut, timestampsDoneOut, tasksTickedAtOut];
 }
 
 const plusMinus = (nr: number, range: number): boolean => {

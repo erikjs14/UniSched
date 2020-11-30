@@ -40,11 +40,16 @@ export const dataSetError = (error: string, at: keyof DataState): DataSetErrorAC
 };
 
 export const checkTask = (subjectId: string, taskId: string, timestampSeconds: number): CheckTaskAC => {
+    const nowMs = new Date().getTime();
+    const s = Math.floor(nowMs / 1000);
+    const ms = nowMs - s*1000;
     return {
         type: actionTypes.CHECK_TASK,
         subjectId,
         taskId,
         timestampSeconds,
+        tickedAtSeconds: s,
+        tickedAtMilliseconds: ms,
     };
 };
 
