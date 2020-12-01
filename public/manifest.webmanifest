@@ -20,8 +20,8 @@
       }
     ],
     "start_url": "/todo",
-    "background_color": "#30475e",
-    "display": "minimal-ui",
+    "background_color": "#fff",
+    "display": "standalone",
     "scope": "/",
     "theme_color": "#30475e",
     "shortcuts": [
@@ -30,28 +30,28 @@
         "short_name": "Add Task",
         "description": "Open dialog to quickly add a new task",
         "url": "/todo?addTask=true",
-        "icons": [{ "src": "/img/add.png", "sizes": "240x240" }]
+        "icons": [{ "src": "/img/add.png", "type": "image/png", "sizes": "192x192" }]
       },
       {
         "name": "What's on your list?",
         "short_name": "ToDo",
         "description": "Open ToDos",
         "url": "/todo",
-        "icons": [{ "src": "/img/todo.png", "sizes": "240x240" }]
+        "icons": [{ "src": "/img/todo.png", "type": "image/png", "sizes": "192x192" }]
       },
       {
         "name": "What's your plan for today?",
         "short_name": "Schedule",
         "description": "Open schedule",
         "url": "/schedule",
-        "icons": [{ "src": "/img/schedule.png", "sizes": "240x240" }]
+        "icons": [{ "src": "/img/schedule.png", "type": "image/png", "sizes": "192x192" }]
       },
       {
         "name": "Change settings",
         "short_name": "Settings",
         "description": "Open settings",
         "url": "/settings",
-        "icons": [{ "src": "/img/settings.png", "sizes": "240x240" }]
+        "icons": [{ "src": "/img/settings.png", "type": "image/png", "sizes": "192x192" }]
       }
     ]
   }
