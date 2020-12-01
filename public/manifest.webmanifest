@@ -1,0 +1,57 @@
+{
+    "short_name": "Unisched",
+    "name": "Unisched: Stay Productive!",
+    "description": "Academic Task Planner",
+    "icons": [
+      {
+        "src": "/img/icon-192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/img/icon-256.png",
+        "type": "image/png",
+        "sizes": "256x256"
+      },
+      {
+        "src": "/img/icon-512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "/todo",
+    "background_color": "#30475e",
+    "display": "minimal-ui",
+    "scope": "/",
+    "theme_color": "#30475e",
+    "shortcuts": [
+      {
+        "name": "Add new task",
+        "short_name": "Add Task",
+        "description": "Open dialog to quickly add a new task",
+        "url": "/todo?addTask=true",
+        "icons": [{ "src": "/img/add.png", "sizes": "240x240" }]
+      },
+      {
+        "name": "What's on your list?",
+        "short_name": "ToDo",
+        "description": "Open ToDos",
+        "url": "/todo",
+        "icons": [{ "src": "/img/todo.png", "sizes": "240x240" }]
+      },
+      {
+        "name": "What's your plan for today?",
+        "short_name": "Schedule",
+        "description": "Open schedule",
+        "url": "/schedule",
+        "icons": [{ "src": "/img/schedule.png", "sizes": "240x240" }]
+      },
+      {
+        "name": "Change settings",
+        "short_name": "Settings",
+        "description": "Open settings",
+        "url": "/settings",
+        "icons": [{ "src": "/img/settings.png", "sizes": "240x240" }]
+      }
+    ]
+  }
