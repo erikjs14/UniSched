@@ -10,11 +10,7 @@ import { removeKey } from '../../../../util/util';
 import { getTimestampFromDate } from '../../../../util/timeUtil';
 import { useDispatch } from 'react-redux';
 import { forceRefresh } from '../../../../store/actions';
-import { useLocation } from 'react-router-dom';
-
-function useQuery() {
-    return new URLSearchParams(useLocation().search);
-}
+import useQuery from './../../../../hooks/useQuery';
 
 export default React.memo(
     forwardRef(

@@ -11,7 +11,7 @@ import Input from '../../../components/ui/input/Input';
 import { defaultColor } from '../../../config/colorChoices';
 import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './../../../firebase/firestore';
-import { useLocation, useHistory, Prompt } from 'react-router-dom';
+import { useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
 import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew, setSpace } from './state';
 import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
@@ -51,7 +51,6 @@ const {
 
 export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
-    const location = useLocation();
     const history = useHistory();
 
     const dispatchToStore = useDispatch();
@@ -99,8 +98,9 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
 
     useEffect(() => {
         // fetch subject data only if changing existing subject
-        if (!props.new) {
-            fetchSubjectDeep(extractIdFromUrl(location.pathname))
+        if (!props.new && props.subjectId) {
+            // fetchSubjectDeep(extractIdFromUrl(location.pathname))
+            fetchSubjectDeep(props.subjectId)
                 .then(data => {
                     dispatch(setSubject({
                         id: data.id,
@@ -121,7 +121,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                     dispatch(setLoading(false));
                 });
         }
-    }, [props.new, location.pathname, dispatch]);
+    }, [props.new, props.subjectId, dispatch]);
 
     // logic for animating and changing color
     const [animateColorChange, startAnimateColorChange] = useState(false);
@@ -445,8 +445,3 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
         </Fragment>
     );
 });
-
-const extractIdFromUrl = (url: string): string => {
-    const parts = url.split('/');
-    return parts[parts.length - 1];
-}

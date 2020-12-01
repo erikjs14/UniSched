@@ -31,6 +31,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import AddTaskDialog from '../../container/todos/addTaskDialog/AddTaskDialog';
 import { Route, useHistory } from 'react-router-dom';
+import useQuery from '../../hooks/useQuery';
 const {
     navDesktop: s_navDesktop,
     navMobile: s_navMobile,
@@ -41,8 +42,9 @@ const {
 export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     const history = useHistory();
+    const query = useQuery();
 
-    const [showAddTaskDialog, setShowAddTaskDialog] = useState(false);
+    const [showAddTaskDialog, setShowAddTaskDialog] = useState(query && query.get('addTask') === 'true');
 
     const dispatch = useDispatch();
     const useRandomAvatar = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ACTIVATE_RANDOM_AVATAR]);
