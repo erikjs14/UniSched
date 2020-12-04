@@ -31,6 +31,8 @@ export const EXAM_START_STATE: ExamModel = {
     },
     timeCreated: undefined,
     additionalInfo: null,
+    grade: null,
+    gradeWeight: 1,
 }
 
 export const TASK_START_STATE: TaskModel = {

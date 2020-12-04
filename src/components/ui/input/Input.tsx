@@ -1,6 +1,7 @@
 import React, { useState, MutableRefObject } from 'react';
 import CSS from './Input.module.scss';
 import { toCss, hex2rgba } from '../../../util/util';
+import { Checkbox, TextInput } from 'evergreen-ui';
 
 const {
     wrapper: s_wrapper,
@@ -15,11 +16,10 @@ const {
     minSize: s_minSize,
     glowRed: s_glowRed,
     textarea: s_textarea,
-    simpleCheckbox: s_simpleCheckbox,
 } = CSS;
 
 export interface InputProps<T> {
-    elementType: 'input' |'input-transparent' | 'text-area' | 'select-visual' | 'checkbox' | 'simple-checkbox';
+    elementType: 'input' |'input-transparent' | 'text-area' | 'select-visual' | 'checkbox' | 'simple-checkbox' | 'number';
     value: T;
     onChange(val: T): void;
     label: string;
@@ -36,7 +36,7 @@ export interface InputProps<T> {
     onClick?: Function;
 }
 
-export default React.forwardRef(function(props: InputProps<string|boolean>, ref: MutableRefObject<any> | ((instance: any) => void) | null): JSX.Element| null {
+export default React.forwardRef(function(props: InputProps<string|number|boolean>, ref: MutableRefObject<any> | ((instance: any) => void) | null): JSX.Element| null {
 
     const [touched, setTouched] = useState(false);
 
@@ -143,14 +143,22 @@ export default React.forwardRef(function(props: InputProps<string|boolean>, ref:
         case 'simple-checkbox':
             return (
                 <div className={toCss(s_wrapper, props.addClass || '')} >
-                    <input
+                    <Checkbox
                         ref={ref}
-                        className={toCss(s_simpleCheckbox)} 
-                        type='checkbox'
-                        value={props.label}
                         onChange={event => props.disabled ? null : props.onChange(event.target.value)}
                         checked={props.value as boolean}
-                        name={props.label}
+                    />
+                </div>
+            );
+        case 'number':
+            return (
+                <div className={toCss(s_wrapper, props.addClass || '')} >
+                    <TextInput
+                        {...props.elementConfig}
+                        ref={ref}
+                        type='number'
+                        value={props.value === 'none' ? '' : props.value as number}
+                        onChange={(event: any) => props.onChange(event.target.value)}
                     />
                 </div>
             );

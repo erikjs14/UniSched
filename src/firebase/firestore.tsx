@@ -138,6 +138,8 @@ export const fetchExams = async (subjectId: string): Promise<models.ExamModelWit
         type: dataWithId.data?.type,
         timeCreated: dataWithId.data?.timeCreated,
         additionalInfo: dataWithId.data?.additionalInfo || null,
+        grade: dataWithId.data?.grade || null,
+        gradeWeight: dataWithId.data?.gradeWeight || 1,
     }));
 
     return exams;
@@ -152,6 +154,8 @@ export const fetchExam = async (subjectId: string, examId: string): Promise<mode
         type: docWithId.data?.type,
         timeCreated: docWithId.data?.timeCreated,
         additionalInfo: docWithId.data?.additionalInfo || null,
+        grade: docWithId.data?.grade || null,
+        gradeWeight: docWithId.data?.gradeWeight || 1,
     };
 }
 

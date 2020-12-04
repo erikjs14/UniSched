@@ -60,6 +60,8 @@ export interface EventModelWithId extends EventModel, SubjectDataModelWithId {}
 
 export interface ExamModel extends SubjectDataModel {
     start: Timestamp;
+    grade: number | null;
+    gradeWeight: number;
 }
 export interface ExamModelWithId extends ExamModel, SubjectDataModelWithId {}
 

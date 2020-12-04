@@ -41,6 +41,37 @@ export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
                 </div>
 
                 <div className={toCss(s_row)} >
+                    <span>Grade</span>
+                    <Input
+                        label=''
+                        elementType='number'
+                        elementConfig={{
+                            width: '8rem',
+                        }}
+                        value={props.data.grade || 'none'}
+                        onChange={val => {
+                            props.onChange<number|null>('grade', (val as number|null) || null);
+                        }}
+                    />
+                </div>
+
+                <div className={toCss(s_row)} >
+                    <span>Weight of Grade</span>
+                    <Input
+                        label=''
+                        elementType='number'
+                        elementConfig={{
+                            min: 0,
+                            width: '8rem',
+                        }}
+                        value={props.data.gradeWeight}
+                        onChange={val => {
+                            props.onChange<number>('gradeWeight', (val as number) || 1);
+                        }}
+                    />
+                </div>
+
+                <div className={toCss(s_row)} >
                     <span>
                         Add Info
                         <Input 

@@ -404,6 +404,8 @@ const mapDataArrayToObject = (dataTypeId: DataTypeId, dataArray: Array<SubjectDa
                     start: exam.start,
                     timeCreated: exam.timeCreated,
                     additionalInfo: exam.additionalInfo,
+                    grade: exam.grade,
+                    gradeWeight: exam.gradeWeight,
                 };
                 out[exam.id] = data;
             });
@@ -463,6 +465,8 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                     start: datum.start,
                     timeCreated: datum.timeCreated,
                     additionalInfo: datum.additionalInfo,
+                    grade: datum.grade,
+                    gradeWeight: datum.gradeWeight,
                 };
                 out.push(data);
             }
