@@ -79,6 +79,7 @@ export default function() {
             />
 
             <DueTasks
+                key={selectedSpaceId || 123}
                 dueTasks={filteredTasks}
                 subjects={subjectsToObject(filteredSubjects)}
                 onTaskChecked={checkTaskHandler}
