@@ -26,7 +26,7 @@ export default function() {
     } = useSelector((state: RootState) => state.data.tasks);
 
     const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId) : null, [selectedSpaceId, subjects]);
-    const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
+    const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => !s.excludeTasksFromAll && s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
 
     const dispatch = useDispatch();
 
@@ -79,7 +79,7 @@ export default function() {
             />
 
             <DueTasks
-                key={selectedSpaceId || 123}
+                key={selectedSpaceId || 123} // to re-mount every time the selected space changes --> do not keep dueTasks state (e.g. collapsed days)
                 dueTasks={filteredTasks}
                 subjects={subjectsToObject(filteredSubjects)}
                 onTaskChecked={checkTaskHandler}

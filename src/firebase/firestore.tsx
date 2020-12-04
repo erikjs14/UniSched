@@ -91,6 +91,7 @@ export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[
         color: dataWithId.data?.color,
         name: dataWithId.data?.name,
         spaceId: dataWithId.data?.spaceId ? dataWithId.data?.spaceId : 'mainSpace',
+        excludeTasksFromAll: dataWithId.data?.excludeTasksFromAll ? dataWithId.data?.excludeTasksFromAll : false,
         timeCreated: dataWithId.data?.timeCreated,
     }));
 
@@ -104,6 +105,7 @@ export const fetchSubject = async (subjectId: string): Promise<models.SubjectMod
         color: docWithId.data?.color,
         name: docWithId.data?.name,
         spaceId: docWithId.data?.spaceId ? docWithId.data?.spaceId : 'mainSpace',
+        excludeTasksFromAll: docWithId.data?.excludeTasksFromAll ? docWithId.data?.excludeTasksFromAll : false,
         timeCreated: docWithId.data?.timeCreated,
     };
 }

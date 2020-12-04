@@ -16,6 +16,7 @@ interface StateModel {
         name: string;
         spaceId: string;
         color: ColorConfig;
+        excludeTasksFromAll: boolean;
         timeCreated: Timestamp | undefined;
         changed: boolean;
     } | null;
@@ -86,6 +87,17 @@ export const changeName = (name: string): ChangeNameActionModel => {
     };
 }
 
+interface ChangeExcludeTasksFromAllActionModel extends ActionModel {
+    val: boolean;
+}
+const ACTION_CHANGE_EXCLUDE_TASK_FROM_ALL = 'CHANGE_EXCLUDE_TASK_FROM_ALL';
+export const changeExcludeTasksFromAll = (val: boolean): ChangeExcludeTasksFromAllActionModel => {
+    return {
+        type: ACTION_CHANGE_EXCLUDE_TASK_FROM_ALL,
+        val,
+    };
+}
+
 interface ChangeColorActionModel extends ActionModel {
     color: string;
 }
@@ -129,6 +141,7 @@ export const initialStateNew = (spaceId: string): StateModel => ({
         id: '',
         timeCreated: undefined,
         spaceId: spaceId,
+        excludeTasksFromAll: false,
     },
     initialData: {
         events: [],
@@ -187,6 +200,16 @@ export const reducer = (state: StateModel, action: ActionModel & any): StateMode
                     name: action.name,
                     changed: true,
                 }
+            };
+        case ACTION_CHANGE_EXCLUDE_TASK_FROM_ALL:
+            if (!state.subject) return state;
+            return {
+                ...state,
+                subject: {
+                    ...state.subject,
+                    excludeTasksFromAll: action.val,
+                    changed: true,
+                },
             };
         case ACTION_CHANGE_COLOR:
             if (!state.subject) return state;

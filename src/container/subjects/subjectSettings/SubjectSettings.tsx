@@ -2,7 +2,7 @@ import React, { useReducer, useState, useEffect, useCallback, useRef, Fragment }
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Button, Dialog, Select } from 'evergreen-ui';
+import { Button, Dialog, InfoSignIcon, Checkbox, Select, Tooltip } from 'evergreen-ui';
 
 import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
@@ -13,7 +13,7 @@ import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './../../../firebase/firestore';
 import { useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
-import { reducer, initialState, setSubject, setError, setLoading, changeName, changeColor, startSaving, setSaved, initialStateNew, setSpace } from './state';
+import { reducer, initialState, setSubject, setError, setLoading, changeName, changeExcludeTasksFromAll, changeColor, startSaving, setSaved, initialStateNew, setSpace } from './state';
 import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/subjects/examCard/ExamCard';
@@ -46,6 +46,9 @@ const {
     spaceSelectArea: s_spaceSelectArea,
     select: s_select,
     label: s_label,
+    info: s_info,
+    item: s_item,
+    configArea: s_configArea,
 } = CSS;
 
 
@@ -108,6 +111,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         color: data.color,
                         spaceId: data.spaceId,
                         timeCreated: data.timeCreated,
+                        excludeTasksFromAll: data.excludeTasksFromAll,
                     }, {
                         exams: data.exams,
                         events: data.events,
@@ -186,6 +190,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                     name: state.subject.name,
                     color: state.subject.color.newColor.name,
                     spaceId: state.subject.spaceId,
+                    excludeTasksFromAll: state.subject.excludeTasksFromAll,
                     timeCreated: getTimestampFromDate(new Date()),
                 };
                 addSubject(sub)
@@ -210,6 +215,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         name: state.subject.name,
                         color: state.subject.color.newColor.name,
                         spaceId: state.subject.spaceId,
+                        excludeTasksFromAll: state.subject.excludeTasksFromAll,
                     }
                 ).then(() => {
                     if (state.subject) {
@@ -218,6 +224,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                             name: state.subject.name,
                             color: state.subject.color.newColor.name,
                             spaceId: state.subject.spaceId,
+                            excludeTasksFromAll: state.subject.excludeTasksFromAll,
                             timeCreated: state.subject.timeCreated,
                         }));
                     }
@@ -372,6 +379,22 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         />
                                     </div>
 
+                                </div>
+
+                                <div className={toCss(s_configArea)} >
+                                    <div className={toCss(s_item)} >
+                                        <Checkbox
+                                            label={null}
+                                            checked={state.subject?.excludeTasksFromAll}
+                                            onChange={e => dispatch(changeExcludeTasksFromAll(e.target.checked))}
+                                        />
+                                        <h3 className={toCss(s_label)}>
+                                            Exclude tasks from todo view (All-View)
+                                            <Tooltip content='If ticked, all tasks of this subject will not be included in the todo view, when "All" spaces is selected.'>
+                                                <InfoSignIcon className={toCss(s_info)}/>
+                                            </Tooltip>  
+                                        </h3>  
+                                    </div>
                                 </div>
 
                                 <div className={toCss(s_footerArea)}>

@@ -28,6 +28,7 @@ export interface SubjectModel extends BaseModel {
     color: string;
     name: string;
     spaceId?: string;
+    excludeTasksFromAll: boolean; // whether to exclude tasks from the "All" spaces view in Todos
 }
 export interface SubjectModelWithId extends SubjectModel, ModelWithId {}
 
