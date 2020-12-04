@@ -53,6 +53,7 @@ export default function(props: ExclusionsDialogProps): JSX.Element {
 
     const rows = props.availableDates.map((date, idx) => (
         <div 
+            key={date.seconds}
             className={toCss(s_row, (exclusionsAtIdc[idx] ? s_disabled : ''))} 
             onClick={() => changeHandler(idx)}
         >

@@ -50,6 +50,7 @@ export default function(props: ColorPickerProps): JSX.Element {
                         type='radio'
                         value={customCol}
                         checked={customSelected}
+                        onChange={() => {}}
                         name={'color'}
                     />
                     <span style={{backgroundColor: customCol}}>
