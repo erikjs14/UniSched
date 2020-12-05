@@ -59,7 +59,7 @@ export interface EventModel extends SubjectDataModel {
 export interface EventModelWithId extends EventModel, SubjectDataModelWithId {}
 
 export interface ExamModel extends SubjectDataModel {
-    start: Timestamp;
+    start: Timestamp | null;
     grade: number | null;
     gradeWeight: number;
 }

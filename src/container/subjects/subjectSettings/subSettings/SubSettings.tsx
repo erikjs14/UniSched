@@ -77,7 +77,7 @@ export default React.memo(
 
     const valChangedHandler = useCallback(<K extends keyof M, T extends any>(dataId: string, key: K, newVal: T | null): void => {
 
-        if (key !== 'additionalInfo' && key !== 'grade' && newVal === null) return;
+        if (key !== 'additionalInfo' && key !== 'grade' && key !== 'start' && newVal === null) return;
 
         updateValue(dataId, key, newVal);
         props.onDataChanged();

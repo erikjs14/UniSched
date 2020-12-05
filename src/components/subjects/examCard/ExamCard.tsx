@@ -29,15 +29,32 @@ export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
         >
 
                 <div className={toCss(s_row)}>
-                    <span>Date</span>
-                    <DateTimePicker
-                        customInput={<CustomDateInputUI />}
-                        showWeekNumbers
-                        withPortal
-                        selected={getDateFromSeconds(props.data.start.seconds)}
-                        onChange={date => props.onChange<Timestamp>('start', getTimestampFromDate(date || new Date()))}
-                        {...DATETIMEPICKER_DEFAULT_PROPS}
-                    />
+                    <span>
+                        Date
+                        <Input
+                            label=''
+                            addClass={s_checkAddInfo} 
+                            elementType='simple-checkbox'
+                            value={props.data.start ? true : false}
+                            onChange={val => {
+                                props.onChange<Timestamp|null>('start', (
+                                    val
+                                        ? getTimestampFromDate(new Date())
+                                        : null
+                                ));
+                            }}
+                        />
+                    </span>
+                    { props.data.start && (
+                        <DateTimePicker
+                            customInput={<CustomDateInputUI />}
+                            showWeekNumbers
+                            withPortal
+                            selected={getDateFromSeconds(props.data.start.seconds)}
+                            onChange={date => props.onChange<Timestamp>('start', getTimestampFromDate(date || new Date()))}
+                            {...DATETIMEPICKER_DEFAULT_PROPS}
+                        />
+                    )}
                 </div>
 
                 <div className={toCss(s_row)} >

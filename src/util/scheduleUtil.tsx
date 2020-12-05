@@ -68,8 +68,8 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
 export const getFullCalendarConfigFromExam = (exam: ExamModelWithId): ConfigType => {
     return {
         title: exam.type,
-        start: getDateFromTimestamp(exam.start),
-        end: getDateFromTimestamp(exam.start),
+        start: exam.start ? getDateFromTimestamp(exam.start) : new Date(),
+        end: exam.start ? getDateFromTimestamp(exam.start) : new Date(),
         subjectId: exam.subjectId,
         additionalInfoText: exam.additionalInfo?.text,
     };
@@ -88,10 +88,12 @@ export const getAllConfigFromEvents = (events: EventModelWithId[]): Array<Config
 export const getAllConfigFromExams = (exams: ExamModelWithId[]): Array<ConfigType> => {
     let out: ConfigType[] = [];
     exams.forEach(exam => {
-        out = [
-            ...out,
-            getFullCalendarConfigFromExam(exam),
-        ];
+        if (exam.start) {
+            out = [
+                ...out,
+                getFullCalendarConfigFromExam(exam),
+            ];
+        }
     });
     return out;
 }
