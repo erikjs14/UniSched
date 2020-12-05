@@ -25,8 +25,8 @@ export default function() {
         timestamp,
     } = useSelector((state: RootState) => state.data.tasks);
 
-    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId) : null, [selectedSpaceId, subjects]);
-    const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => !s.excludeTasksFromAll && s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
+    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId, true) : null, [selectedSpaceId, subjects]);
+    const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
 
     const dispatch = useDispatch();
 

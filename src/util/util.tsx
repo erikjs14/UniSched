@@ -52,11 +52,15 @@ export const arrayToN = (n: number): number[] => {
     return out;
 }
 
-export const filterSubjectsForSpace = (subjects: SubjectModelWithId[], selectedSpaceId: string | null): SubjectModelWithId[] => {
+export const filterSubjectsForSpace = (subjects: SubjectModelWithId[], selectedSpaceId: string | null, checkTaskExclude = false): SubjectModelWithId[] => {
     return subjects
         .filter(subject => {
             if (selectedSpaceId === 'all') {
-                return true;
+                if (checkTaskExclude) {
+                    return subject.excludeTasksFromAll ? false : true;
+                } else {
+                    return true;
+                }
             } else if (selectedSpaceId === 'mainSpace') {
                 return !subject.spaceId || subject.spaceId === 'mainSpace';
             } else {
