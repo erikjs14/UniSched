@@ -454,7 +454,9 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                 };
                 out.push(data);
             }
-            break;
+            return (out as EventModelWithId[]).sort((d1, d2) => (
+                d1.firstStart.seconds - d2.firstStart.seconds
+            ));
         case 'exam':
             for (const id in dataObject) {
                 const datum = (dataObject[id] as ExamModel);
@@ -470,7 +472,9 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                 };
                 out.push(data);
             }
-            break;
+            return (out as ExamModelWithId[]).sort((d1, d2) => (
+                d1.start.seconds - d2.start.seconds
+            ));
         case 'task':
             for (const id in dataObject) {
                 const datum = (dataObject[id] as TaskModel);
@@ -490,15 +494,14 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                 };
                 out.push(data);
             }
-            break;
+            return out.sort((d1, d2) => (
+                d1.timeCreated && !d2.timeCreated ? 1
+                    : d2.timeCreated && !d1.timeCreated ? -1
+                        : !d1.timeCreated || !d2.timeCreated ? 0
+                            : d2.timeCreated.seconds - d1.timeCreated.seconds
+            ));
     }
-    
-    return out.sort((d1, d2) => (
-        d1.timeCreated && !d2.timeCreated ? 1
-            : d2.timeCreated && !d1.timeCreated ? -1
-                : !d1.timeCreated || !d2.timeCreated ? 0
-                    : d2.timeCreated.seconds - d1.timeCreated.seconds
-    ));
+    return out;
 }
 
 const getNewIdfor = (count: number): string => {
