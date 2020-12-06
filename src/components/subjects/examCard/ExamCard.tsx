@@ -38,7 +38,7 @@ export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
                             value={props.data.start ? true : false}
                             onChange={val => {
                                 props.onChange<Timestamp|null>('start', (
-                                    val
+                                    !props.data.start
                                         ? getTimestampFromDate(new Date())
                                         : null
                                 ));
