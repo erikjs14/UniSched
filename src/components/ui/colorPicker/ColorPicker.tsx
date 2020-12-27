@@ -10,6 +10,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 const {
     colorRow: s_colorRow,
     colorPicker: s_colorPicker,
+    customPicker: s_customPicker,
 } = CSS;
 
 export default function(props: ColorPickerProps): JSX.Element {
@@ -18,7 +19,9 @@ export default function(props: ColorPickerProps): JSX.Element {
     
     const customSelected = props.selectedColorName.startsWith('#');
     const customDefaultCol = '#ff0000';
-    const customCol = customSelected ? props.selectedColorName : customDefaultCol;
+    const customCol = customSelected ? props.selectedColorName : (
+        colorChoices.find(ch => ch.name === props.selectedColorName)?.value
+    ) || customDefaultCol;
     return (
         <Fragment>
             <div
@@ -45,7 +48,7 @@ export default function(props: ColorPickerProps): JSX.Element {
                     </label>
                 ))}
 
-                <label className={toCss(s_colorPicker)} onClick={() => setShowCustomSelect(true)}>
+                <label className={toCss(s_colorPicker, s_customPicker)} onClick={() => setShowCustomSelect(true)}>
                     <input 
                         type='radio'
                         value={customCol}
@@ -70,12 +73,14 @@ export default function(props: ColorPickerProps): JSX.Element {
 
             </div>
 
-            <CustomColorDialog
-                initialCol={customCol}
-                show={showCustomSelect}
-                onConfirm={col => props.onSelectedColorChanged(col)}
-                onClose={() => setShowCustomSelect(false)}
-            />
+            {showCustomSelect && (
+                <CustomColorDialog
+                    initialCol={customCol}
+                    show={showCustomSelect}
+                    onConfirm={col => props.onSelectedColorChanged(col)}
+                    onClose={() => setShowCustomSelect(false)}
+                />
+            )}
 
         </Fragment>
     );

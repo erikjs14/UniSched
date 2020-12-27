@@ -30,6 +30,8 @@
             height: 100%;
             border-radius: 50%;
             z-index: 100;
+            box-shadow: .1rem .5rem .75rem rgba(0,0,0,0.2);
+            box-shadow: inset -.1rem -.2rem .25rem rgba(0,0,0, 0.25);
 
             &::before {
                 content: '';
@@ -83,5 +85,12 @@
                 stroke-dashoffset: 0;
             }
         }  
+
+        &.customPicker {
+
+            span {
+                transition: background-color .3s ease-in-out 0s;
+            }
+        }
     }
 }
