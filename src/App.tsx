@@ -80,8 +80,7 @@ function App() {
     }
 
     if (loading && location.pathname !== '/') {
-        // display global page load animation here
-        return <h1>LOADING...</h1>;
+        return <Loader global />;
     }
 
     const routes = (

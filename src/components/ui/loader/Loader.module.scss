@@ -1,5 +1,18 @@
 @import '../../../style/abstract/_variables';
 
+.Wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-width: 100%;
+    min-height: 100vh;
+
+    .Logo {
+        height: 7.5rem;
+    }
+}
+
 .Loader,
 .Loader:before,
 .Loader:after {
@@ -13,8 +26,8 @@
 }
 .Loader {
   color: $col-secondary-dark;
-  font-size: 10px;
-  margin: 0 auto 40px auto;
+//   color: $col-primary-light;
+  font-size: 8px;
   position: relative;
   text-indent: -9999em;
   -webkit-transform: translateZ(0);
