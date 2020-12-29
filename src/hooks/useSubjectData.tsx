@@ -455,10 +455,12 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                 out.push(data);
             }
             return (out as EventModelWithId[]).sort((d1, d2) => (
-                d1.firstStart.seconds > d2.firstStart.seconds ? 1
-                    : d1.firstStart.seconds === d2.firstStart.seconds 
-                        ? ( d1.type > d2.type ? 1 : d1.type === d2.type ? 0 : -1 )
-                        : -1
+                !d1.type && d2.type ? -1
+                    : d1.type && !d2.type ? 1
+                        : d1.firstStart.seconds > d2.firstStart.seconds ? 1
+                            : d1.firstStart.seconds === d2.firstStart.seconds 
+                                ? ( d1.type > d2.type ? 1 : d1.type === d2.type ? 0 : -1 )
+                                : -1
             ));
         case 'exam':
             for (const id in dataObject) {
@@ -476,10 +478,12 @@ const mapDataObjectToArray = (dataTypeId: DataTypeId, dataObject: AllDataModel, 
                 out.push(data);
             }
             return (out as ExamModelWithId[]).sort((d1, d2) => (
-                d1.start && !d2.start ? 1
-                    : d2.start && !d1.start ? -1
-                        : !d1.start || !d2.start ? (d1.type > d2.type ? 1 : d1.type === d2.type ? 0 : -1)
-                            : (d1.start.seconds > d2.start.seconds ? 1 : (d1.start.seconds === d2.start.seconds ? (d1.type > d2.type ? 1 : d1.type === d2.type ? 0 : -1) : -1))                
+                !d1.type && d2.type ? -1
+                    : d1.type && !d2.type ? 1
+                        : d1.start && !d2.start ? 1
+                            : d2.start && !d1.start ? -1
+                                : !d1.start || !d2.start ? (d1.type > d2.type ? 1 : d1.type === d2.type ? 0 : -1)
+                                    : (d1.start.seconds > d2.start.seconds ? 1 : (d1.start.seconds === d2.start.seconds ? (d1.type > d2.type ? 1 : d1.type === d2.type ? 0 : -1) : -1))                
             ));
         case 'task':
             for (const id in dataObject) {
