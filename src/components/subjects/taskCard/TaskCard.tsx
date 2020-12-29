@@ -15,11 +15,10 @@ import ExclusionsDialog from '../exclusionsDialog/ExclusionsDialog';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../..';
 import { PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS } from './../../../config/userPreferences';
+import MarkdownDialog from '../../dialogs/MarkdownDialog';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
-    checkAddInfo: s_checkAddInfo,
-    addInfoTextarea: s_addInfoTextarea,
     infoIcon: s_infoIcon,
     notificationsTextInput: s_notificationsTextInput,
     addNotificationsArea: s_addNotificationsArea,
@@ -34,6 +33,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
 
     const [inputTouched, setInputTouched] = useState(false);
     const [exclDialogShown, setExclDialogShown] = useState(false);
+    const [infoDialogShown, setInfoDialogShown] = useState(false);
 
     const { onChange } = props;
     const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, tasksTickedAt: oldTasksTickedAt, star, additionalInfo, exclusions, notifications } = props.data;
@@ -164,23 +164,23 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
             <div className={toCss(s_row)} >
                 <span>
                     Add Info
-                    <Input 
-                        addClass={s_checkAddInfo} 
-                        label='' 
-                        elementType='simple-checkbox' 
-                        value={additionalInfo ? true : false} 
-                        onChange={() => !additionalInfo ? onChange('additionalInfo', {text: ''}) : onChange('additionalInfo', null)} 
-                    />
                 </span>
-                {additionalInfo && 
-                    <Input
-                        addClass={s_addInfoTextarea} 
-                        label='Add Info'
-                        elementType='text-area'
-                        value={additionalInfo.text}
-                        onChange={newText => onChange('additionalInfo', {text: newText})}
+                <Button
+                    iconBefore='edit'
+                    onClick={() => setInfoDialogShown(prev => !prev)}
+                >
+                    Edit
+                </Button>
+                { infoDialogShown && (
+                    <MarkdownDialog
+                        title={'Additional Info for "'+props.data.type+'"'}
+                        show={infoDialogShown}
+                        onClose={() => setInfoDialogShown(false)}
+                        rawMarkdown={additionalInfo?.text || ''}
+                        onRawMarkdownChange={newText => onChange('additionalInfo', {text: newText})}
+                        editMode={true}
                     />
-                }
+                )}
             </div>
 
             { userPrefersEnableTaskNotifications &&

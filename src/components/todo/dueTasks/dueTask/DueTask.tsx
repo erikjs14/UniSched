@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useCallback } from 'react';
 
 import CSS from './DueTask.module.scss';
 import { DueTaskProps } from './DueTask.d';
@@ -7,8 +7,11 @@ import Input from '../../../ui/input/Input';
 import { findColorConfig } from './../../../../config/colorChoices';
 import AnimateHeight from 'react-animate-height';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faStar, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faStar, faPen, faClock } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
+import { toaster } from 'evergreen-ui';
+import { formatDateTimeOutput } from '../../../../util/timeUtil';
+import MarkdownDialog from '../../../dialogs/MarkdownDialog';
 const {
     wrapper: s_wrapper,
     fadeOut: s_fadeOut,
@@ -20,10 +23,12 @@ const {
     change: s_change,
     options: s_options,
     small: s_small,
-    highlight: s_highlight,
+    additionalText: s_additionalText,
 } = CSS;
 
 export default React.memo(function(props: DueTaskProps): JSX.Element {
+
+    const [additionalTextDialogShown, setAdditionalTextDialogShown] = useState(false);
 
     const [fadingOut, setFadingOut] = useState(false);
 
@@ -38,6 +43,14 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
     }, [onFadeOutComplete, fadeOut, fadingOut]);
 
     const history = useHistory();
+
+    const showTaskMetaInfo = useCallback((): void => {
+        toaster.notify(
+            `Due at ${formatDateTimeOutput(props.taskSemantic.dueAt)}`, {
+                id: 'unique',
+            }
+        );
+    }, [props.taskSemantic.dueAt]);
 
     return (
         <AnimateHeight
@@ -89,11 +102,32 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                                 <FontAwesomeIcon icon={faPen} />
                             </span>
 
+                            {props.taskSemantic.additionalInfo?.text && (
+                                <Fragment>
+                                    <span 
+                                        className={toCss(s_additionalText)}
+                                        onClick={() => setAdditionalTextDialogShown(true)}
+                                    >
+                                        <FontAwesomeIcon icon={faInfoCircle} />
+                                    </span>
+
+                                    { additionalTextDialogShown && (
+                                        <MarkdownDialog
+                                            show={additionalTextDialogShown}
+                                            title={'Additional Info for "'+props.taskSemantic.name+'"'}
+                                            onClose={() => setAdditionalTextDialogShown(false)}
+                                            rawMarkdown={props.taskSemantic.additionalInfo?.text}
+                                            editModeDisabled
+                                        />
+                                    )}
+                                </Fragment>
+                            )}
+
                             <span 
-                                className={toCss(s_moreInfo, (props.moreInfo ? s_highlight : ''))} 
-                                onClick={() => props.infoClicked?.()}
+                                className={toCss(s_moreInfo)}
+                                onClick={() => showTaskMetaInfo()}
                             >
-                                <FontAwesomeIcon icon={faInfoCircle} />
+                                <FontAwesomeIcon icon={faClock} />
                             </span>
                         </div>
                     </Fragment>

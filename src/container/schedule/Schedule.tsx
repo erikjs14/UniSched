@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo, Fragment } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import Loader from '../../components/ui/loader/Loader';
 import { toaster } from 'evergreen-ui';
@@ -25,6 +25,7 @@ import Input from '../../components/ui/input/Input';
 import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig'
 import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
 import { getSubAndTitleAndTimeFromEventTitle } from '../../util/scheduleUtil';
+import MarkdownDialog from '../../components/dialogs/MarkdownDialog';
 const {
     wrapperCalendar: s_wrapperCalendar,
     viewToggle: s_viewToggle,
@@ -37,6 +38,11 @@ const availableViews: {[id: string]: string} = {
     listWeek: 'List',
 };
 export default function() {
+
+    const [additionalInfo, setAdditionalInfo] = useState<{
+        title: string;
+        markdown: string;
+    }|null>(null);
 
     const spaces = useSelector((state: RootState) => state.user.spaces);
     const selectedSpaceId = useSelector((state: RootState) => state.user.selectedSpace);
@@ -100,21 +106,17 @@ export default function() {
         const {subjectName, eventName, timeStr} = getSubAndTitleAndTimeFromEventTitle(event);
         const addInfoText = event.extendedProps?.additionalInfoText;
 
-        const descr = (
-            <Fragment>
-                <p> {`${timeStr} ${subjectName}`} </p>
-                {addInfoText && <p>{addInfoText}</p>}
-            </Fragment>
-        );
-
-        toaster.notify(
-            eventName, 
-            {
-                id: 'unique',
-                duration: 2,
-                description: descr,
-            }
-        );
+        if (addInfoText) {
+            setAdditionalInfo({
+                title: `${timeStr}: ${subjectName} - ${eventName}`,
+                markdown: addInfoText || '',
+            });
+        } else {
+            toaster.notify(
+                `${timeStr}: ${subjectName} - ${eventName}`,
+                { id: 'unique', duration: 2 }
+            )
+        }
     }, []);
 
     if (eventsLoading || examsLoading) {
@@ -156,6 +158,16 @@ export default function() {
                     eventClick={eventClickHandler}
                     {...DEFAULT_SCHEDULE_CALENDAR_PROPS}
                 />
+
+                { additionalInfo && (
+                    <MarkdownDialog
+                        show={additionalInfo !== null}
+                        title={additionalInfo.title}
+                        rawMarkdown={additionalInfo.markdown}
+                        onClose={() => setAdditionalInfo(null)}
+                        editModeDisabled
+                    />
+                )}
             </div>
 
         </div>

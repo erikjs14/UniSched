@@ -6,11 +6,10 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, TaskSemantic, formatDateTimeOutput, getSecondsFromDate, subtractHours, dayIsInLimit } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, getSecondsFromDate, subtractHours, dayIsInLimit } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { toaster } from 'evergreen-ui';
 const {
     wrapper: s_wrapper,
     dayWrapper: s_dayWrapper,
@@ -85,14 +84,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         }
     }, [fadeTaskOut, semTasks]);
 
-    const showTaskInfo = useCallback((task: TaskSemantic): void => {
-        toaster.notify(
-            `Due at ${formatDateTimeOutput(task.dueAt)}`, {
-                id: 'unique',
-                description: task.additionalInfo?.text,
-            }
-        );
-    }, []);
+    
 
     // no tasks todo
     if (!semTasks || semTasks.length === 0) {
@@ -176,7 +168,6 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                             // setFadeTaskOut(prev => prev.filter(([id, ts]) => task.taskId !== id || task.dueAt.getTime() !== ts));
                                         }}
                                         backgroundColor={props.subjects[task.subjectId].color}
-                                        infoClicked={() => showTaskInfo(task)}
                                         small={props.small}
                                         star={task.star}
                                         moreInfo={task.additionalInfo?.text ? true : false}

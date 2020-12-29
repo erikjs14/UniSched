@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DateTimePicker from 'react-datepicker';
 
 import CSS from '../settingsCard/SettingsCard.module.scss';
@@ -10,15 +10,18 @@ import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
 import Input from '../../ui/input/Input';
+import { Button } from 'evergreen-ui';
+import MarkdownDialog from '../../dialogs/MarkdownDialog';
 const {
     row: s_row,
-    checkAddInfo: s_checkAddInfo,
-    addInfoTextarea: s_addInfoTextarea,
+    checkAddInfo: s_checkAddInfo
 } = CSS;
 
 export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
 
     const { additionalInfo } = props.data;
+
+    const [infoDialogShown, setInfoDialogShown] = useState(false);
     
     return (
         <SettingsCard
@@ -91,23 +94,23 @@ export default function(props: SubjectDataCardProps<ExamModel>): JSX.Element {
                 <div className={toCss(s_row)} >
                     <span>
                         Add Info
-                        <Input 
-                            addClass={s_checkAddInfo} 
-                            label='' 
-                            elementType='simple-checkbox' 
-                            value={additionalInfo ? true : false} 
-                            onChange={() => !additionalInfo ? props.onChange<{text: string;}|null>('additionalInfo', {text: ''}) : props.onChange<{text: string;}|null>('additionalInfo', null)} 
-                        />
                     </span>
-                    {additionalInfo && 
-                        <Input
-                            addClass={s_addInfoTextarea} 
-                            label='Add Info'
-                            elementType='text-area'
-                            value={additionalInfo.text}
-                            onChange={newText => props.onChange<{text: string;}|null>('additionalInfo', {text: newText as string})}
+                    <Button
+                        iconBefore='edit'
+                        onClick={() => setInfoDialogShown(prev => !prev)}
+                    >
+                        Edit
+                    </Button>
+                    { infoDialogShown && (
+                        <MarkdownDialog
+                            title={'Additional Info for "'+props.data.type+'"'}
+                            show={infoDialogShown}
+                            onClose={() => setInfoDialogShown(false)}
+                            rawMarkdown={additionalInfo?.text || ''}
+                            onRawMarkdownChange={newText => props.onChange('additionalInfo', {text: newText})}
+                            editMode={true}
                         />
-                    }
+                    )}
                 </div>
 
         </SettingsCard>

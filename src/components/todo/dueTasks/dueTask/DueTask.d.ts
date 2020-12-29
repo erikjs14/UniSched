@@ -7,7 +7,6 @@ export interface DueTaskProps {
     fadeOut?: boolean;
     onFadeOutComplete?: Function;
     backgroundColor?: string;
-    infoClicked?: Function;
     small?: boolean;
     star?: boolean;
     moreInfo?: boolean;

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useRef, useMemo, Fragment } from 'react';
+import React, { useEffect, useCallback, useState, useRef, useMemo } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import FullCalendar from '@fullcalendar/react';
 import Loader from '../../components/ui/loader/Loader';
@@ -23,6 +23,7 @@ import { PREF_ID_SHOW_ONLY_FUTURE_EXAMS } from './../../config/userPreferences';
 import Input from '../../components/ui/input/Input';
 import { getSubAndTitleAndTimeFromEventTitle } from '../../util/scheduleUtil';
 import { toaster } from 'evergreen-ui';
+import MarkdownDialog from '../../components/dialogs/MarkdownDialog';
 
 const {
     wrapperCalendar: s_wrapperCalendar,
@@ -35,6 +36,11 @@ const availableViews: {[id: string]: string} = {
 };
 
 export default function() {
+
+    const [additionalInfo, setAdditionalInfo] = useState<{
+        title: string;
+        markdown: string;
+    }|null>(null);
 
     const spaces = useSelector((state: RootState) => state.user.spaces);
     const selectedSpaceId = useSelector((state: RootState) => state.user.selectedSpace);
@@ -81,21 +87,17 @@ export default function() {
         const {subjectName, eventName, timeStr} = getSubAndTitleAndTimeFromEventTitle(event);
         const addInfoText = event.extendedProps?.additionalInfoText;
 
-        const descr = (
-            <Fragment>
-                <p> {`${timeStr} ${subjectName}`} </p>
-                {addInfoText && <p>{addInfoText}</p>}
-            </Fragment>
-        );
-
-        toaster.notify(
-            eventName, 
-            {
-                id: 'unique',
-                duration: 2,
-                description: descr,
-            }
-        );
+        if (addInfoText) {
+            setAdditionalInfo({
+                title: `${timeStr}: ${subjectName} - ${eventName}`,
+                markdown: addInfoText || '',
+            });
+        } else {
+            toaster.notify(
+                `${timeStr}: ${subjectName} - ${eventName}`,
+                { id: 'unique', duration: 2 }
+            )
+        }
     }, []);
 
     if (loading) {
@@ -139,6 +141,16 @@ export default function() {
                     eventClick={eventClickHandler}
                     eventTimeFormat={CALENDAR_DEFAULT_TIME_FORMAT}
                 />
+
+                { additionalInfo && (
+                    <MarkdownDialog
+                        show={additionalInfo !== null}
+                        title={additionalInfo.title}
+                        rawMarkdown={additionalInfo.markdown}
+                        onClose={() => setAdditionalInfo(null)}
+                        editModeDisabled
+                    />
+                )}
             </div>
 
         </div>

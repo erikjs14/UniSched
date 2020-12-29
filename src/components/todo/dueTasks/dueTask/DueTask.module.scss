@@ -70,33 +70,19 @@
             margin-right: 1rem;
         }
 
-        .moreInfo {
-            cursor: pointer;
-            transform: scale(.9);
-            opacity: .4;
-
-            transition: all .3s;
-            
-
-            &.highlight {
-                opacity: .75;
-                transform: scale(1);
-                
-                &:hover {
-                    transform: scale(1.1);
-                    opacity: .8;
-                }
-            }
-        }
-
+        .moreInfo,
+        .additionalText,
         .change {
             cursor: pointer;
             opacity: .4;
 
-            transition: all .3s;
+            transition: all .25s;
             &:hover {
-                transform: scale(1.1);
                 opacity: .8;
+            }
+
+            &.highlight {
+                opacity: .75;
             }
         }
     }
