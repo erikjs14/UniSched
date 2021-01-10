@@ -79,7 +79,7 @@ export default function(): JSX.Element {
         data: tasks,
     } = useSelector((state: RootState) => state.data.tasks);
 
-    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId) : null, [selectedSpaceId, subjects]);
+    const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId, true) : null, [selectedSpaceId, subjects]);
     const filteredExamsConfig = useMemo(() => filteredSubjects && examsConfig ? examsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [examsConfig, filteredSubjects]);
     const filteredEventsConfig = useMemo(() => filteredSubjects && eventsConfig ? eventsConfig.filter(e => filteredSubjects.some(s => s.id === e.subjectId)) : null, [eventsConfig, filteredSubjects]);
     const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
