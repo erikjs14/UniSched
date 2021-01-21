@@ -131,6 +131,11 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
+            flex-wrap: wrap;
+
+            &:not(:last-child) {
+                margin-bottom: 1rem;
+            }
             
             .label {
                 margin-left: 1.5rem;
@@ -139,6 +144,11 @@
             .info {
                 margin-left: 1rem;
                 height: .7em;
+            }
+
+            .transitionEase,
+            .transitionEase p {
+                transition: all .3s ease;
             }
         }
     }

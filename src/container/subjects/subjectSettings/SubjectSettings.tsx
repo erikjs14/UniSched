@@ -2,7 +2,9 @@ import React, { useReducer, useState, useEffect, useCallback, useRef, Fragment }
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Button, Dialog, InfoSignIcon, Checkbox, Select, Tooltip } from 'evergreen-ui';
+import { Button, Dialog, InfoSignIcon, Checkbox, Select, Tooltip, Text, Pane } from 'evergreen-ui';
+import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
 
 import CSS from './SubjectSettings.module.scss';
 import { SubjectSettingsProps } from './SubjectSettings.d';
@@ -13,7 +15,7 @@ import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './../../../firebase/firestore';
 import { useHistory, Prompt } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
-import { reducer, initialState, setSubject, setError, setLoading, changeName, changeExcludeTasksFromAll, changeColor, startSaving, setSaved, initialStateNew, setSpace } from './state';
+import { reducer, initialState, setSubject, setError, setLoading, changeName, changeExcludeTasksFromAll, changeColor, startSaving, setSaved, initialStateNew, setSpace, changeAdditionalInfo } from './state';
 import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/subjects/examCard/ExamCard';
@@ -30,6 +32,9 @@ import { getTimestampFromDate } from '../../../util/timeUtil';
 import '../../../style/override.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 import { RootState } from '../../..';
+import MarkdownDialog from '../../../components/dialogs/MarkdownDialog';
+import mdCSS from '../../../components/dialogs/MarkdownDialog.module.scss' ;
+const { resetForMarkdown: s_resetForMarkdown } = mdCSS;
 const {
     wrapper: s_wrapper,
     titleInput: s_titleInput,
@@ -49,6 +54,7 @@ const {
     info: s_info,
     item: s_item,
     configArea: s_configArea,
+    transitionEase: s_transitionEase,
 } = CSS;
 
 
@@ -65,7 +71,6 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
         ? useReducer(reducer, initialStateNew(!globalSelectedSpaceId || globalSelectedSpaceId === 'all' ? 'mainSpace' : globalSelectedSpaceId))
         : useReducer(reducer, initialState);
 
-
     const [wantDelete, setWantDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
@@ -79,6 +84,8 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [tasksSaveState, setTasksSaveState] = useState(false);
 
     const [markSubTitleEmpty, setMarkSubTitleEmpty] = useState(false);
+
+    const [addInfoDialogShown, setAddInfoDialogShown] = useState(false);
 
     const eventsRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
@@ -112,6 +119,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         spaceId: data.spaceId,
                         timeCreated: data.timeCreated,
                         excludeTasksFromAll: data.excludeTasksFromAll,
+                        additionalInfo: data.additionalInfo,
                     }, {
                         exams: data.exams,
                         events: data.events,
@@ -192,6 +200,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                     spaceId: state.subject.spaceId,
                     excludeTasksFromAll: state.subject.excludeTasksFromAll,
                     timeCreated: getTimestampFromDate(new Date()),
+                    additionalInfo: state.subject.additionalInfo,
                 };
                 addSubject(sub)
                     .then(id => {
@@ -216,6 +225,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         color: state.subject.color.newColor.name,
                         spaceId: state.subject.spaceId,
                         excludeTasksFromAll: state.subject.excludeTasksFromAll,
+                        additionalInfo: state.subject.additionalInfo,
                     }
                 ).then(() => {
                     if (state.subject) {
@@ -226,6 +236,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                             spaceId: state.subject.spaceId,
                             excludeTasksFromAll: state.subject.excludeTasksFromAll,
                             timeCreated: state.subject.timeCreated,
+                            additionalInfo: state.subject.additionalInfo,
                         }));
                     }
                     dispatch(setSaved());
@@ -382,6 +393,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 </div>
 
                                 <div className={toCss(s_configArea)} >
+
                                     <div className={toCss(s_item)} >
                                         <Checkbox
                                             label={null}
@@ -395,6 +407,53 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                             </Tooltip>  
                                         </h3>  
                                     </div>
+
+                                    <div className={toCss(s_item)} >
+                                        <h3 style={{marginRight: '1.5rem'}}>
+                                            Additional Info
+                                        </h3>
+
+                                        <Button
+                                            appearance='minimal'
+                                            iconBefore='edit'
+                                            style={{color: 'inherit'}}
+                                            onClick={() => setAddInfoDialogShown(prev => !prev)}
+                                        >
+                                            Edit
+                                        </Button>
+
+                                        { state.subject?.additionalInfo && (
+                                            <Pane 
+                                                flexBasis='100%' 
+                                                backgroundColor={state.subject?.color.newColor.textColor === '#fff' ? 'rgba(0,0,0, 0.05)' : 'rgba(255, 255, 255, 0.05)'}
+                                                marginY='.5rem'
+                                                marginX='1rem'
+                                                paddingY='.5rem'
+                                                paddingX='1rem'
+                                                borderRadius='.5rem' 
+                                                className={toCss(s_resetForMarkdown, s_transitionEase)}
+                                            >
+                                                <Text color={state.subject?.color.newColor.textColor || 'white'} className={toCss(s_transitionEase)}>
+                                                    <ReactMarkdown
+                                                        plugins={[gfm]} 
+                                                        children={state.subject?.additionalInfo || '*The formatted markdown will appear here*'}
+                                                    />
+                                                </Text>
+                                            </Pane>
+                                        )}
+
+                                        { addInfoDialogShown && (
+                                            <MarkdownDialog
+                                                title={'Additional Info for "'+state.subject?.name+'"'}
+                                                show={addInfoDialogShown}
+                                                onClose={() => setAddInfoDialogShown(false)}
+                                                rawMarkdown={state.subject?.additionalInfo || ''}
+                                                onRawMarkdownChange={newText => dispatch(changeAdditionalInfo(newText))}
+                                                editMode={true}
+                                            />
+                                        )}
+                                    </div>
+
                                 </div>
 
                                 <div className={toCss(s_footerArea)}>
