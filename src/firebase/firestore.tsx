@@ -8,12 +8,13 @@ import { getCurrentTimestamp } from './../util/timeUtil';
 
 const users_ref = db.collection(fields.USER_COL);
 const user_ref = () => users_ref.doc(firebase.auth().currentUser?.uid);
-const subjects_ref = () => user_ref().collection(fields.SUBJECTS_COL);
+const all_subjects_ref = () => user_ref().collection(fields.SUBJECTS_COL);
+const subjects_ref_by_archive = (archiveId: string) => user_ref().collection(fields.SUBJECTS_COL).where('archiveId', '==', archiveId);
+const no_archive_subjects_ref = () => user_ref().collection(fields.SUBJECTS_COL).where('archiveId', '==', '');
 const spaces_ref = () => user_ref().collection(fields.SPACES_COL);
 const spaces_q_by_name = () => user_ref().collection(fields.SPACES_COL).orderBy('name');
 const space_ref = (spaceId: string) => spaces_ref().doc(spaceId);
-const subjects_q_by_name = () => user_ref().collection(fields.SUBJECTS_COL).orderBy('name');
-const subject_ref = (subjectId: string) => subjects_ref().doc(subjectId);
+const subject_ref = (subjectId: string) => all_subjects_ref().doc(subjectId);
 const exams_ref = (subjectId: string) => subject_ref(subjectId).collection(fields.EXAMS_COL);
 const exams_q_by_timestamp = (subjectId: string) => exams_ref(subjectId).orderBy('timeCreated', 'desc');
 const exam_ref = (subjectId: string, examId: string) => exams_ref(subjectId).doc(examId);
@@ -82,8 +83,8 @@ export const fetchSpaces = async (): Promise<models.SpaceModelWithId[]> => {
     return spaces;
 }
 
-export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[]> => {
-    const data: DocDataWithId[] = await fetchCollection(subjects_q_by_name());
+export const fetchSubjectsShallow = async (onlyNonArchived: boolean = true): Promise<models.SubjectModelWithId[]> => {
+    const data: DocDataWithId[] = await fetchCollection(onlyNonArchived ? no_archive_subjects_ref() : all_subjects_ref());
     const subjects: models.SubjectModelWithId[] = [];
 
     data.forEach(dataWithId => subjects.push({
@@ -97,7 +98,33 @@ export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[
         archiveId: dataWithId.data?.archiveId,
     }));
 
-    return subjects;
+    return subjects.sort((a, b) => {
+        var textA = a.name.toLowerCase().trim();
+        var textB = b.name.toLowerCase().trim();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
+}
+
+export const fetchSubjectsShallowByArchive = async (archiveId: string): Promise<models.SubjectModelWithId[]> => {
+    const data: DocDataWithId[] = await fetchCollection(subjects_ref_by_archive(archiveId));
+    const subjects: models.SubjectModelWithId[] = [];
+
+    data.forEach(dataWithId => subjects.push({
+        id: dataWithId.id,
+        color: dataWithId.data?.color,
+        name: dataWithId.data?.name,
+        spaceId: dataWithId.data?.spaceId ? dataWithId.data?.spaceId : 'mainSpace',
+        excludeTasksFromAll: dataWithId.data?.excludeTasksFromAll ? dataWithId.data?.excludeTasksFromAll : false,
+        additionalInfo: dataWithId.data?.additionalInfo ? dataWithId.data?.additionalInfo : "",
+        timeCreated: dataWithId.data?.timeCreated,
+        archiveId: dataWithId.data?.archiveId,
+    }));
+
+    return subjects.sort((a, b) => {
+        var textA = a.name.toLowerCase().trim();
+        var textB = b.name.toLowerCase().trim();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+    });
 }
 
 export const fetchSubject = async (subjectId: string): Promise<models.SubjectModelWithId> => {
@@ -271,7 +298,7 @@ export const addSpace = async (space: models.SpaceModel): Promise<string> => {
 }
 
 export const addSubject = async (subject: models.SubjectModel): Promise<string> => {
-    return await addDoc(subjects_ref(), subject);
+    return await addDoc(all_subjects_ref(), subject);
 }
 
 export const addTask = async (subjectId: string, task: models.TaskModel): Promise<string> => {
