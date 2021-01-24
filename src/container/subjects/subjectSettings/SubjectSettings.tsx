@@ -318,20 +318,20 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         display='flex'
                                     >
                                         <Tooltip content='Archive' showDelay={500}>
-                                            <div 
+                                            <Pane 
                                                 className={toCss(s_archiveIcon)}
                                                 onClick={() => setWantArchive(state.subject?.archiveId || NO_GROUP_ASSIGNMENT_VAL)}    
                                             >
                                                 <FontAwesomeIcon icon={faArchive} />
-                                            </div>
+                                            </Pane>
                                         </Tooltip>
                                         <Tooltip content='Delete' showDelay={500}>
-                                            <div 
+                                            <Pane 
                                                 className={toCss(s_trashIcon)}
                                                 onClick={() => setWantDelete(true)}    
                                             >
                                                 <FontAwesomeIcon icon={faTrash} />
-                                            </div>
+                                            </Pane>
                                         </Tooltip>
                                     </Pane>
                                 </div>
