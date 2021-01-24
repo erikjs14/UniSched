@@ -44,6 +44,7 @@
             width: 80%;
         }
 
+        .archiveIcon,
         .trashIcon {
             border-radius: 50%;
             width: 5rem;
@@ -51,6 +52,10 @@
             font-size: 2.5rem;
             cursor: pointer;
             position: relative;
+
+            &:not(:last-child) {
+                margin-right: 3rem;
+            }
 
             svg {
                 @include absCenter;
@@ -61,6 +66,14 @@
             &:hover {
                 background-color: rgba(#000, .1);
             }
+        }
+
+        .trashIcon {
+
+        }
+
+        .trashIcon {
+
         }
     }
 

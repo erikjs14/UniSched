@@ -1,5 +1,6 @@
 import { SubjectModelWithId, EventModelWithId, ExamModelWithId, TaskModelWithId, Timestamp } from './../../../firebase/model';
 import { Color, findColorConfig, defaultColorConfig } from './../../../config/colorChoices';
+import { NO_GROUP_ASSIGNMENT_VAL } from '../../../config/userPreferences';
 
 interface ColorConfig {
     newColor: Color;
@@ -167,7 +168,7 @@ export const initialStateNew = (spaceId: string): StateModel => ({
         spaceId: spaceId,
         excludeTasksFromAll: false,
         additionalInfo: '',
-        archiveId: '',
+        archiveId: NO_GROUP_ASSIGNMENT_VAL,
     },
     initialData: {
         events: [],

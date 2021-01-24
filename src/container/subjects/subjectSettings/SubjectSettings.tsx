@@ -1,8 +1,8 @@
 import React, { useReducer, useState, useEffect, useCallback, useRef, Fragment } from 'react';
 import { Transition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Button, Dialog, InfoSignIcon, Checkbox, Select, Tooltip, Text, Pane } from 'evergreen-ui';
+import { faTrash, faArrowLeft, faArchive } from '@fortawesome/free-solid-svg-icons';
+import { Button, Dialog, InfoSignIcon, Checkbox, Select, Tooltip, Text, Pane, RadioGroup } from 'evergreen-ui';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
@@ -13,9 +13,9 @@ import Input from '../../../components/ui/input/Input';
 import { defaultColor } from '../../../config/colorChoices';
 import ColorPicker from '../../../components/ui/colorPicker/ColorPicker';
 import { updateSubject, addSubject, deleteSubject, fetchSubjectDeep } from './../../../firebase/firestore';
-import { useHistory, Prompt } from 'react-router-dom';
+import { useHistory, Prompt, Link } from 'react-router-dom';
 import Loader from '../../../components/ui/loader/Loader';
-import { reducer, initialState, setSubject, setError, setLoading, changeName, changeExcludeTasksFromAll, changeColor, startSaving, setSaved, initialStateNew, setSpace, changeAdditionalInfo } from './state';
+import { reducer, initialState, setSubject, setError, setLoading, changeName, changeExcludeTasksFromAll, changeColor, startSaving, setSaved, initialStateNew, setSpace, changeAdditionalInfo, setArchiveId } from './state';
 import { EXAM_START_STATE, EVENTS_START_STATE, getTaskStartState, DEFAULT_TOASTER_CONFIG } from './../../../config/settingsConfig';
 import { ICON_EXAMS_TYPE, ICON_TODO_TYPE } from '../../../config/globalTypes.d';
 import ExamCard from '../../../components/subjects/examCard/ExamCard';
@@ -34,6 +34,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { RootState } from '../../..';
 import MarkdownDialog from '../../../components/dialogs/MarkdownDialog';
 import mdCSS from '../../../components/dialogs/MarkdownDialog.module.scss' ;
+import { GroupItem, NO_GROUP_ASSIGNMENT_VAL, PREF_ID_ARCHIVES } from '../../../config/userPreferences';
 const { resetForMarkdown: s_resetForMarkdown } = mdCSS;
 const {
     wrapper: s_wrapper,
@@ -42,6 +43,7 @@ const {
     header: s_header,
     settingsArea: s_settingsArea,
     trashIcon: s_trashIcon,
+    archiveIcon: s_archiveIcon,
     eventsArea: s_eventsArea,
     tasksArea: s_tasksArea,
     examsArea: s_examsArea,
@@ -74,6 +76,8 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [wantDelete, setWantDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
+    const [wantArchive, setWantArchive] = useState<boolean|string>(false);
+
     const [eventsDataChanged, setEventsDataChanged] = useState(false);
     const [eventsSaveState, setEventsSaveState] = useState(false);
 
@@ -86,6 +90,8 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
     const [markSubTitleEmpty, setMarkSubTitleEmpty] = useState(false);
 
     const [addInfoDialogShown, setAddInfoDialogShown] = useState(false);
+
+    const availableArchives = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ARCHIVES] as GroupItem[]);
 
     const eventsRef = useRef<{
         save: (newSubjectId: string | undefined) => void;
@@ -228,6 +234,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         spaceId: state.subject.spaceId,
                         excludeTasksFromAll: state.subject.excludeTasksFromAll,
                         additionalInfo: state.subject.additionalInfo,
+                        archiveId: state.subject.archiveId,
                     }
                 ).then(() => {
                     if (state.subject) {
@@ -307,13 +314,35 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                         labelLeft
                                         markWhenEmpty={markSubTitleEmpty}
                                     />
-                                    <div 
-                                        className={toCss(s_trashIcon)}
-                                        onClick={() => setWantDelete(true)}    
+                                    <Pane
+                                        display='flex'
                                     >
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </div>
+                                        <Tooltip content='Archive' showDelay={500}>
+                                            <div 
+                                                className={toCss(s_archiveIcon)}
+                                                onClick={() => setWantArchive(state.subject?.archiveId || NO_GROUP_ASSIGNMENT_VAL)}    
+                                            >
+                                                <FontAwesomeIcon icon={faArchive} />
+                                            </div>
+                                        </Tooltip>
+                                        <Tooltip content='Delete' showDelay={500}>
+                                            <div 
+                                                className={toCss(s_trashIcon)}
+                                                onClick={() => setWantDelete(true)}    
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </div>
+                                        </Tooltip>
+                                    </Pane>
                                 </div>
+
+                                { state.subject?.archiveId !== NO_GROUP_ASSIGNMENT_VAL && (
+                                    <Pane
+                                        paddingY='2rem'
+                                    >
+                                        <Text textAlign='center' fontSize='2em' fontWeight={600} display='block'>!!! ARCHIVED !!!</Text>
+                                    </Pane>
+                                )}
 
                                 <ColorPicker
                                     style={{zIndex: 100}}
@@ -475,6 +504,35 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                 </div>
                                 
                             </div>
+
+                            <Dialog
+                                isShown={typeof wantArchive === 'string'}
+                                title={`Archive subject ${state.subject?.name}`}
+                                confirmLabel='Confirm'
+                                onCloseComplete={() => { //closed in another way
+                                    setWantArchive(false);
+                                }}
+                                onConfirm={close => {
+                                    close();
+                                    if (typeof wantArchive !== 'string') return;
+                                    dispatch(setArchiveId(wantArchive));
+                                    saveHandler();
+                                }}
+                            >
+                                { availableArchives?.length > 0 ? (
+                                    <RadioGroup 
+                                        label='Select Archive'
+                                        value={typeof wantArchive === 'string' ? wantArchive : NO_GROUP_ASSIGNMENT_VAL}
+                                        options={[{label: 'None', value: NO_GROUP_ASSIGNMENT_VAL}].concat(availableArchives.map(arch => ({
+                                            label: arch.name,
+                                            value: arch.id,
+                                        })))}
+                                        onChange={e => setWantArchive(e)}
+                                    />
+                                ) : (
+                                    <Text>No archives configured yet. Add them in the <Link to='/settings'>settings</Link>.</Text>
+                                )}  
+                            </Dialog>
 
                             <Dialog
                                 isShown={wantDelete}

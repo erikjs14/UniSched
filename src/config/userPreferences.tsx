@@ -36,6 +36,7 @@ export interface OptionalGroupingPreferenceConfig extends BasePreferenceConfig {
     type: 'optionalGrouping';
     default: GroupItem[];
 }
+export const NO_GROUP_ASSIGNMENT_VAL = '';
 
 export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig | DeviceSpecificBoolPreferenceConfig | OptionalGroupingPreferenceConfig;
 
