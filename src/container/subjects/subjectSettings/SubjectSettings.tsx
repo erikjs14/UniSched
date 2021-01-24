@@ -120,6 +120,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                         timeCreated: data.timeCreated,
                         excludeTasksFromAll: data.excludeTasksFromAll,
                         additionalInfo: data.additionalInfo,
+                        archiveId: data.archiveId,
                     }, {
                         exams: data.exams,
                         events: data.events,
@@ -201,6 +202,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                     excludeTasksFromAll: state.subject.excludeTasksFromAll,
                     timeCreated: getTimestampFromDate(new Date()),
                     additionalInfo: state.subject.additionalInfo,
+                    archiveId: state.subject.archiveId,
                 };
                 addSubject(sub)
                     .then(id => {
@@ -237,6 +239,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                             excludeTasksFromAll: state.subject.excludeTasksFromAll,
                             timeCreated: state.subject.timeCreated,
                             additionalInfo: state.subject.additionalInfo,
+                            archiveId: state.subject.archiveId,
                         }));
                     }
                     dispatch(setSaved());

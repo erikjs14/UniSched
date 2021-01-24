@@ -94,6 +94,7 @@ export const fetchSubjectsShallow = async (): Promise<models.SubjectModelWithId[
         excludeTasksFromAll: dataWithId.data?.excludeTasksFromAll ? dataWithId.data?.excludeTasksFromAll : false,
         additionalInfo: dataWithId.data?.additionalInfo ? dataWithId.data?.additionalInfo : "",
         timeCreated: dataWithId.data?.timeCreated,
+        archiveId: dataWithId.data?.archiveId,
     }));
 
     return subjects;
@@ -109,6 +110,7 @@ export const fetchSubject = async (subjectId: string): Promise<models.SubjectMod
         excludeTasksFromAll: docWithId.data?.excludeTasksFromAll ? docWithId.data?.excludeTasksFromAll : false,
         additionalInfo: docWithId.data?.additionalInfo ? docWithId.data?.additionalInfo : false,
         timeCreated: docWithId.data?.timeCreated,
+        archiveId: docWithId.data?.archiveId,
     };
 }
 

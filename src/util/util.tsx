@@ -68,3 +68,5 @@ export const filterSubjectsForSpace = (subjects: SubjectModelWithId[], selectedS
             }
         });
 }
+
+export const getPseudoRandomIdByTime = () => new Date().getTime() + '-' + Math.floor(Math.random() * 1000000);

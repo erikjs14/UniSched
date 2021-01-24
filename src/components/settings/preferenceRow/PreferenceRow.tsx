@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Switch, Tooltip, InfoSignIcon, CornerDialog } from 'evergreen-ui';
+import { Switch, Tooltip, InfoSignIcon, CornerDialog, Button } from 'evergreen-ui';
 
 import CSS from './PreferenceRow.module.scss';
 import { PreferenceRowProps } from './PreferenceRow.d';
@@ -8,6 +8,7 @@ import { toCss } from '../../../util/util';
 import { registerNotificationsWorker } from '../../../util/subscription';
 import { resetPermissionPreferences } from '../../../store/actions';
 import useUnischedId from '../../../hooks/useUnischedId';
+import GroupingDailog from '../groupingDialog/GroupingDailog';
 const {
     wrapper: s_wrapper,
     name: s_name,
@@ -25,6 +26,7 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
         newVal: null,
         keepTrue: false,
     });
+    const [archiveDialogShown, setArchiveDialogShown] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -83,6 +85,29 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                     onChange={e => props.onChange(parseInt(e.target.value))}
                 />
             );
+            break;
+        case 'optionalGrouping':
+            inputEl = (
+                <>
+
+                    <Button
+                        appearance='minimal'
+                        iconBefore='edit'
+                        onClick={() => setArchiveDialogShown(prev => !prev)}
+                    >
+                        Edit
+                    </Button>
+
+                    { archiveDialogShown && (
+                        <GroupingDailog 
+                            {...props}
+                            onCloseComplete={() => setArchiveDialogShown(false)}
+                            title='Edit Archives'
+                            idsOfEmptyGroupItems={props.getIdsOfEmptyGroupItems?.(props.config.id) || []} //unsauber...
+                        />
+                    )}
+                </>
+            )
             break;
         default:
             inputEl = null;

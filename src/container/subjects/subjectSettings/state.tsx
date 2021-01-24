@@ -18,6 +18,7 @@ interface StateModel {
         color: ColorConfig;
         excludeTasksFromAll: boolean;
         additionalInfo: string;
+        archiveId: string;
         timeCreated: Timestamp | undefined;
         changed: boolean;
     } | null;
@@ -29,6 +30,17 @@ interface StateModel {
 
 interface ActionModel {
     type: string;
+}
+
+interface SetArchiveIdActionModel extends ActionModel {
+    archiveId: string;
+}
+const ACTION_SET_ARCHIVE_ID = 'ACTION_SET_ARCHIVE_ID';
+export const setArchiveId = (archiveId: string): SetArchiveIdActionModel => {
+    return {
+        type: ACTION_SET_ARCHIVE_ID,
+        archiveId,
+    };
 }
 
 interface SetSpaceActionModel extends ActionModel {
@@ -154,7 +166,8 @@ export const initialStateNew = (spaceId: string): StateModel => ({
         timeCreated: undefined,
         spaceId: spaceId,
         excludeTasksFromAll: false,
-        additionalInfo: "",
+        additionalInfo: '',
+        archiveId: '',
     },
     initialData: {
         events: [],
@@ -184,6 +197,16 @@ export const reducer = (state: StateModel, action: ActionModel & any): StateMode
                 },
                 initialData: action.initialData,
             }
+        case ACTION_SET_ARCHIVE_ID:
+            if (!state.subject) return state;
+            return {
+                ...state,
+                subject: {
+                    ...state.subject,
+                    archiveId: action.archiveId,
+                    changed: true,
+                },
+            };
         case ACTION_SET_SPACE:
             if (!state.subject) return state;
             return {

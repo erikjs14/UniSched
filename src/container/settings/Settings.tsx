@@ -4,7 +4,7 @@ import { RootState } from '../..';
 import PreferenceRows from '../../components/settings/PreferenceRows';
 import * as actions from '../../store/actions';
 
-import { PREFERENCES_CONFIG, PreferenceId, PreferenceVal } from '../../config/userPreferences';
+import { PREFERENCES_CONFIG, PreferenceId, PreferenceVal, getIdsOfEmptyGroupItems, GroupItem } from '../../config/userPreferences';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { ICON_SETTINGS_ALT } from './../../config/globalTypes.d';
 import AddSpace from './addSpace/AddSpace';
@@ -13,19 +13,25 @@ import AlterSpace from './alterSpace/AlterSpace';
 
 import CSS from './Settings.module.scss';
 import { toCss } from '../../util/util';
+import { PreferencesState } from './../../config/userPreferences';
 const {
     row: s_row,
 } = CSS;
 
 export default function(): JSX.Element {
 
-    const preferences = useSelector((state: RootState) => state.user.preferences);
+    const preferences: PreferencesState | null = useSelector((state: RootState) => state.user.preferences);
     const error = useSelector((state: RootState) => state.user.preferenceError);
+    const shallowSubjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const dispatch = useDispatch();
 
     const preferenceChangedHandler = useCallback((id: PreferenceId, value: PreferenceVal) => {
         dispatch(actions.setUserPreference(id, value));
     }, [dispatch]);
+
+    const getGroupItems = useCallback((groupId: string) => {
+        return preferences?.[groupId] as GroupItem[];
+    }, [preferences]);
     
     return (
         <div>
@@ -42,6 +48,7 @@ export default function(): JSX.Element {
                             preferences={preferences}
                             preferenceConfigs={PREFERENCES_CONFIG}
                             onChange={preferenceChangedHandler}
+                            getIdsOfEmptyGroupItems={groupId => getIdsOfEmptyGroupItems(groupId, getGroupItems(groupId), shallowSubjects || [])}
                         />
 
                         <AddSpace       wrapCss={toCss(s_row)} />

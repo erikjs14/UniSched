@@ -1,3 +1,4 @@
+import { SubjectModel, SubjectModelWithId } from '../firebase/model';
 import { getResult } from './../util/util';
 
 export interface BasePreferenceConfig {
@@ -27,8 +28,16 @@ export interface DeviceSpecificBoolPreferenceConfig extends BasePreferenceConfig
     default: { [id: string]: boolean };
     uponActivation?: Function | string;
 }
+export type GroupItem = {
+    id: string;
+    name: string;
+};
+export interface OptionalGroupingPreferenceConfig extends BasePreferenceConfig {
+    type: 'optionalGrouping';
+    default: GroupItem[];
+}
 
-export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig | DeviceSpecificBoolPreferenceConfig;
+export type PreferenceConfig = BooleanPreferenceConfig | IntegerPreferenceConfig | DeviceSpecificBoolPreferenceConfig | OptionalGroupingPreferenceConfig;
 
 export const PREF_ID_ACTIVATE_RANDOM_AVATAR = 'activateRandomAvatar';
 export const PREF_ID_SHOW_ONLY_FUTURE_EXAMS = 'showOnlyFutureExams';
@@ -43,6 +52,7 @@ export const PREF_ID_MINUTES_BEFORE_EVENT_NOTIFICATION = 'remindBeforeEvent';
 export const PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM = 'showReminderNotificationBeforeExam';
 export const PREF_ID_HOURS_BEFORE_EXAM_NOTIFICATION = 'remindBeforeExam';
 export const PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS = 'enableBeforeTaskNotifications';
+export const PREF_ID_ARCHIVES = 'archives';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
 export const PREFERENCES_CONFIG: PreferenceConfig[] = [
@@ -167,6 +177,13 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         default: {},
         uponActivation: 'activateNotifications',
     },
+    {
+        id: PREF_ID_ARCHIVES,
+        type: 'optionalGrouping',
+        name: 'Define Archives',
+        description: 'You can archive subjects into self-defined archives',
+        default: [],
+    }
 ]
 
 const allIds = PREFERENCES_CONFIG.map(config => config.id);
@@ -181,3 +198,15 @@ export const DEFAULT_PREFERENCES_STATE: PreferencesState = getResult(() => {
     PREFERENCES_CONFIG.forEach(conf => p[conf.id] = conf.default);
     return p;
 });
+
+export const getIdsOfEmptyGroupItems = (groupId: keyof SubjectModel, groupItems: GroupItem[], subjects: SubjectModelWithId[]) => {
+    // init array with all group ids, then remove if subject is assigned to it
+    let emptyGroupItemIds = groupItems.map(g => g.id);
+    for (let sub of subjects) {
+        const idx = emptyGroupItemIds.findIndex(eid => eid === sub[groupId]);
+        if (idx > -1) {
+            emptyGroupItemIds = emptyGroupItemIds.filter((id, i) => i !== idx);
+        }
+    }
+    return emptyGroupItemIds;
+}

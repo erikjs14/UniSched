@@ -28,6 +28,7 @@ export default function(props: PreferenceRowsProps): JSX.Element {
                         config={config}
                         value={props.preferences[config.id]}
                         onChange={val => props.onChange(config.id, val)}
+                        getIdsOfEmptyGroupItems={props.getIdsOfEmptyGroupItems}
                     />
                 )
             })}
