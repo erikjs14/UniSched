@@ -34,6 +34,7 @@ export type GroupItem = {
 };
 export interface OptionalGroupingPreferenceConfig extends BasePreferenceConfig {
     type: 'optionalGrouping';
+    subjectIdName: string;
     default: GroupItem[];
 }
 export const NO_GROUP_ASSIGNMENT_VAL = '';
@@ -184,6 +185,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         name: 'Define Archives',
         description: 'You can archive subjects into self-defined archives',
         default: [],
+        subjectIdName: 'archiveId',
     }
 ]
 
@@ -201,6 +203,7 @@ export const DEFAULT_PREFERENCES_STATE: PreferencesState = getResult(() => {
 });
 
 export const getIdsOfEmptyGroupItems = (groupId: keyof SubjectModel, groupItems: GroupItem[], subjects: SubjectModelWithId[]) => {
+    if (!subjects || subjects.length < 1) return [];
     // init array with all group ids, then remove if subject is assigned to it
     let emptyGroupItemIds = groupItems.map(g => g.id);
     for (let sub of subjects) {

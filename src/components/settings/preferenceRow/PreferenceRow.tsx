@@ -9,6 +9,7 @@ import { registerNotificationsWorker } from '../../../util/subscription';
 import { resetPermissionPreferences } from '../../../store/actions';
 import useUnischedId from '../../../hooks/useUnischedId';
 import GroupingDailog from '../groupingDialog/GroupingDailog';
+import { PREF_ID_ARCHIVES } from '../../../config/userPreferences';
 const {
     wrapper: s_wrapper,
     name: s_name,
@@ -103,7 +104,7 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                             {...props}
                             onCloseComplete={() => setArchiveDialogShown(false)}
                             title='Edit Archives'
-                            idsOfEmptyGroupItems={props.getIdsOfEmptyGroupItems?.(props.config.id) || []} //unsauber...
+                            idsOfEmptyGroupItems={props.getIdsOfEmptyGroupItems?.(PREF_ID_ARCHIVES, props.config.subjectIdName) || []} //unsauber...
                         />
                     )}
                 </>

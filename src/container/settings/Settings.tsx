@@ -1,4 +1,4 @@
-import React, { useCallback, Fragment } from 'react';
+import React, { useCallback, Fragment, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../..';
 import PreferenceRows from '../../components/settings/PreferenceRows';
@@ -14,6 +14,8 @@ import AlterSpace from './alterSpace/AlterSpace';
 import CSS from './Settings.module.scss';
 import { toCss } from '../../util/util';
 import { PreferencesState } from './../../config/userPreferences';
+import { fetchSubjectsShallow } from './../../firebase/firestore';
+import { SubjectModelWithId } from '../../firebase/model';
 const {
     row: s_row,
 } = CSS;
@@ -22,7 +24,6 @@ export default function(): JSX.Element {
 
     const preferences: PreferencesState | null = useSelector((state: RootState) => state.user.preferences);
     const error = useSelector((state: RootState) => state.user.preferenceError);
-    const shallowSubjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const dispatch = useDispatch();
 
     const preferenceChangedHandler = useCallback((id: PreferenceId, value: PreferenceVal) => {
@@ -32,6 +33,12 @@ export default function(): JSX.Element {
     const getGroupItems = useCallback((groupId: string) => {
         return preferences?.[groupId] as GroupItem[];
     }, [preferences]);
+
+    const [allShallowSubjects, setAllShallowSubjects] = useState<SubjectModelWithId[] | null>(null);
+    useEffect(() => {
+        fetchSubjectsShallow(false)
+            .then(subs => setAllShallowSubjects(subs))
+    }, []);
     
     return (
         <div>
@@ -48,7 +55,7 @@ export default function(): JSX.Element {
                             preferences={preferences}
                             preferenceConfigs={PREFERENCES_CONFIG}
                             onChange={preferenceChangedHandler}
-                            getIdsOfEmptyGroupItems={groupId => getIdsOfEmptyGroupItems(groupId, getGroupItems(groupId), shallowSubjects || [])}
+                            getIdsOfEmptyGroupItems={(groupId, subjectIdName) => getIdsOfEmptyGroupItems(subjectIdName, getGroupItems(groupId), allShallowSubjects || [])}
                         />
 
                         <AddSpace       wrapCss={toCss(s_row)} />

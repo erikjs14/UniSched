@@ -5,5 +5,5 @@ export interface PreferenceRowProps {
     config: PreferenceConfig;
     value: PreferenceVal;
     onChange(newVal: PreferenceVal): void;
-    getIdsOfEmptyGroupItems: ((groupId: keyof SubjectModel) => string[]) | undefined; //unsauber...
+    getIdsOfEmptyGroupItems: ((groupId: string, subjectIdName: keyof SubjectModel) => string[]) | undefined; //unsauber...
 }
