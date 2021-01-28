@@ -34,38 +34,79 @@
         }
     }
 
-    .amountStars {
-        margin-left: 3rem;
-        text-align: right;
-
-        svg {
-            margin-right: .5rem;
-            color: $col-primary-light;
-            transition: .5s all;
+    .infoRow {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        @include respond(phone) {
+            flex-wrap: wrap;
         }
 
-        &:hover svg {
-            filter: drop-shadow(1px 1px 2px rgba($col-primary-light, .5));
-            transform: scale(1.03);
+        .amountStars {
+            margin-left: 3rem;
+            text-align: right;
+
+            svg {
+                margin-right: .5rem;
+                color: $col-primary-light;
+                transition: .5s all;
+            }
+
+            &:hover svg {
+                filter: drop-shadow(1px 1px 2px rgba($col-primary-light, .5));
+                transform: scale(1.03);
+            }
         }
+
+        .filterStar {
+            cursor: pointer;
+            opacity: .2;
+            display: inline-block;
+            margin: 1rem 2.5rem;
+            border: 1px solid rgba(#000, .3);
+            border-radius: 2px;
+            padding: .1rem .5rem;
+            margin-right: auto;
+
+            transition: .3s all;
+            &.enabled {
+                opacity: 1;
+                font-weight: bold;
+                font-size: 1.2em;
+            }
+        }
+
+        .filter {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-right: 3rem;
+
+            @include respond(phone) {
+                flex-basis: 100%;
+                justify-content: flex-start;
+                padding-left: 3rem;
+            }
+
+            .filterInput {
+                margin-right: .5rem;
+                height: 2.5rem;
+                flex-basis: 25rem;
+            }
+
+            .crossInput {
+
+            }
+        }
+
     }
 
-    .filterStar {
-        cursor: pointer;
-        opacity: .2;
-        display: inline-block;
-        margin: 1rem 2.5rem;
-        border: 1px solid rgba(#000, .3);
-        border-radius: 2px;
-        padding: .1rem .5rem;
-
-        transition: .3s all;
-        &.enabled {
-            opacity: 1;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
+    .nofound {
+        text-align: center;
+        padding: 5rem 2rem;
+        font-size: 1.5em;
     }
+
 }
 
 .noTodoToday {

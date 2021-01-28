@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, Fragment, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, Fragment, useMemo, useRef } from 'react';
 
 import WeekdaySeperator from './weekdaySeperator/WeekdaySeperator';
 import Collapsible from '../../ui/collapsible/Collapsible';
@@ -6,10 +6,11 @@ import DueTask from './dueTask/DueTask';
 import CSS from './DueTasks.module.scss';
 import { DueTasksProps } from './DueTasks.d';
 import { toCss } from './../../../util/util';
-import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, getSecondsFromDate, subtractHours, dayIsInLimit } from './../../../util/timeUtil';
+import { getRelevantTaskSemanticsGrouped, containsDay, endOf, allTasksOfOneDayContained, taskContained, getSecondsFromDate, subtractHours, dayIsInLimit, TaskSemantic } from './../../../util/timeUtil';
 import AnimateHeight from 'react-animate-height';
 import { faSmileBeam, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconButton, TextInput } from 'evergreen-ui';
 const {
     wrapper: s_wrapper,
     dayWrapper: s_dayWrapper,
@@ -24,12 +25,31 @@ const {
     showMore: s_showMore,
     showLess: s_showLess,
     showMoreLessArea: s_showMoreLessArea,
+    nofound: s_nofound,
+    infoRow: s_infoRow,
+    filterInput: s_filterInput,
+    crossInput: s_crossInput,
+    filter: s_filter,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
 
     const [fadeTaskOut, setFadeTaskOut] = useState<[string, number][]>([]);
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
+    const [filterText, setFilterText] = useState('');
+    const filterInputRef = useRef<HTMLInputElement>();
+
+    useEffect(() => {
+        const handler = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === 'f') {
+                event.preventDefault();
+                console.log(typeof filterInputRef?.current)
+                filterInputRef?.current?.focus();
+            }
+        }
+        window.addEventListener('keydown', handler)
+        return () => window.removeEventListener('keydown', handler);
+    }, []);
 
     const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
             props.dueTasks, false, undefined, false, props.onlyRelevantTasks || false, props.forceShowAllTasksForXDays || undefined 
@@ -115,7 +135,22 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         </AnimateHeight>
     );
     
-    const allTasks = semTasks.map((tasksOneDay, idx) => {
+    const filteredTasks: TaskSemantic[][] = filterText ? semTasks.map((tasksOneDay, idx) => {
+        return tasksOneDay.filter(task => {
+            return task.name.includes(filterText) || task.additionalInfo?.text?.includes(filterText) || props.subjects[task.subjectId].name.includes(filterText);
+        });
+    }).reduce<TaskSemantic[][]>((acc, current) => {
+        if (current.length > 0) {
+            return [
+                ...acc,
+                current
+            ];
+        } else {
+            return acc;
+        }
+    }, [])
+        : semTasks;
+    const allTasks = filteredTasks.map((tasksOneDay, idx) => {
         //check if limit reached
         if ((!onlyStars && idx + 1 > showDays) || ( onlyStars && starsPerDay.reduce((prev, cur, lidx) => lidx <= idx && cur > 0 ? prev + 1 : prev , 0) > showDays ) ) return null;
         //check for stars
@@ -143,6 +178,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                             />
                         )}
                         uncollapsed={onlyStars
+                            || filterText?.length > 0
                             || props.expandAllVisibleDays 
                             || endOf(subtractHours(new Date(), props.dayStartsAtHour || 0)).getTime() >= endOf(tasksOneDay[0].dueAt).getTime()
                         }
@@ -183,19 +219,41 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
-            {containsStars &&
-                <Fragment>
-                    <span className={toCss(s_amountStars)} >
-                        <FontAwesomeIcon icon={faStar} />
-                        { amountStars }
-                    </span>
-                    <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
-                </Fragment>
-            }
+            <div className={toCss(s_infoRow)}>
+                {containsStars &&
+                    <Fragment>
+                        <span className={toCss(s_amountStars)} >
+                            <FontAwesomeIcon icon={faStar} />
+                            { amountStars }
+                        </span>
+                        <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
+                    </Fragment>
+                }
+                <div className={toCss(s_filter)}>
+                    <TextInput 
+                        value={filterText}
+                        onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFilterText(e.target.value)}
+                        placeholder='Search...'
+                        className={toCss(s_filterInput)}
+                        innerRef={filterInputRef as any}
+                    />
+                    <IconButton 
+                        icon='cross' 
+                        onClick={() => setFilterText('')}
+                        appearance='minimal'
+                        className={toCss(s_crossInput)}
+                    />
+                </div>
+            </div>
             {todayView}
             {allTasks}
+            { filterText?.length > 0 && filteredTasks.length < 1 && (
+                <div className={toCss(s_nofound)} >
+                    None found
+                </div>
+            )}
             <div className={toCss(s_showMoreLessArea)} >
-                {(!onlyStars ? (showDays < semTasks.length - 1) : (showDays < amountStars) ) &&
+                {(!onlyStars ? (showDays < filteredTasks.length - 1) : (showDays < amountStars) ) &&
                     <span className={toCss(s_showMore)}  onClick={showMore}>
                         Show More
                     </span>
