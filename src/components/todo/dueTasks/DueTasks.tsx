@@ -229,21 +229,23 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                         <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
                     </Fragment>
                 }
-                <div className={toCss(s_filter)}>
-                    <TextInput 
-                        value={filterText}
-                        onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFilterText(e.target.value)}
-                        placeholder='Search...'
-                        className={toCss(s_filterInput)}
-                        innerRef={filterInputRef as any}
-                    />
-                    <IconButton 
-                        icon='cross' 
-                        onClick={() => setFilterText('')}
-                        appearance='minimal'
-                        className={toCss(s_crossInput)}
-                    />
-                </div>
+                { (semTasks && semTasks.length > 0) && (
+                    <div className={toCss(s_filter)}>
+                        <TextInput 
+                            value={filterText}
+                            onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFilterText(e.target.value)}
+                            placeholder='Search...'
+                            className={toCss(s_filterInput)}
+                            innerRef={filterInputRef as any}
+                        />
+                        <IconButton 
+                            icon='cross' 
+                            onClick={() => setFilterText('')}
+                            appearance='minimal'
+                            className={toCss(s_crossInput)}
+                        />
+                    </div>
+                )}
             </div>
             {todayView}
             {allTasks}
