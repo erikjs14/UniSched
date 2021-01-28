@@ -64,7 +64,7 @@ export default function(): JSX.Element {
     } else {
         const filteredSubjectsForSpace = filterSubjectsForSpace(subjects, selectedSpaceId);
         const filteredSubjects = filterText.length > 0 ? filteredSubjectsForSpace.filter(subject => {
-            return subject.name.includes(filterText) || subject.additionalInfo.includes(filterText);
+            return subject.name.toUpperCase().includes(filterText.toUpperCase()) || subject.additionalInfo?.toUpperCase().includes(filterText.toUpperCase());
         }) : filteredSubjectsForSpace;
         const elements = 
             filteredSubjects
@@ -95,7 +95,10 @@ export default function(): JSX.Element {
                         />
                     </div>
                 )}
-                {elements.length > 0 ? elements : <h3 className={toCss(s_noSubjects)} >There are no subjects in this space.</h3>}
+                {elements.length > 0 ? elements : ( filteredSubjectsForSpace.length > 0
+                    ? <h3 className={toCss(s_noSubjects)}>None found</h3> 
+                    : <h3 className={toCss(s_noSubjects)} >There are no subjects in this space.</h3>
+                )}
                 <div className={toCss(s_addBtn)}>
                     <FloatingButton onClick={() => history.push('/subjects/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
                 </div>

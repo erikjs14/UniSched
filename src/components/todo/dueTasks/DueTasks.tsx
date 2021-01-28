@@ -136,7 +136,9 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     const filteredTasks: TaskSemantic[][] = filterText ? semTasks.map((tasksOneDay, idx) => {
         return tasksOneDay.filter(task => {
-            return task.name.includes(filterText) || task.additionalInfo?.text?.includes(filterText) || props.subjects[task.subjectId].name.includes(filterText);
+            return task.name.toUpperCase().includes(filterText.toUpperCase()) 
+                || task.additionalInfo?.text?.toUpperCase().includes(filterText.toUpperCase())
+                || props.subjects[task.subjectId].name.toUpperCase().includes(filterText.toUpperCase());
         });
     }).reduce<TaskSemantic[][]>((acc, current) => {
         if (current.length > 0) {
