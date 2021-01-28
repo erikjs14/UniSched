@@ -22,7 +22,7 @@
 
     .subjects {
         width: 80%;
-        margin: 5rem auto;
+        margin: 2rem auto 5rem;
         text-align: center;
 
         @include respond(phone) {
@@ -48,6 +48,25 @@
 
     .addBtn {
         font-size: 2rem;
+    }
+
+    .filter {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-right: 2rem;
+        margin-left: 2rem;
+        margin-bottom: 1.5rem;
+
+        .filterInput {
+            margin-right: .5rem;
+            height: 2.5rem;
+            flex-basis: 25rem;
+        }
+
+        .crossInput {
+
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { useHistory } from 'react-router-dom';
@@ -12,6 +12,7 @@ import { ICON_SETTINGS_TYPE } from '../../config/globalTypes.d';
 import { useSelector } from 'react-redux';
 import { RootState } from '../..';
 import SpaceSelector from '../spaceSelector/SpaceSelector';
+import { TextInput, IconButton } from 'evergreen-ui';
 const {
     container: s_container,
     subjects: s_subjects,
@@ -20,9 +21,26 @@ const {
     addBtn: s_addBtn,
     mobileOnly: s_mobileOnly,
     noSubjects: s_noSubjects,
+    filter: s_filter,
+    filterInput: s_filterInput,
+    crossInput: s_crossInput,
 } = CSS;
 
 export default function(): JSX.Element {
+
+    const [filterText, setFilterText] = useState('');
+    const filterInputRef = useRef<HTMLInputElement>();
+
+    useEffect(() => {
+        const handler = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === 'f') {
+                event.preventDefault();
+                filterInputRef?.current?.focus();
+            }
+        }
+        window.addEventListener('keydown', handler)
+        return () => window.removeEventListener('keydown', handler);
+    }, []);
 
     const history = useHistory();
 
@@ -44,8 +62,12 @@ export default function(): JSX.Element {
         );
 
     } else {
+        const filteredSubjectsForSpace = filterSubjectsForSpace(subjects, selectedSpaceId);
+        const filteredSubjects = filterText.length > 0 ? filteredSubjectsForSpace.filter(subject => {
+            return subject.name.includes(filterText) || subject.additionalInfo.includes(filterText);
+        }) : filteredSubjectsForSpace;
         const elements = 
-            filterSubjectsForSpace(subjects, selectedSpaceId)
+            filteredSubjects
             .map(subject => (
                 <SimpleSettingsRow 
                     key={subject.id}
@@ -56,6 +78,23 @@ export default function(): JSX.Element {
         ));
         content = (
             <div className={toCss(s_subjects)}>
+                { (filteredSubjectsForSpace && filteredSubjectsForSpace.length > 0) && (
+                    <div className={toCss(s_filter)}>
+                        <TextInput 
+                            value={filterText}
+                            onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFilterText(e.target.value)}
+                            placeholder='Search...'
+                            className={toCss(s_filterInput)}
+                            innerRef={filterInputRef as any}
+                        />
+                        <IconButton 
+                            icon='cross' 
+                            onClick={() => setFilterText('')}
+                            appearance='minimal'
+                            className={toCss(s_crossInput)}
+                        />
+                    </div>
+                )}
                 {elements.length > 0 ? elements : <h3 className={toCss(s_noSubjects)} >There are no subjects in this space.</h3>}
                 <div className={toCss(s_addBtn)}>
                     <FloatingButton onClick={() => history.push('/subjects/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
