@@ -43,7 +43,6 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         const handler = (event: KeyboardEvent) => {
             if (event.ctrlKey && event.key === 'f') {
                 event.preventDefault();
-                console.log(typeof filterInputRef?.current)
                 filterInputRef?.current?.focus();
             }
         }
