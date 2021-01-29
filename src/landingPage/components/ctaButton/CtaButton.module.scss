@@ -35,7 +35,7 @@
         }
 
         &:hover:not(:active) {
-            transform: scale(1.05) rotate(1deg);
+            transform: scale(1.02) rotate(.5deg);
             box-shadow: 0 5px 10px rgba(#000, .4);
         }
     }

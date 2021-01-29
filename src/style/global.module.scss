@@ -1,0 +1,7 @@
+@import './abstract//variables';
+@import './abstract/mixins';
+
+.layoutContainer {
+    max-width: $max-container-width;
+    @include respond(phone) {max-width: $max-container-width-phone;}
+}

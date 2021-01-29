@@ -2,13 +2,18 @@
 @import '../../../style/abstract/mixins';
 
 .wrapper {
-    padding-bottom: 10rem;
+    display: block;
+    background-color: #fff;
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 10rem));
+    padding-bottom: 10rem;
     @include respond(phone) { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5rem)); padding-bottom: 7rem;}
     @include respond(small-phone) { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3rem)); padding-bottom: 5rem;}
-    background-color: #fff;
     margin-bottom: -10rem;
     @include respond(phone) { padding-top: 3rem;}
+}
+
+.wrapper > div {
+    margin: auto;
 
     h2 {
         color: $col-primary-dark;

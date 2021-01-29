@@ -2,89 +2,17 @@
 @import '../../../style/abstract/mixins';
 
 .wrapper {
-    margin: -13vw auto 0;
-    padding: calc(13vw + 5rem) 3rem 25rem;
+    margin: 0 auto;
+    padding: 15rem 3rem;
+    @include respond(phone) { padding: 7.5rem 0;}
     position: relative;
-    background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-        url(../../assets/img/desk_from_above/desk_from_above_w_1627.jpg);
-
-    /* @ 1x Images */
-    @media (max-width: 300px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_300.webp);
-    }
-    @media (min-width: 301px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_814.webp);
-    }
-    @media (min-width: 815px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_1627.webp);
-    }
-    @media (min-width: 1628px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_2410.webp);
-    }
-    @media (min-width: 2410px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_3038.webp);
-    }
-    @media (min-width: 3039px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_3537.webp);
-    }
-    @media (min-width: 3538px) {
-        background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                url(../../assets/img/desk_from_above/desk_from_above_w_3840.webp);
-    }
-    /* @2x Images (Pixel Ratio of 1.25+) */
-    @media  only screen and (-o-min-device-pixel-ratio: 5/4),
-            only screen and (-webkit-min-device-pixel-ratio: 1.25),
-            only screen and (min-device-pixel-ratio: 1.25),
-            only screen and (min-resolution: 1.25dppx) {
-        @media (max-width: 149px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_300.webp);
-        }
-        @media (min-width: 150px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_814.webp);
-        }
-        @media (min-width: 400px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_1627.webp);
-        }
-        @media (min-width: 800px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_2410.webp);
-        }
-        @media (min-width: 1200px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_3038.webp);
-        }
-        @media (min-width: 1500px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_3537.webp);
-        }
-        @media (min-width: 1750px) {
-            background-image: linear-gradient(to bottom right, rgba($col-primary-dark, .8), rgba($col-primary-light, .8)),
-                    url(../../assets/img/desk_from_above/desk_from_above_w_3840.webp);
-        }
-    }
-
-    background-size: cover;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 10rem));
-    @include respond(phone) { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 5rem)); padding-bottom: 15rem;}
-    @include respond(small-phone) { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3rem)); padding-bottom: 10rem;}
 
     h2 {
-        color: $col-secondary-light;
         font-size: 6rem;
         @include respond(phone) { font-size: 4rem;}
         @include respond(small-phone) { font-size: 3rem;}
         text-align: center;
-        margin-bottom: 5rem;
-        margin-top: -4rem;
+        margin-bottom: 7.5rem;
     }
 
     .cards {

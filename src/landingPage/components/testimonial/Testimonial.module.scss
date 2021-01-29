@@ -13,6 +13,11 @@
     font-size: 1.1em;
     box-shadow: $default-box-shadow;
     overflow: hidden;
+    @include respond(phone) { 
+        width: 100%; 
+        max-width: unset;
+        padding: 3rem 4rem;
+    }
 
     .quote {
         position: absolute;
@@ -20,6 +25,11 @@
         left: 1.5rem;
         font-size: 5rem;
         color: rgba($col-primary-light-text, .8);
+        @include respond(phone) {
+            top: 1rem;
+            left: .75rem;
+            font-size: 2.5rem;
+        }
     }
 
     .body {

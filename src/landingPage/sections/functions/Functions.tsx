@@ -6,6 +6,8 @@ import { FunctionsProps } from './Functions.d';
 import { toCss } from '../../../util/util';
 import FunctionCard from '../../components/functionCard/FunctionCard';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
+import globalCSS from '../../../style/global.module.scss';
+const { layoutContainer: s_layoutContainer } = globalCSS;
 const {
     wrapper: s_wrapper,
     cards: s_cards,
@@ -16,7 +18,7 @@ export default function(props: FunctionsProps): JSX.Element {
     
     return (
         <LazyLoadComponent>
-            <section className={toCss(s_wrapper)}>
+            <section className={toCss(s_wrapper, s_layoutContainer)}>
 
                     <h2>Functionality</h2>
                 

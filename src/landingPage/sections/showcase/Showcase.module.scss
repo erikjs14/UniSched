@@ -2,9 +2,13 @@
 @import '../../../style/abstract/mixins';
 
 .wrapper {
+    background-color: $col-secondary-light;
+}
+
+.wrapper > div {
+    margin: auto;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: bold;
-    background-color: $col-secondary-light;
     padding-top: 7rem;
     @include respond(phone) { padding-top: 12rem;}
     padding-bottom: 10rem;
@@ -14,7 +18,8 @@
      h4 {
          text-align: center;
          font-weight: bold;
-         margin: 2rem 0 3rem;
+         margin: 5rem 0 3rem;
+         @include respond(phone) {margin-bottom: 7.5rem;}
      }
 
      .orderVideo {
@@ -29,20 +34,6 @@
         border-radius: 1rem;
         overflow: hidden;
         opacity: .8;
-        filter: brightness(.8) blur(2px);
-        @include respond(tab-port) {filter: brightness(1) blur(0);}
-
-        transition: filter 1s ease-in-out;
-        &:hover {
-            filter: brightness(1) blur(0);
-            @include respond(phone) { filter: unset;}
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
 
         @include respond(phone) { position: relative;}
      }
@@ -64,7 +55,10 @@
 
         grid-template-rows: repeat(8, 1fr);
         grid-template-columns: repeat(8, 1fr);
-        @include respond(phone) { grid-template: repeat(8, 10vw) / repeat(8, 1fr);}
+        @include respond(phone) { 
+            grid-template: repeat(8, 10fr) / repeat(8, 1fr);
+            height: 40rem;
+        }
 
         &.colorful {
 
@@ -140,7 +134,7 @@
 
             transition: all .2s;
             &:hover {
-                transform: scale(1.3);
+                transform: scale(1.1);
                 @include respond(phone) { transform: none;}
             }
         }

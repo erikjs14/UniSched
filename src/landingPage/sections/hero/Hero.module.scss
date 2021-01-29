@@ -2,26 +2,26 @@
 @import '../../../style/abstract/variables';
 
 .wrapper {
-    position: relative;
-    padding: 5rem;
-    @include respond(phone) { padding-top: 0;}
-    padding-bottom: 15vw;
-    @include respond(tab-land) {padding: 3rem 2rem inherit;}
-    @include respond(phone) {padding-bottom: 50vw;}
-    @include respond(small-phone) {padding-bottom: 60vw;}
-    color: white;
     background: rgb(34,40,49);
     background: $hero-gradient;
     @include respond(phone) {
         background: unset;
     }
-    .waveTop {
-        z-index: 10;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100vw;
-    }
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 85%);
+    @include respond(phone) {clip-path: unset;}
+}
+.wrapper > div {
+    margin: auto;
+    max-width: 130rem;
+    position: relative;
+    padding: 5rem;
+    padding-top: 15rem;
+    @include respond(phone) { padding-top: 0;}
+    padding-bottom: 13vw;
+    @include respond(tab-land) {padding: 3rem 2rem inherit;}
+    @include respond(phone) {padding-bottom: 50vw;}
+    @include respond(small-phone) {padding-bottom: 60vw;}
+    color: white;
 
     display: flex;
     justify-content: space-around;
@@ -109,7 +109,6 @@
 
                 &:hover:not(:active) {
                     color: rgba(#fff, .5);
-                    text-decoration: none;
                 }
             }
         }
@@ -223,17 +222,6 @@
     z-index: 1000;
     @include respond(phone) {
         display: none;
-    }
-}
-
-.waveBottomWrapper{
-    width: 100vw;
-    overflow: hidden;
-    .waveBottom {
-        transform: rotate(180deg);
-        width: 105vw;
-        position: relative;
-        z-index: 100;
     }
 }
 
