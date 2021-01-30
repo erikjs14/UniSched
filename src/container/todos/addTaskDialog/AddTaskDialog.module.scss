@@ -48,6 +48,7 @@
             max-width: 100%;
             flex-shrink: 0;
             padding: 1.5rem;
+            scroll-behavior: smooth;
             @include mobileKeyboardOpen { padding: 0; }
 
             .spacesSelect {

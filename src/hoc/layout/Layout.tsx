@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, Fragment, useMemo, useRef, useEffect, useState } from 'react';
+import React, { PropsWithChildren, Fragment, useMemo, useRef, useEffect, useState, useCallback } from 'react';
 import cuteDog from '../../assets/img/cute_dog.jpg';
 import bird1 from '../../assets/img/bird1.jpeg';
 import bird2 from '../../assets/img/bird2.jpeg';
@@ -39,12 +39,34 @@ const {
     plusBtn: s_plusBtn,
 } = CSS;
 
+const keyMap: {[key: string]: boolean} = {};
 export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     const history = useHistory();
     const query = useQuery();
 
     const [showAddTaskDialog, setShowAddTaskDialog] = useState(query && query.get('addTask') === 'true');
+
+    const handleKey = useCallback(
+        (e) => {
+            keyMap[e.key] = e.type === 'keydown';
+        },
+        [],
+    );
+
+    useEffect(() => {
+        window.addEventListener('keydown', event => {
+            handleKey(event);
+            if (!showAddTaskDialog && (keyMap.Shift || keyMap.Control) && event.key === 'Enter') {
+                setShowAddTaskDialog(true);
+            }
+        });
+        window.addEventListener('keyup', handleKey);
+        return () => {
+            window.removeEventListener('keydown', handleKey);
+            window.removeEventListener('keyup', handleKey);
+        }
+    }, [handleKey, showAddTaskDialog]);
 
     const dispatch = useDispatch();
     const useRandomAvatar = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ACTIVATE_RANDOM_AVATAR]);
@@ -66,7 +88,9 @@ export default function(props: PropsWithChildren<{}>): JSX.Element {
 
     return (
         <Fragment>
-            <nav className={toCss(s_navDesktop)}>
+            <nav 
+                className={toCss(s_navDesktop)}    
+            >
                 <Sidebar 
                     navItems={navConfig}
                     onLogout={() => logout(dispatch)} 

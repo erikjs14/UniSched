@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState, useMemo, useCallback, Fragment, useRef, useEffect } from 'react';
+import React, { PropsWithChildren, useState, useMemo, useCallback, Fragment, useRef, useEffect, RefObject } from 'react';
 
 import CSS from './AddTaskDialog.module.scss';
 import { AddTaskDialogProps } from './AddTaskDialog.d';
@@ -52,6 +52,9 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
 
     const {data: tasks, timestamp, } = useSelector((state: RootState) => state.data.tasks);
     const spaces = useSelector((state: RootState) => state.user.spaces);
+    const spaceRefs = useMemo((): Array<RefObject<HTMLSpanElement>> | undefined => {
+        return spaces?.map(s => React.createRef());
+    }, [spaces]);
     const subjects = useSelector((state: RootState) => state.user.shallowSubjects);
     const {loading, error} = useSelector((state: RootState) => state.data.tasks);
     const dispatch = useDispatch();
@@ -200,19 +203,86 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             dispatch(addAndSaveNewTask(config, subjectId, closeDialog, reset));
         }
     }, [dispatch, interval, pageCnt, reset, subjectId, taskConfig]);
+
+    const filteredSubs = useMemo(() => filterSubjectsForSpace(subjects || [], spaceId), [spaceId, subjects]);
+    const subRefs = useMemo((): Array<RefObject<any>> | undefined => {
+        return filteredSubs?.map(s => React.createRef());
+    }, [filteredSubs]);
+
+    const viewRef = useRef<any>();
+    const isInView = (el:any) => {
+        const itemRect = el.getBoundingClientRect();
+        const viewRect = viewRef?.current?.getBoundingClientRect();
+        if (!itemRect || ! viewRect) return false;
+
+        return (
+            itemRect.top >= viewRect.top &&
+            itemRect.bottom <= viewRect.bottom
+        );
+    }
+
+    const onKeyDown = useCallback((event) => {
+        if (event.key === 'ArrowLeft') {
+            if (pageCnt !== 2 && pageCnt !== 6) 
+                onChangePageCnt(-1);
+        } else if (event.key === 'ArrowRight') {
+            if (pageCnt !== 2 && pageCnt !== 6) 
+                onChangePageCnt(1);
+        } else if (event.key === 'Enter') {
+            if (keyMap.Shift) {
+                onChangePageCnt(-1);
+            } else if (pageCnt !== 6) {
+                onChangePageCnt(1);
+            }            
+        } else if (event.key === 'ArrowDown') {
+            if (pageCnt === 0 && spaces) {
+                const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
+                const newIdx = (currentSpaceIdx + 1) % spaces.length;
+                setSpaceId(spaces[newIdx].id);
+                if (spaceRefs && spaceRefs.length > newIdx) {
+                    if (spaceRefs[newIdx] && !isInView(spaceRefs[newIdx]?.current)) spaceRefs[newIdx]?.current?.scrollIntoView();
+                }
+            } else if (pageCnt === 1 && filteredSubs) {
+                const currentSubIdx = filteredSubs.findIndex(s => s.id === subjectId);
+                const newIdx = (currentSubIdx + 1) % filteredSubs.length;
+                setSubjectId(filteredSubs[newIdx].id);
+                if (subRefs && subRefs.length > newIdx) {
+                    if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView();
+                }
+            }
+        } else if (event.key === 'ArrowUp') {
+            if (pageCnt === 0 && spaces) {
+                const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
+                const newIdx = currentSpaceIdx <= 0 ? (spaces.length - 1) : (currentSpaceIdx - 1);
+                setSpaceId(spaces[newIdx].id);
+                if (spaceRefs && spaceRefs.length > newIdx) {
+                    if (spaceRefs[newIdx] && !isInView(spaceRefs[newIdx]?.current)) spaceRefs[newIdx]?.current?.scrollIntoView();
+                }
+            } else if (pageCnt === 1 && filteredSubs) {
+                const currentSubIdx = filteredSubs.findIndex(s => s.id === subjectId);
+                const newIdx = currentSubIdx <= 0 ? (filteredSubs.length - 1) : (currentSubIdx - 1);
+                setSubjectId(filteredSubs[newIdx].id);
+                if (subRefs && subRefs.length > newIdx) {
+                    if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView();
+                }
+            }
+        }
+    }, [filteredSubs, onChangePageCnt, pageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId]);
+
     
     const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
 
     const pages = useCallback((closeDialog: Function) => [
         <Fragment>
             <div className={toCss(s_spacesSelect)} >
-                {spaces?.map(s => (
+                {spaces?.map((s, idx) => (
                     <span 
                         className={toCss(s_space, s.id === spaceId ? s_spaceSelected : '')}
                         onClick={() => {
                             setSpaceId(s.id);
                             onChangePageCnt(1);
                         }}
+                        ref={spaceRefs && spaceRefs.length > idx ? spaceRefs[idx] : undefined}
                     >
                         {s.name}
                     </span> 
@@ -222,11 +292,10 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         <Fragment>
             <div className={toCss(s_subjectScrollPane)}>
                 {(() => {
-                    const filteredSubs = filterSubjectsForSpace(subjects || [], spaceId);
                     if (!filteredSubs || filteredSubs.length === 0) {
                         return <h3 className={toCss(s_nosubs)} >No Subjects in this space!</h3>
                     } else {
-                        return (filteredSubs.map(subject => (
+                        return (filteredSubs.map((subject, idx) => (
                             <SimpleSettingsRow 
                                 key={subject.id}
                                 title={subject.name}
@@ -236,6 +305,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                                     onChangePageCnt(1);
                                 }}
                                 outline={subject.id === subjectId}
+                                ref={subRefs && subRefs.length > idx ? subRefs[idx] : undefined}
                             />
                         )));
                     }
@@ -254,13 +324,14 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     ref={typeInputRef}
                     markWhenEmpty={markTypeInput}
                     elementConfig={{
-                        onKeyPress: (event: React.KeyboardEvent) => {
-                            if (event.key === 'Enter') {
-                                if (keyMap.Shift || keyMap.Control) addTaskHandler(closeDialog);
-                                else onChangePageCnt(1);
+                        onKeyDown: (event: React.KeyboardEvent) => {
+                            if (!keyMap[event.key]) {
+                                handleKey(event);
+                                if (event.key === 'Enter') {
+                                    if (keyMap.Control) addTaskHandler(closeDialog);
+                                }
                             }
                         },
-                        onKeyDown: handleKey,
                         onKeyUp: handleKey,
                     }}
                 />
@@ -350,7 +421,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             />
             { error && <span className={toCss(s_error)}>{error}</span> }
         </Fragment>,
-    ], [addTaskHandler, changeHandler, error, firstDeadline, handleKey, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaces, subjectId, subjects, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
+    ], [addTaskHandler, changeHandler, error, filteredSubs, firstDeadline, handleKey, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
     
     if (!props.isShown) return null;
 
@@ -375,14 +446,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     tabIndex={-1}
                     onKeyDown={event => {
                         handleKey(event);
-                        if (pageCnt !== 2) {
-                            if (event.key === 'ArrowLeft')
-                                onChangePageCnt(-1);
-                            else if (event.key === 'ArrowRight')
-                                onChangePageCnt(1);
-                            else if (pageCnt !== pageLen - 1 && event.key === 'Enter')
-                                addTaskHandler(close);
-                        }
+                        onKeyDown(event);
                     }}
                     onKeyUp={handleKey}
                 >
@@ -403,6 +467,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                         style={{
                             transform: 'translateX(-' + (pageCnt*100) + '%)',
                         }}
+                        ref={viewRef}
                     >
                         {pages(close).map(pageContent => (
                             <div className={toCss(s_page)} >

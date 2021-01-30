@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import CSS from './SimpleSettingsRow.module.scss';
 import { SimpleSettingsRowProps } from './SimpleSettingsRow.d';
@@ -15,7 +15,7 @@ const {
     outline: s_outline,
 } = CSS;
 
-export default function(props: SimpleSettingsRowProps): JSX.Element {
+export default forwardRef(function(props: SimpleSettingsRowProps, ref: any): JSX.Element {
 
     const history = useHistory();
     
@@ -41,9 +41,10 @@ export default function(props: SimpleSettingsRowProps): JSX.Element {
                 color: colorConfig.textColor,
             }}
             onClick={clickHandler}
+            ref={ref}
         >
             {props.icon && <FontAwesomeIcon className={toCss(s_icon)} icon={mapToIcon(props.icon)} />}
             <span className={toCss(s_title)} >{props.title}</span>
         </div>
     );
-}
+});
