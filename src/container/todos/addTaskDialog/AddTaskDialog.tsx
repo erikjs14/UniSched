@@ -221,53 +221,60 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         );
     }
 
-    const onKeyDown = useCallback((event) => {
-        if (event.key === 'ArrowLeft') {
-            if (pageCnt !== 2 && pageCnt !== 6) 
-                onChangePageCnt(-1);
-        } else if (event.key === 'ArrowRight') {
-            if (pageCnt !== 2 && pageCnt !== 6) 
-                onChangePageCnt(1);
-        } else if (event.key === 'Enter') {
-            if (keyMap.Shift) {
-                onChangePageCnt(-1);
-            } else if (pageCnt !== 6) {
-                onChangePageCnt(1);
-            }            
-        } else if (event.key === 'ArrowDown') {
-            if (pageCnt === 0 && spaces) {
-                const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
-                const newIdx = (currentSpaceIdx + 1) % spaces.length;
-                setSpaceId(spaces[newIdx].id);
-                if (spaceRefs && spaceRefs.length > newIdx) {
-                    if (spaceRefs[newIdx] && !isInView(spaceRefs[newIdx]?.current)) spaceRefs[newIdx]?.current?.scrollIntoView();
+    const onKeyDown = useCallback((event, closeDialog) => {
+        if (!keyMap[event.key]) { // dont handle multiple keydown events
+            if (event.key === 'ArrowLeft') {
+                if (pageCnt !== 2 && pageCnt !== 6) 
+                    onChangePageCnt(-1);
+            } else if (event.key === 'ArrowRight') {
+                if (pageCnt !== 2 && pageCnt !== 6) 
+                    onChangePageCnt(1);
+            } else if (event.key === 'Enter') {
+                if (keyMap.Control) {
+                    addTaskHandler(closeDialog);
+                } else if (keyMap.Shift) {
+                    onChangePageCnt(-1);
+                } else if (pageCnt !== 6) {
+                    onChangePageCnt(1);
+                }            
+            } else if (event.key === 'ArrowDown') {
+                if (pageCnt === 0 && spaces) {
+                    const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
+                    const newIdx = (currentSpaceIdx + 1) % spaces.length;
+                    setSpaceId(spaces[newIdx].id);
+                    if (spaceRefs && spaceRefs.length > newIdx) {
+                        if (spaceRefs[newIdx] && !isInView(spaceRefs[newIdx]?.current)) {
+                            spaceRefs[newIdx]?.current?.scrollIntoView({ block: 'end' }); // scroll behavior smooth not working in chrome (test later) SCROLL_SMOOTH_TEST
+                        }
+                    }
+                } else if (pageCnt === 1 && filteredSubs) {
+                    const currentSubIdx = filteredSubs.findIndex(s => s.id === subjectId);
+                    const newIdx = (currentSubIdx + 1) % filteredSubs.length;
+                    setSubjectId(filteredSubs[newIdx].id);
+                    if (subRefs && subRefs.length > newIdx) {
+                        if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView({ block: 'end' });
+                    }
                 }
-            } else if (pageCnt === 1 && filteredSubs) {
-                const currentSubIdx = filteredSubs.findIndex(s => s.id === subjectId);
-                const newIdx = (currentSubIdx + 1) % filteredSubs.length;
-                setSubjectId(filteredSubs[newIdx].id);
-                if (subRefs && subRefs.length > newIdx) {
-                    if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView();
+            } else if (event.key === 'ArrowUp') {
+                if (pageCnt === 0 && spaces) {
+                    const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
+                    const newIdx = currentSpaceIdx <= 0 ? (spaces.length - 1) : (currentSpaceIdx - 1);
+                    setSpaceId(spaces[newIdx].id);
+                    if (spaceRefs && spaceRefs.length > newIdx) {
+                        if (spaceRefs[newIdx] && !isInView(spaceRefs[newIdx]?.current)) spaceRefs[newIdx]?.current?.scrollIntoView({ block: 'start' });
+                    }
+                } else if (pageCnt === 1 && filteredSubs) {
+                    const currentSubIdx = filteredSubs.findIndex(s => s.id === subjectId);
+                    const newIdx = currentSubIdx <= 0 ? (filteredSubs.length - 1) : (currentSubIdx - 1);
+                    setSubjectId(filteredSubs[newIdx].id);
+                    if (subRefs && subRefs.length > newIdx) {
+                        if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView({ block: 'start' });
+                    }
                 }
             }
-        } else if (event.key === 'ArrowUp') {
-            if (pageCnt === 0 && spaces) {
-                const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
-                const newIdx = currentSpaceIdx <= 0 ? (spaces.length - 1) : (currentSpaceIdx - 1);
-                setSpaceId(spaces[newIdx].id);
-                if (spaceRefs && spaceRefs.length > newIdx) {
-                    if (spaceRefs[newIdx] && !isInView(spaceRefs[newIdx]?.current)) spaceRefs[newIdx]?.current?.scrollIntoView();
-                }
-            } else if (pageCnt === 1 && filteredSubs) {
-                const currentSubIdx = filteredSubs.findIndex(s => s.id === subjectId);
-                const newIdx = currentSubIdx <= 0 ? (filteredSubs.length - 1) : (currentSubIdx - 1);
-                setSubjectId(filteredSubs[newIdx].id);
-                if (subRefs && subRefs.length > newIdx) {
-                    if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView();
-                }
-            }
+            handleKey(event);
         }
-    }, [filteredSubs, onChangePageCnt, pageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId]);
+    }, [addTaskHandler, filteredSubs, handleKey, onChangePageCnt, pageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId]);
 
     
     const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
@@ -323,17 +330,6 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     onChange={newType => changeHandler('type', newType)}
                     ref={typeInputRef}
                     markWhenEmpty={markTypeInput}
-                    elementConfig={{
-                        onKeyDown: (event: React.KeyboardEvent) => {
-                            if (!keyMap[event.key]) {
-                                handleKey(event);
-                                if (event.key === 'Enter') {
-                                    if (keyMap.Control) addTaskHandler(closeDialog);
-                                }
-                            }
-                        },
-                        onKeyUp: handleKey,
-                    }}
                 />
                 <FontAwesomeIcon 
                     className={toCss(s_star)}  
@@ -421,7 +417,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             />
             { error && <span className={toCss(s_error)}>{error}</span> }
         </Fragment>,
-    ], [addTaskHandler, changeHandler, error, filteredSubs, firstDeadline, handleKey, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
+    ], [changeHandler, error, filteredSubs, firstDeadline, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
     
     if (!props.isShown) return null;
 
@@ -445,8 +441,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     className={toCss(s_wrapper)}
                     tabIndex={-1}
                     onKeyDown={event => {
-                        handleKey(event);
-                        onKeyDown(event);
+                        onKeyDown(event, close);
                     }}
                     onKeyUp={handleKey}
                 >
