@@ -451,8 +451,11 @@ export const getFilterForInterval = (startSecs: number, interval: IntervalType):
                 startDate.getDate() === d.getDate()
                 || (startDate.getDate() > getDaysInMonth(d) && d.getDate() === getDaysInMonth(d))
             );
-        else
-            return plusMinus(difference_s % getSecondsFromIntervalType(interval), 3600);
+        else {
+            const int_s = getSecondsFromIntervalType(interval);
+            const mod = difference_s % int_s;
+            return plusMinus(mod, 3600) || plusMinus(int_s - mod, 3600);
+        }
     }
 }
 
