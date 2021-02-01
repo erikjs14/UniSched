@@ -667,3 +667,5 @@ export const periodToNatural = (ms: number): string => {
         return ( y ) + ( y > 1 ? ' years, ' : ' year, ') + ( m ) + ( m > 1 ? ' months' : ' month');
     }
 }
+
+export const dateIn = (days: number, userPrefersDayStartsAtHour: number): Date => addDays(endOf(subtractHours(new Date(), userPrefersDayStartsAtHour || 0)), days);

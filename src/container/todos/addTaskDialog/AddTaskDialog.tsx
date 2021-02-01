@@ -11,7 +11,7 @@ import { getTaskStartState } from '../../../config/settingsConfig';
 import Button from '../../../components/ui/button/Button';
 import { faStar as fasStar } from '@fortawesome/free-solid-svg-icons';
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
-import { getDateFromTimestamp, getDateFromSeconds, getTimestampFromDate, dateToHTMLString, endOf, HTMLStringToDate, addDays, subtractHours, getNDatesAsSecondsForInterval, formatDateOutput, getConfigDataFromTimestamps } from '../../../util/timeUtil';
+import { getDateFromTimestamp, getDateFromSeconds, getTimestampFromDate, dateToHTMLString, HTMLStringToDate, getNDatesAsSecondsForInterval, formatDateOutput, getConfigDataFromTimestamps, sameDay, dateIn } from '../../../util/timeUtil';
 import { getEditedTimestamps, getWeekDay } from '../../../util/timeUtil';
 import { PREF_ID_DAY_STARTS_AT } from '../../../config/userPreferences';
 import { RootState } from '../../..';
@@ -47,8 +47,10 @@ const {
 
 // !!! ALWAYS UPDATE
 const pageLen = 7;
-const keyMap: {[key: string]: boolean} = {};
+const keyMap: {[key: string]: boolean} = {}; // always update when handling key stroke to be able to handle multiple keys at same time
 export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Element | null{
+
+    const intervalOptions = useMemo(() => IntervalOptions.slice().reverse(), []);
 
     const {data: tasks, timestamp, } = useSelector((state: RootState) => state.data.tasks);
     const spaces = useSelector((state: RootState) => state.user.spaces);
@@ -209,6 +211,10 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         return filteredSubs?.map(s => React.createRef());
     }, [filteredSubs]);
 
+    const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
+
+    const dateOptions = useMemo(() => arrayToN(6).map((val, idx) => dateIn(idx, userPrefersDayStartsAtHour || 0)), [userPrefersDayStartsAtHour]);
+
     const viewRef = useRef<any>();
     const isInView = (el:any) => {
         const itemRect = el.getBoundingClientRect();
@@ -221,7 +227,10 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         );
     }
 
+    const lastDateOptions = useMemo(() => getNDatesAsSecondsForInterval(firstDeadline.seconds, interval, CONFIG__QUICK_ADD_FUTURE_END_OPTIONS), [firstDeadline.seconds, interval]);
+
     const onKeyDown = useCallback((event, closeDialog) => {
+        console.log('keydown')
         if (!keyMap[event.key]) { // dont handle multiple keydown events
             if (event.key === 'ArrowLeft') {
                 if (pageCnt !== 2 && pageCnt !== 6) 
@@ -238,6 +247,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     onChangePageCnt(1);
                 }            
             } else if (event.key === 'ArrowDown') {
+                console.log('ArrowDown '+pageCnt)
                 if (pageCnt === 0 && spaces) {
                     const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
                     const newIdx = (currentSpaceIdx + 1) % spaces.length;
@@ -254,6 +264,22 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     if (subRefs && subRefs.length > newIdx) {
                         if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView({ block: 'end' });
                     }
+                } else if (pageCnt === 3) {
+                    const currentIdx =
+                        taskConfig.timestamps && 
+                        taskConfig.timestamps.length > 0
+                            ? dateOptions.findIndex(d => sameDay(d, getDateFromTimestamp(taskConfig.timestamps[0])))
+                            : -1;
+                    const newIdx = (currentIdx + 1) % dateOptions.length;
+                    changeHandler('firstDeadline', dateOptions[newIdx]);
+                } else if (pageCnt === 4) {
+                    const currentIdx = intervalOptions.findIndex(io => io === interval);
+                    const newIdx = (currentIdx + 1) % IntervalOptions.length;
+                    changeHandler('interval', intervalOptions[newIdx]);
+                } else if (pageCnt === 5) {
+                    const currentIdx = lastDateOptions.findIndex(d => d === lastDeadline.seconds);
+                    const newIdx = (currentIdx + 1) % lastDateOptions.length;
+                    changeHandler('lastDeadline', getDateFromSeconds(lastDateOptions[newIdx])); 
                 }
             } else if (event.key === 'ArrowUp') {
                 if (pageCnt === 0 && spaces) {
@@ -270,16 +296,29 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     if (subRefs && subRefs.length > newIdx) {
                         if (subRefs[newIdx] && !isInView(subRefs[newIdx]?.current)) subRefs[newIdx]?.current?.scrollIntoView({ block: 'start' });
                     }
+                } else if (pageCnt === 3) {
+                    const currentIdx = (
+                        taskConfig.timestamps && 
+                        taskConfig.timestamps.length > 0 && 
+                        dateOptions.findIndex(d => sameDay(d, getDateFromTimestamp(taskConfig.timestamps[0])))
+                    ) || -1;
+                    const newIdx = currentIdx <= 0 ? (dateOptions.length - 1) : (currentIdx - 1);
+                    changeHandler('firstDeadline', dateOptions[newIdx]);
+                } else if (pageCnt === 4) {
+                    const currentIdx = intervalOptions.findIndex(io => io === interval);
+                    const newIdx = currentIdx <= 0 ? (intervalOptions.length - 1) : (currentIdx - 1);
+                    changeHandler('interval', intervalOptions[newIdx]);
+                } else if (pageCnt === 5) {
+                    const currentIdx = lastDateOptions.findIndex(d => d === lastDeadline.seconds);
+                    const newIdx = currentIdx <= 0 ? (lastDateOptions.length - 1) : (currentIdx - 1);
+                    changeHandler('lastDeadline', getDateFromSeconds(lastDateOptions[newIdx])); 
                 }
             }
             handleKey(event);
         }
-    }, [addTaskHandler, filteredSubs, handleKey, onChangePageCnt, pageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId]);
+    }, [addTaskHandler, changeHandler, dateOptions, filteredSubs, handleKey, interval, intervalOptions, lastDateOptions, lastDeadline.seconds, onChangePageCnt, pageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId, taskConfig.timestamps]);
 
-    
-    const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
-
-    const pages = useCallback((closeDialog: Function) => [
+    const pages = (closeDialog: Function) => [
         <Fragment>
             <div className={toCss(s_spacesSelect)} >
                 {spaces?.map((s, idx) => (
@@ -343,12 +382,11 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             <h3>When do you want to be reminded?</h3>
             <div className={toCss(s_shortcuts)} >
                 {(() => {
-                    const dateIn = (days: number): Date => addDays(endOf(subtractHours(new Date(), userPrefersDayStartsAtHour || 0)), days);
-                    const dates = arrayToN(6).map((val, idx) => dateIn(idx));
-                    return dates.map((date, idx) => (
+                    return dateOptions.map((date, idx) => (
                         <Button
                             key={idx}
                             fontSize='.8em'
+                            mark={taskConfig.timestamps?.[0] && sameDay(getDateFromTimestamp(taskConfig.timestamps[0]), date)}
                             onClick={() => {
                                 changeHandler('firstDeadline', date);
                                 onChangePageCnt(1);
@@ -385,7 +423,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     else 
                         onChangePageCnt(2, true);
                 }}
-                options={IntervalOptions.reverse()}
+                options={intervalOptions}
                 addClass={toCss(s_intervalOptions)}
             />
 
@@ -394,11 +432,14 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                 
             <Fragment>
                 <h3>What's the last date?</h3>
-                <select value={lastDeadline.seconds} onChange={event => {
-                    changeHandler('lastDeadline', getDateFromSeconds(parseInt(event.target.value))); 
-                    onChangePageCnt(1);
-                }}>
-                    { getNDatesAsSecondsForInterval(firstDeadline.seconds, interval, CONFIG__QUICK_ADD_FUTURE_END_OPTIONS).map(secs => (
+                <select 
+                    value={lastDeadline.seconds} 
+                    onChange={event => {
+                        changeHandler('lastDeadline', getDateFromSeconds(parseInt(event.target.value))); 
+                        onChangePageCnt(1);
+                    }}
+                >
+                    { lastDateOptions.map(secs => (
                         <option key={secs} value={secs}>{formatDateOutput(getDateFromSeconds(secs))}</option>
                     ))}
                 </select>
@@ -417,7 +458,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             />
             { error && <span className={toCss(s_error)}>{error}</span> }
         </Fragment>,
-    ], [changeHandler, error, filteredSubs, firstDeadline, interval, lastDeadline.seconds, markTypeInput, onChangePageCnt, spaceId, spaceRefs, spaces, subRefs, subjectId, taskConfig.additionalInfo, taskConfig.star, taskConfig.type, userPrefersDayStartsAtHour]);
+    ];
     
     if (!props.isShown) return null;
 
