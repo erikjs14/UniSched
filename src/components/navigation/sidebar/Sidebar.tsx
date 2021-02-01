@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SidebarProps } from './Sidebar.d';
 
 import CSS from './Sidebar.module.scss';
@@ -29,13 +29,26 @@ const {
 
 export default React.memo(function(props: SidebarProps): JSX.Element {
 
+    const [updatedAt, setUpdatedAt] = useState(new Date().getTime());
+    useEffect(() => {
+        const handler = () => document.visibilityState === 'visible' ? setUpdatedAt(new Date().getTime()) : null;
+        document.addEventListener('visibilitychange', handler);
+        return () => document.removeEventListener('visibilitychange', handler);
+    }, []);
+
     const dispatch = useDispatch();
     const history = useHistory();
 
     return (
         <div className={toCss(s_sidebar)}>
 
-            <Clock type='digital' alignSelf='center' precision='seconds' className={toCss(s_clock)}/>
+            <Clock 
+                key={updatedAt} // to re-render whenever visibility re-gained
+                type='digital' 
+                alignSelf='center' 
+                precision='seconds' 
+                className={toCss(s_clock)}
+            />
 
             <div className={toCss(s_userArea)}>
                 {props.imgUrl
