@@ -10,4 +10,5 @@ export interface DueTaskProps {
     small?: boolean;
     star?: boolean;
     moreInfo?: boolean;
+    showExactTime?: boolean;
 }

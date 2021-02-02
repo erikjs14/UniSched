@@ -54,6 +54,8 @@ export const PREF_ID_MINUTES_BEFORE_EVENT_NOTIFICATION = 'remindBeforeEvent';
 export const PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM = 'showReminderNotificationBeforeExam';
 export const PREF_ID_HOURS_BEFORE_EXAM_NOTIFICATION = 'remindBeforeExam';
 export const PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS = 'enableBeforeTaskNotifications';
+export const PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS = 'enableShowDateForTasks';
+export const PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS = 'enableShowDateForStarredTasks';
 export const PREF_ID_ARCHIVES = 'archives';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
@@ -78,6 +80,24 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         name: 'Expand all visible days',
         description: 'If enabled, all days that are visible in the todo view, will be expanded.',
         default: false,
+    },
+    {
+        id: PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS,
+        type: 'boolean',
+        name: 'Show time on tasks',
+        description: 'When enabled, tasks will show the exact time in the todo view, instead of "In 3 hours" (e.g.).',
+        default: false,
+    },
+    {
+        id: PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS,
+        type: 'boolean',
+        name: 'Show time on starred tasks',
+        description: 'When enabled, tasks with a star will show the exact time in the todo view, instead of "In 3 days" (e.g.).',
+        default: false,
+        constraint: {
+            id: PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS,
+            value: false,
+        }
     },
     {
         id: PREF_ID_DAYS_BEFORE_TASK_DELETION,

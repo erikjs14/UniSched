@@ -208,6 +208,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                         small={props.small}
                                         star={task.star}
                                         moreInfo={task.additionalInfo?.text ? true : false}
+                                        showExactTime={props.showTimeForTasks || (props.showTimeForStarredTasks && task.star)}
                                     />
                                 : null 
                                 ))

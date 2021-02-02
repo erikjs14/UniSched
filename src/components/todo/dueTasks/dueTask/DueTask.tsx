@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faStar, faPen, faClock } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import { toaster } from 'evergreen-ui';
-import { formatDateTimeOutput } from '../../../../util/timeUtil';
+import { formatDateTimeOutput, formatTimeOutput } from '../../../../util/timeUtil';
 import MarkdownDialog from '../../../dialogs/MarkdownDialog';
 const {
     wrapper: s_wrapper,
@@ -91,7 +91,10 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                         </span>
 
                         <span className={toCss(s_dueAt)}>
-                            {props.taskSemantic.dueString}
+                            {props.showExactTime                                
+                                ? formatTimeOutput(props.taskSemantic.dueAt)
+                                : props.taskSemantic.dueString
+                            }
                         </span>
 
                         <div className={toCss(s_options)} >
