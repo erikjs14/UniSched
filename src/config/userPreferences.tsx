@@ -22,6 +22,14 @@ export interface IntegerPreferenceConfig extends BasePreferenceConfig {
     min?: number;
     max?: number;
     step?: number;
+    minConstraint?: {
+        id: string;
+        value: number;
+    };
+    maxConstraint?: {
+        id: string;
+        value: number;
+    }
 }
 export interface DeviceSpecificBoolPreferenceConfig extends BasePreferenceConfig {
     type: 'deviceBoolean';
@@ -56,6 +64,8 @@ export const PREF_ID_HOURS_BEFORE_EXAM_NOTIFICATION = 'remindBeforeExam';
 export const PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS = 'enableBeforeTaskNotifications';
 export const PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS = 'enableShowDateForTasks';
 export const PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS = 'enableShowDateForStarredTasks';
+export const PREF_ID_MIN_TIME_SCHEDULE = 'minTimeSchedule';
+export const PREF_ID_MAX_TIME_SCHEDULE = 'maxTimeSchedule';
 export const PREF_ID_ARCHIVES = 'archives';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
@@ -123,7 +133,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         id: PREF_ID_DAY_STARTS_AT,
         type: 'integer',
         name: 'Day starts at',
-        description: 'Depicts the hour, at which you want to start seeing the tasks for this day.',
+        description: 'Depicts the hour, at which you want to start seeing the tasks for this day. If set to 3 (i.e. 3am), e.g., the todo view will show tasks of the previous day until 3am and only then starts to switch to show the next day as "today".',
         default: 0,
         min: 0,
         max: 23,
@@ -144,9 +154,37 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         default: 0,
         min: 0,
         step: 1,
+        // TODO: constraints are unhandled!!
         constraint: {
             id: PREF_ID_SHOW_ONLY_RELEVANT_TASKS,
             value: true,
+        }
+    },
+    {
+        id: PREF_ID_MIN_TIME_SCHEDULE,
+        type: 'integer',
+        name: 'Start schedule at',
+        description: 'The hour of day at which the calendar views start to show events for each day.',
+        default: 6,
+        min: 0,
+        max: 23,
+        // TODO: constraints are unhandled!!
+        maxConstraint: {
+            id: PREF_ID_MAX_TIME_SCHEDULE,
+            value: 1,
+        }
+    },
+    {
+        id: PREF_ID_MAX_TIME_SCHEDULE,
+        type: 'integer',
+        name: 'End schedule at',
+        description: 'The hour of day at which the calendar views ends to show events for each day.',
+        default: 24,
+        min: 1,
+        max: 24,
+        minConstraint: {
+            id: PREF_ID_MIN_TIME_SCHEDULE,
+            value: 1,
         }
     },
     {

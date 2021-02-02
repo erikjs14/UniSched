@@ -4,7 +4,7 @@ import { RootState } from '../..';
 import PreferenceRows from '../../components/settings/PreferenceRows';
 import * as actions from '../../store/actions';
 
-import { PREFERENCES_CONFIG, PreferenceId, PreferenceVal, getIdsOfEmptyGroupItems, GroupItem } from '../../config/userPreferences';
+import { PREFERENCES_CONFIG, PreferenceId, PreferenceVal, getIdsOfEmptyGroupItems, GroupItem, } from '../../config/userPreferences';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { ICON_SETTINGS_ALT } from './../../config/globalTypes.d';
 import AddSpace from './addSpace/AddSpace';

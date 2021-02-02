@@ -26,6 +26,7 @@ import { DEFAULT_SCHEDULE_CALENDAR_PROPS } from '../../config/timeConfig'
 import { TIME_BEFORE_DATA_REFRESH_MS } from '../../config/generalConfig';
 import { getSubAndTitleAndTimeFromEventTitle } from '../../util/scheduleUtil';
 import MarkdownDialog from '../../components/dialogs/MarkdownDialog';
+import { PREF_ID_MAX_TIME_SCHEDULE, PREF_ID_MIN_TIME_SCHEDULE } from '../../config/userPreferences';
 const {
     wrapperCalendar: s_wrapperCalendar,
     viewToggle: s_viewToggle,
@@ -119,6 +120,13 @@ export default function() {
         }
     }, []);
 
+    const userPrefersMinTimeSchedule = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_MIN_TIME_SCHEDULE] as (number|undefined));
+    const userPrefersMaxTimeSchedule = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_MAX_TIME_SCHEDULE] as (number|undefined));
+
+    let minTime = userPrefersMinTimeSchedule && userPrefersMinTimeSchedule < 24 && userPrefersMinTimeSchedule >= 0 ? userPrefersMinTimeSchedule : 0;
+    let maxTime = userPrefersMaxTimeSchedule && userPrefersMaxTimeSchedule <= 24 && userPrefersMaxTimeSchedule > 0 && userPrefersMaxTimeSchedule > minTime ? userPrefersMaxTimeSchedule : 24;
+
+
     if (eventsLoading || examsLoading) {
         return <Loader />;
     } else if (eventsError || examsError || !filteredSubjects || !filteredEventsConfig || !filteredExamsConfig) {
@@ -150,7 +158,8 @@ export default function() {
                 <FullCalendar
                     ref={calRef}
                     defaultView={calendarView}
-                    minTime='06:00'
+                    minTime={`${minTime}:00`.padStart(5, '0')}
+                    maxTime={`${maxTime}:00`.padStart(5, '0')}
                     plugins={[dayGridPlugin, timeGridPlugin, listPlugin]}
                     nowIndicator
                     aspectRatio={calAspectRatio}
