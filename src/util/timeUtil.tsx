@@ -669,3 +669,34 @@ export const periodToNatural = (ms: number): string => {
 }
 
 export const dateIn = (days: number, userPrefersDayStartsAtHour: number): Date => addDays(endOf(subtractHours(new Date(), userPrefersDayStartsAtHour || 0)), days);
+
+// https://stackoverflow.com/questions/11887934/how-to-check-if-dst-daylight-saving-time-is-in-effect-and-if-so-the-offset
+export const isDaylightSavings = (reference: Date): boolean => {
+    const jan = new Date(reference.getFullYear(), 0, 1);
+    const jul = new Date(reference.getFullYear(), 6, 1);
+    const stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+    return reference.getTimezoneOffset() < stdTimezoneOffset;
+}
+
+export const getDstOffset = (referece: Date) => {
+    const jan = new Date(referece.getFullYear(), 0, 1);
+    const jul = new Date(referece.getFullYear(), 6, 1);
+    const stdTimezoneOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
+    return (stdTimezoneOffset - referece.getTimezoneOffset()) * 60; // in seconds
+}
+
+export const adjustDateForDst = (date: Date): Date => {
+    const offset = getDstOffset(date);
+    return new Date(date.getTime() - offset * 1000);
+}
+export const adjustSecsForDst = (secs: number): number => {
+    const offset = getDstOffset(new Date(secs * 1000));
+    return secs - offset;
+}
+export const adjustTsForDst = (ts: Timestamp): Timestamp => {
+    const offset = getDstOffset(getDateFromTimestamp(ts));
+    return {
+        ...ts,
+        seconds: ts.seconds - offset,
+    };
+}

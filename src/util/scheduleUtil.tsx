@@ -1,5 +1,5 @@
 import { EventModel, EventModelWithId, ExamModelWithId, Timestamp } from "../firebase/model";
-import { getDateFromTimestamp, getSecondsFromIntervalType, getDateFromSeconds, containsTimestamp, getTimestampFromSeconds } from "./timeUtil";
+import { getDateFromTimestamp, getSecondsFromIntervalType, getDateFromSeconds, containsTimestamp, getTimestampFromSeconds, isDaylightSavings, getDstOffset } from "./timeUtil";
 
 export interface ConfigType {
     title: string;
@@ -45,10 +45,12 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
         let curSecs = event.firstStart.seconds;
         const endSecs = event.endAt.seconds;
         const delta = getSecondsFromIntervalType(event.interval);
+        const startIsDst = isDaylightSavings(getDateFromSeconds(event.firstStart.seconds));
 
         const additionalInfoText = event.additionalInfo?.text;
 
         const out = [];
+        let handleDst = true;
         while (curSecs <= endSecs) {
             if (!containsTimestamp(getTimestampFromSeconds(curSecs), event.exclusions))
                 out.push({
@@ -58,7 +60,25 @@ export const getFullCalendarEventConfigFromEvent = (event: EventModelWithId): Co
                     subjectId: event.subjectId,
                     additionalInfoText,
                 });
-            curSecs += delta;
+            // if switching into/from dst
+            let tmpDelta = delta;
+            const initialDate = getDateFromSeconds(curSecs);
+            const initialDateisDst = isDaylightSavings(initialDate);
+            const refDate = getDateFromSeconds(curSecs + tmpDelta);
+            const refDateIsDst = isDaylightSavings(refDate);
+            if (handleDst && initialDateisDst !== refDateIsDst) {
+                if (startIsDst === initialDateisDst) {
+                    const offset = startIsDst ? -getDstOffset(initialDate) : getDstOffset(refDate);
+                    if (tmpDelta > offset)
+                        tmpDelta -= offset;
+                    else 
+                        handleDst = false;
+                } else {
+                    const offset = startIsDst ? -getDstOffset(refDate) : getDstOffset(initialDate);
+                    tmpDelta += offset;
+                }
+            }
+            curSecs += tmpDelta;
         }
         return out;
 
