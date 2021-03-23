@@ -64,7 +64,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
     }, []);
 
     const userPrefersEnableTaskNotifications = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS] as (boolean|undefined));
-    
+
     return (
         <SettingsCard
             headerValue={props.data.type}

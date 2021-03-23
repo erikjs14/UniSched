@@ -388,12 +388,33 @@ export const getTimestampsFromConfig = ({firstDeadline, lastDeadline, interval}:
 
     if (interval === 'once') return [getTimestampFromSeconds(firstDeadline.seconds)];
 
-    let intervalSeconds;
-    let cur = firstDeadline.seconds;
-    while (cur <= lastDeadline.seconds) {
-        timestamps.push(getTimestampFromSeconds(cur));
-        intervalSeconds = getSecondsFromIntervalType(interval, getTimestampFromSeconds(cur));
-        cur += intervalSeconds;
+    const startIsDst = isDaylightSavings(getDateFromSeconds(firstDeadline.seconds));
+    let curSecs = firstDeadline.seconds;
+    let handleDst = true;
+    while (curSecs <= lastDeadline.seconds) {
+        timestamps.push(getTimestampFromSeconds(curSecs));
+        const delta = getSecondsFromIntervalType(interval, getTimestampFromSeconds(curSecs));
+
+        // if switching into/from dst
+        let tmpDelta = delta;
+        const initialDate = getDateFromSeconds(curSecs);
+        const initialDateisDst = isDaylightSavings(initialDate);
+        const refDate = getDateFromSeconds(curSecs + tmpDelta);
+        const refDateIsDst = isDaylightSavings(refDate);
+        if (handleDst && initialDateisDst !== refDateIsDst) {
+            if (startIsDst === initialDateisDst) {
+                const offset = startIsDst ? -getDstOffset(initialDate) : getDstOffset(refDate);
+                if (tmpDelta > offset)
+                    tmpDelta -= offset;
+                else 
+                    handleDst = false;
+            } else {
+                const offset = startIsDst ? -getDstOffset(refDate) : getDstOffset(initialDate);
+                tmpDelta += offset;
+            }
+        }
+
+        curSecs += tmpDelta;
     }
 
     return timestamps;

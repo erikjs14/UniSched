@@ -49,7 +49,14 @@ export const TASK_START_STATE: TaskModel = {
 }
 export const getTaskStartState = (): TaskModel => ({
     type: '',
-    timestamps: [getTimestampFromDate(new Date())],
+    timestamps: [getTimestampFromDate((() => {
+        const todayAtNine = new Date();
+        todayAtNine.setHours(9);
+        todayAtNine.setMinutes(0);
+        todayAtNine.setSeconds(0);
+        todayAtNine.setMilliseconds(0);
+        return todayAtNine;
+    })())],
     timestampsDone: [],
     tasksTickedAt: [{seconds:0,nanoseconds:0}],
     timeCreated: undefined,
