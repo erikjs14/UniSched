@@ -134,14 +134,16 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         </AnimateHeight>
     );
     
+    const filteredStarsPerDay: number[] = filterText ? [] : starsPerDay;
     const filteredTasks: TaskSemantic[][] = filterText ? semTasks.map((tasksOneDay, idx) => {
         return tasksOneDay.filter(task => {
             return task.name.toUpperCase().includes(filterText.toUpperCase()) 
                 || task.additionalInfo?.text?.toUpperCase().includes(filterText.toUpperCase())
                 || props.subjects[task.subjectId].name.toUpperCase().includes(filterText.toUpperCase());
         });
-    }).reduce<TaskSemantic[][]>((acc, current) => {
+    }).reduce<TaskSemantic[][]>((acc, current, curIdx) => {
         if (current.length > 0) {
+            filteredStarsPerDay.push(starsPerDay[curIdx]);
             return [
                 ...acc,
                 current
@@ -151,11 +153,16 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         }
     }, [])
         : semTasks;
+        
     const allTasks = filteredTasks.map((tasksOneDay, idx) => {
         //check if limit reached
-        if ((!onlyStars && idx + 1 > showDays) || ( onlyStars && starsPerDay.reduce((prev, cur, lidx) => lidx <= idx && cur > 0 ? prev + 1 : prev , 0) > showDays ) ) return null;
+        if ((!onlyStars && idx + 1 > showDays) || ( onlyStars && filteredStarsPerDay.reduce((prev, cur, lidx) => lidx <= idx && cur > 0 ? prev + 1 : prev , 0) > showDays ) ){
+            return null;
+        }
         //check for stars
-        if (onlyStars && starsPerDay[idx] < 1) return null;
+        if (onlyStars && filteredStarsPerDay[idx] < 1) {
+            return null;
+        }
 
         const dayContained = containsDay(fadeDayOut, tasksOneDay[0].dueAt);
         const dayInPast = tasksOneDay[0].dueAt.getTime() <= endOfDayMsAdapted;
@@ -174,7 +181,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                 date={tasksOneDay[0].dueAt}
                                 amount={tasksOneDay.length}
                                 withClock={dayInPast}
-                                amountStars={starsPerDay[idx]}
+                                amountStars={filteredStarsPerDay[idx]}
                                 dayStartsAtHour={props.dayStartsAtHour}
                             />
                         )}
