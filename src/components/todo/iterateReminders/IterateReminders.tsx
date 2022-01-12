@@ -3,9 +3,6 @@ import { dateToHTMLString } from '../../../util/timeUtil';
 import MarkdownDialog from '../../dialogs/MarkdownDialog';
 import {IterateRemindersProps} from './IterateReminders.d';
 
-const {
-} = CSS;
-
 export default React.memo(function(props: IterateRemindersProps): JSX.Element {
 
     const reminders = useMemo(() => props.tasks.reduce((prev, cur, curIdx) => {
