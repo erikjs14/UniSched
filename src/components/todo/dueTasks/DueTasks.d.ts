@@ -13,4 +13,6 @@ export interface DueTasksProps {
     forceShowAllTasksForXDays?: number;
     showTimeForTasks?: boolean;
     showTimeForStarredTasks?: boolean;
+    excludeReminders?: boolean;
+    onlyReminders?: boolean;
 }

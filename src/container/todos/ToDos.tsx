@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from 'react';
+import React, { useEffect, useCallback, useMemo, useState } from 'react';
 import SiteHeader from '../../components/ui/SiteHeader/SiteHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../..';
@@ -27,6 +27,8 @@ export default function() {
 
     const filteredSubjects = useMemo(() => subjects ? filterSubjectsForSpace(subjects, selectedSpaceId, true) : null, [selectedSpaceId, subjects]);
     const filteredTasks = useMemo(() => filteredSubjects && tasks ? tasks.filter(t => filteredSubjects.some(s => s.id === t.subjectId)) : null, [filteredSubjects, tasks]);
+
+    const [remindersEnabled, setRemindersEnabled] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -78,6 +80,8 @@ export default function() {
                 subTitle={spaces && selectedSpaceId !== 'all' ? spaces.find(s => s.id === selectedSpaceId).name : undefined} 
                 onRefresh={refreshHandler}
                 refreshing={refreshing}
+                bellSelected={remindersEnabled}
+                onBellClicked={() => setRemindersEnabled(prev => !prev)}
             />
 
             <DueTasks
@@ -92,6 +96,7 @@ export default function() {
                 forceShowAllTasksForXDays={userPrefersShowAllTasksForXDays}
                 showTimeForTasks={userPrefersEnableshowTimeForTasks}
                 showTimeForStarredTasks={userPrefersEnableshowTimeForStarredTasks}
+                excludeReminders={!remindersEnabled}
             />
 
             <CheckedTasks

@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
     position: relative;
  
     .icon {
@@ -42,17 +42,29 @@
             font-size: 2.5em;
         }
     }
+}
+
+.buttonRow {
+    color: rgba($col-primary-dark, .4);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 90%;
+    margin: 0 auto 2rem;
+    padding: 0 2rem;
+    position: relative;
+
+    .bell, .refresh {
+        cursor: pointer;
+    }
+
+    .bell {
+        font-size: 1.5em;
+        margin-right: 3rem;
+    }
 
     .refresh {
         font-size: 2em;
-        position: absolute;
-        right: 10rem;
-        bottom: -1em;
-        cursor: pointer;
-
-        @include respond(phone) {
-            display: none;
-        }
 
         &.refreshing {
             animation: rotateAnim 2.5s linear infinite;

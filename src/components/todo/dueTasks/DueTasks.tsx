@@ -50,8 +50,8 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         return () => window.removeEventListener('keydown', handler);
     }, []);
 
-    const [semTasks, starsPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
-            props.dueTasks, false, undefined, false, props.onlyRelevantTasks || false, props.forceShowAllTasksForXDays || undefined 
+    const [semTasks, starsPerDay, remindersPerDay] = React.useMemo(() => getRelevantTaskSemanticsGrouped(
+            props.dueTasks, false, undefined, false, false, false, props.onlyRelevantTasks || false, props.forceShowAllTasksForXDays || undefined 
         ), [props.dueTasks, props.forceShowAllTasksForXDays, props.onlyRelevantTasks]);
     const containsStars = React.useMemo(() => {
         return starsPerDay.some(nr => nr > 0);
@@ -135,6 +135,8 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     );
     
     const filteredStarsPerDay: number[] = filterText ? [] : starsPerDay;
+    const filteredRemindersPerDay: number[] = filterText ? [] : remindersPerDay;
+    const filteredTasksPerDay: number[] = filterText ? [] : semTasks.map(day => day.length);
     const filteredTasks: TaskSemantic[][] = filterText ? semTasks.map((tasksOneDay, idx) => {
         return tasksOneDay.filter(task => {
             return task.name.toUpperCase().includes(filterText.toUpperCase()) 
@@ -144,6 +146,8 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     }).reduce<TaskSemantic[][]>((acc, current, curIdx) => {
         if (current.length > 0) {
             filteredStarsPerDay.push(starsPerDay[curIdx]);
+            filteredRemindersPerDay.push(remindersPerDay[curIdx]);
+            filteredTasksPerDay.push(current.length);
             return [
                 ...acc,
                 current
@@ -161,6 +165,14 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
         }
         //check for stars
         if (onlyStars && filteredStarsPerDay[idx] < 1) {
+            return null;
+        }
+
+        // check for reminders
+        if (props.onlyReminders && filteredRemindersPerDay[idx] < 1) {
+            return null;
+        }
+        if (props.excludeReminders && (filteredTasksPerDay[idx] - filteredRemindersPerDay[idx]) < 1) {
             return null;
         }
 
@@ -196,7 +208,9 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                     >
                             
                             {tasksOneDay.map(task => (
-                                (!onlyStars || (onlyStars && task.star)) ?
+                                (!onlyStars || (onlyStars && task.star))
+                                && (!props.onlyReminders || (props.onlyReminders && task.reminder))
+                                && (!props.excludeReminders || (props.excludeReminders && !task.reminder)) ?
                                     <DueTask
                                         key={task.taskId}
                                         taskSemantic={task}
@@ -214,6 +228,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
                                         backgroundColor={props.subjects[task.subjectId].color}
                                         small={props.small}
                                         star={task.star}
+                                        bell={task.reminder}
                                         moreInfo={task.additionalInfo?.text ? true : false}
                                         showExactTime={props.showTimeForTasks || (props.showTimeForStarredTasks && task.star)}
                                     />

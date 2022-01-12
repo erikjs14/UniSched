@@ -5,5 +5,7 @@ export interface SiteHeaderProps {
     title: string;
     subTitle?: string;
     onRefresh?: Function;
+    bellSelected?: boolean;
+    onBellClicked?: Function;
     refreshing?: boolean;
 }

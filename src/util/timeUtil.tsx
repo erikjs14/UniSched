@@ -110,25 +110,30 @@ export const sameDay = (d1: Date | null, d2: Date | null): boolean => {
 }
 
 // input must already been sorted by due day
-export const groupTaskSemanticsByDueDay = (sortedTasks: TaskSemantic[]): [TaskSemantic[][], number[]] => {
+export const groupTaskSemanticsByDueDay = (sortedTasks: TaskSemantic[]): [TaskSemantic[][], number[], number[]] => {
     const out: TaskSemantic[][] = [];
     const starsPerSubject: number[] = [];
+    const remindersPerSubject: number[] = [];
 
     let prev = null;
     for (const ts of sortedTasks) {
         if (sameDay(prev, ts.dueAt)) {
             out[out.length-1].push(ts);
             if (ts.star) starsPerSubject[out.length-1] += 1;
+            if (ts.reminder) remindersPerSubject[out.length-1] += 1;
         } else {
             out.push([ts]);
             starsPerSubject.push(
                 ts.star ? 1 : 0
             );
+            remindersPerSubject.push(
+                ts.reminder ? 1 : 0
+            );
         }
         prev = ts.dueAt;
     }
 
-    return [out, starsPerSubject];
+    return [out, starsPerSubject, remindersPerSubject];
 }
 
 // input must already be sorted by subject
@@ -163,6 +168,8 @@ export const getRelevantTaskSemantics = (
     forceAppendFuture: boolean, 
     limitFutureBy: number | undefined = undefined, 
     onlyStars: boolean = false,
+    onlyReminders: boolean = false,
+    excludeReminders: boolean = true,
     onlyRelevantTasks: boolean = false,
     forceShowXDaysInFuture: number | undefined = undefined,
 ): TaskSemantic[] => {
@@ -174,7 +181,7 @@ export const getRelevantTaskSemantics = (
         const stamps = endOfLimitDay && limitInSec
             ? task.timestamps.filter(ts => limitInSec >= ts.seconds)
             : task.timestamps;
-        if (!onlyStars || task.star) { 
+        if ((!onlyStars || task.star) && (!onlyReminders || task.reminder) && (!excludeReminders || !task.reminder)) { 
             out.push(
                 getRelevantTimestamps(stamps, task.timestampsDone, forceAppendFuture, onlyRelevantTasks, forceShowXDaysInFuture, task.exclusions).map(tstamp => ({
                     name: task.type,
@@ -184,6 +191,7 @@ export const getRelevantTaskSemantics = (
                     dueString: formatDistanceOutput(getDateFromTimestamp(tstamp)),
                     dueAt: getDateFromTimestamp(tstamp),
                     star: task.star,
+                    reminder: task.reminder,
                     additionalInfo: task.additionalInfo,
                 }))
             );
@@ -197,9 +205,11 @@ export const getRelevantTaskSemanticsGrouped = (
     forceAppendFuture: boolean, 
     limitFutureBy: number | undefined = undefined,
     onlyStars: boolean = false,
+    onlyReminders: boolean = false,
+    excludeReminders: boolean = true,
     onlyRelevantTasks: boolean = false,
     forceShowXDaysInFuture: number | undefined = undefined,
-): [TaskSemantic[][], number[]] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars, onlyRelevantTasks, forceShowXDaysInFuture));
+): [TaskSemantic[][], number[], number[]] => groupTaskSemanticsByDueDay(getRelevantTaskSemantics(rawTasks, forceAppendFuture, limitFutureBy, onlyStars, onlyReminders, excludeReminders, onlyRelevantTasks, forceShowXDaysInFuture));
 
 export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithId[]): TaskSemantic[] => {
     const out: TaskSemantic[][] = [];
@@ -214,6 +224,7 @@ export const getUncheckedTaskSemantics = (rawTasks: TaskModelWithId[]): TaskSema
                 dueString: formatDateOutput(getDateFromTimestamp(tsDone)),
                 dueAt: getDateFromTimestamp(tsDone),
                 star: task.star,
+                reminder: task.reminder,
                 additionalInfo: task.additionalInfo,
             }))
         )
@@ -239,6 +250,7 @@ export interface TaskSemantic {
     subjectId: string;
     checked: boolean;
     star: boolean;
+    reminder: boolean;
     additionalInfo: {
         text: string;
     } | null;

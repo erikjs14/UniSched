@@ -36,7 +36,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
     const [infoDialogShown, setInfoDialogShown] = useState(false);
 
     const { onChange } = props;
-    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, tasksTickedAt: oldTasksTickedAt, star, additionalInfo, exclusions, notifications } = props.data;
+    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, tasksTickedAt: oldTasksTickedAt, star, reminder, additionalInfo, exclusions, notifications } = props.data;
     const changeHandler = useCallback((config: TaskConfig) => {
         const [timestamps, timestampsDone, tasksTickedAt] = getEditedTimestamps(config, oldTimestamps, oldTimestampsDone, oldTasksTickedAt);
         onChange('timestamps', timestamps);
@@ -74,6 +74,10 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
             star={{
                 selected: star,
                 starClicked: () => onChange('star', !star),
+            }}
+            reminder={{
+                selected: reminder,
+                reminderClicked: () => onChange('reminder', !reminder),
             }}
             uncollapsed={props.uncollapsed}
             checked={allTasksChecked(oldTimestamps, oldTimestampsDone)}

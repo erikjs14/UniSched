@@ -144,6 +144,7 @@ export default React.forwardRef(function(props: InputProps<string|number|boolean
             return (
                 <div className={toCss(s_wrapper, props.addClass || '')} >
                     <Checkbox
+                        {...props.elementConfig}
                         ref={ref}
                         onChange={event => props.disabled ? null : props.onChange(event.target.value)}
                         checked={props.value as boolean}

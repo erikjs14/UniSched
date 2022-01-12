@@ -72,6 +72,7 @@ export interface TaskModel extends SubjectDataModel {
     timestampsDone: Timestamp[];
     tasksTickedAt: Timestamp[];
     star: boolean;
+    reminder: boolean; // to allow distinguishing between tasks and reminders
     deleted: boolean;
     exclusions: Timestamp[];
     notifications: number[]; // as number of seconds before task

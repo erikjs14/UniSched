@@ -9,6 +9,10 @@ export interface SettingsCardProps {
         starClicked: Function;
         selected: boolean;
     };
+    reminder?: {
+        reminderClicked: Function;
+        selected: boolean;
+    };
     uncollapsed?: boolean;
     checked?: boolean;
 }

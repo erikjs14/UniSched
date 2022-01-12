@@ -9,6 +9,7 @@ export interface DueTaskProps {
     backgroundColor?: string;
     small?: boolean;
     star?: boolean;
+    bell?: boolean;
     moreInfo?: boolean;
     showExactTime?: boolean;
 }

@@ -7,7 +7,7 @@ import Input from '../../../ui/input/Input';
 import { findColorConfig } from './../../../../config/colorChoices';
 import AnimateHeight from 'react-animate-height';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle, faStar, faPen, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faStar, faPen, faClock, faBell } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import { toaster } from 'evergreen-ui';
 import { formatDateTimeOutput, formatTimeOutput } from '../../../../util/timeUtil';
@@ -24,6 +24,7 @@ const {
     options: s_options,
     small: s_small,
     additionalText: s_additionalText,
+    bell: s_bell,
 } = CSS;
 
 export default React.memo(function(props: DueTaskProps): JSX.Element {
@@ -69,6 +70,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                     : undefined
                 }
             >
+                {props.bell && <FontAwesomeIcon className={s_bell} icon={faBell} />}
                 
                 <div className={toCss(s_checkWrapper)}>
                     <Input
@@ -81,6 +83,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
 
                 <span className={toCss(s_titleTask)}>
                     {props.star && <Fragment><FontAwesomeIcon icon={faStar} /> &nbsp;</Fragment>}
+                    {props.bell && <Fragment><FontAwesomeIcon icon={faBell} /> &nbsp;</Fragment>}
                     {props.taskSemantic.name}
                 </span>
 

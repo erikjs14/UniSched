@@ -7,8 +7,8 @@ import { toCss } from '../../../util/util';
 import Input from '../../ui/input/Input';
 import Button from '../../ui/button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar as fasStar, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
+import { faStar as fasStar, faBell as fasBell, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faStar as farStar, faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 const {
     wrapper: s_wrapper,
@@ -17,6 +17,7 @@ const {
     btnRow: s_btnRow,
     removeBtn: s_removeBtn,
     star: s_star,
+    reminder: s_reminder,
     inputWrapper: s_inputWrapper,
     checked: s_checked,
     checkmark: s_checkmark,
@@ -34,6 +35,16 @@ export default function(props: PropsWithChildren<SettingsCardProps>): JSX.Elemen
                     onClick={event => {
                         event.stopPropagation();
                         props.star?.starClicked?.();
+                    }}
+                />
+            }
+            {props.reminder && 
+                <FontAwesomeIcon 
+                    className={toCss(s_reminder)}  
+                    icon={(props.reminder.selected ? fasBell : farBell) as IconProp} 
+                    onClick={event => {
+                        event.stopPropagation();
+                        props.reminder?.reminderClicked?.();
                     }}
                 />
             }
