@@ -5,6 +5,17 @@
     width: 90%;
     margin: auto;
 
+    .headlineWrapper {
+        max-width: 80%;
+        margin: 3rem auto;
+        font-size: 2em;
+
+        h3 {
+            text-align: center;
+            color: #222831;
+        }
+    }
+
     &.small {
         width: 100%;
 

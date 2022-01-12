@@ -15,4 +15,5 @@ export interface DueTasksProps {
     showTimeForStarredTasks?: boolean;
     excludeReminders?: boolean;
     onlyReminders?: boolean;
+    headline?: string;
 }

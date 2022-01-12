@@ -30,6 +30,7 @@ const {
     filterInput: s_filterInput,
     crossInput: s_crossInput,
     filter: s_filter,
+    headlineWrapper: s_headlineWrapper,
 } = CSS;
 
 export default React.memo(function(props: DueTasksProps): JSX.Element {
@@ -243,6 +244,13 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     
     return (
         <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
+
+            {props.headline && (
+                <div className={s_headlineWrapper}>
+                    <h3>{props.headline}</h3>
+                </div>
+            )}
+
             <div className={toCss(s_infoRow)}>
                 {containsStars &&
                     <Fragment>

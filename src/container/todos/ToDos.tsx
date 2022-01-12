@@ -105,6 +105,24 @@ export default function() {
                 onTaskUnchecked={uncheckTaskHandler}
             />
 
+            <div style={{height: '20rem'}}></div>
+
+            <DueTasks
+                headline='All Reminders'
+                key={selectedSpaceId || 123} // to re-mount every time the selected space changes --> do not keep dueTasks state (e.g. collapsed days)
+                dueTasks={filteredTasks}
+                subjects={subjectsToObject(filteredSubjects)}
+                onTaskChecked={checkTaskHandler}
+                limitDaysInFuture={userPrefersLimitTasksInFuture}
+                dayStartsAtHour={userPrefersDayStartsAtHour}
+                expandAllVisibleDays={userPrefersExpandAllVisibleDays}
+                onlyRelevantTasks={userPrefersShowOnlyRelevantTasks}
+                forceShowAllTasksForXDays={userPrefersShowAllTasksForXDays}
+                showTimeForTasks={userPrefersEnableshowTimeForTasks}
+                showTimeForStarredTasks={userPrefersEnableshowTimeForStarredTasks}
+                onlyReminders
+            />
+
         </div>
     )
 
