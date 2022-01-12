@@ -34,7 +34,7 @@ const {
     headlineWrapper: s_headlineWrapper,
 } = CSS;
 
-export default React.memo(function(props: DueTasksProps): JSX.Element {
+export default React.memo(function(props: DueTasksProps): JSX.Element | null {
 
     const [fadeTaskOut, setFadeTaskOut] = useState<[string, number][]>([]);
     const [fadeDayOut, setFadeDayOut] = useState<Date[]>([])
@@ -58,6 +58,9 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     const containsStars = React.useMemo(() => {
         return starsPerDay.some(nr => nr > 0);
     }, [starsPerDay]);
+    const containsReminders = React.useMemo(() => {
+        return remindersPerDay.some(nr => nr > 0);
+    }, [remindersPerDay]);
     const amountStars = React.useMemo(() => {
         return starsPerDay.reduce((prev, cur) => prev + cur, 0);
     }, [starsPerDay]);
@@ -242,6 +245,10 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
             </AnimateHeight>
         );
     });
+
+    if (props.onlyReminders && !containsReminders) {
+        return null;
+    }
     
     return (
         <>

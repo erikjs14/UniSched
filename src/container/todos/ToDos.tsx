@@ -125,6 +125,8 @@ export default function() {
                 iterateReminders={userPrefersEnableReminderPopups}
             />
 
+            <div style={{height: '8rem'}}></div>
+
         </div>
     )
 
