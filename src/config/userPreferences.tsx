@@ -67,6 +67,7 @@ export const PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS = 'enableShowDateForStar
 export const PREF_ID_MIN_TIME_SCHEDULE = 'minTimeSchedule';
 export const PREF_ID_MAX_TIME_SCHEDULE = 'maxTimeSchedule';
 export const PREF_ID_ARCHIVES = 'archives';
+export const PREF_ID_ENABLE_REMINDER_POPUPS = 'enableReminderPopups';
 
 /***** INSERT PREFERENCES CONFIG HERE *****/
 export const PREFERENCES_CONFIG: PreferenceConfig[] = [
@@ -236,6 +237,13 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         description: 'If enabled, notifications for tasks can be configured.',
         default: {},
         uponActivation: 'activateNotifications',
+    },
+    {
+        id: PREF_ID_ENABLE_REMINDER_POPUPS,
+        type: 'boolean',
+        name: 'Enable reminder dialogs',
+        description: 'If enabled, all open reminders will be iterated upon going to the ToDo page',
+        default: true,
     },
     {
         id: PREF_ID_ARCHIVES,

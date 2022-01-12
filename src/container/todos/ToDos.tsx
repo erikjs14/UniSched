@@ -8,7 +8,7 @@ import { subjectsToObject, filterSubjectsForSpace } from '../../util/util';
 import CheckedTasks from '../../components/todo/checkedTasks/CheckedTasks';
 import * as actions from '../../store/actions';
 import { TIME_BEFORE_DATA_REFRESH_MS } from './../../config/generalConfig';
-import { PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT, PREF_ID_DAY_STARTS_AT, PREF_ID_SHOW_ALL_TASKS_FOR_X_DAYS, PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS, PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS } from '../../config/userPreferences';
+import { PREF_ID_FUTURE_TASKS_TODO_VIEW_LIMIT, PREF_ID_DAY_STARTS_AT, PREF_ID_SHOW_ALL_TASKS_FOR_X_DAYS, PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS, PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS, PREF_ID_ENABLE_REMINDER_POPUPS } from '../../config/userPreferences';
 import { PREF_ID_EXPAND_ALL_VISIBLE_DAYS, PREF_ID_SHOW_ONLY_RELEVANT_TASKS } from './../../config/userPreferences';
 
 export default function() {
@@ -64,6 +64,7 @@ export default function() {
     const userPrefersShowAllTasksForXDays = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_SHOW_ALL_TASKS_FOR_X_DAYS] as (number|undefined));
     const userPrefersEnableshowTimeForStarredTasks = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ENABLE_SHOW_TIME_FOR_STARRED_TASKS] as (boolean|undefined));
     const userPrefersEnableshowTimeForTasks = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ENABLE_SHOW_TIME_FOR_TASKS] as (boolean|undefined));
+    const userPrefersEnableReminderPopups = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ENABLE_REMINDER_POPUPS] as (boolean|undefined));
 
     if (loading) {
         return <Loader />;
@@ -121,7 +122,7 @@ export default function() {
                 showTimeForTasks={userPrefersEnableshowTimeForTasks}
                 showTimeForStarredTasks={userPrefersEnableshowTimeForStarredTasks}
                 onlyReminders
-                iterateReminders
+                iterateReminders={userPrefersEnableReminderPopups}
             />
 
         </div>
