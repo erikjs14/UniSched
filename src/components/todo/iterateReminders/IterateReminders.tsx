@@ -1,16 +1,17 @@
 import React, { useMemo, useState } from 'react';
-import { dateToHTMLString } from '../../../util/timeUtil';
+import { dateToHTMLString, endOf } from '../../../util/timeUtil';
 import MarkdownDialog from '../../dialogs/MarkdownDialog';
 import {IterateRemindersProps} from './IterateReminders.d';
 
 export default React.memo(function(props: IterateRemindersProps): JSX.Element {
 
+    const today = useMemo(() => endOf(new Date()), []);
     const reminders = useMemo(() => props.tasks.reduce((prev, cur, curIdx) => {
         return [
             ...prev,
-            ...(cur.filter(t => t.reminder))
+            ...(cur.filter(t => t.reminder && new Date(t.dueAt).getTime() <= today.getTime()))
         ]
-    }, []), [props.tasks]);
+    }, []), [props.tasks, today]);
 
     const [showIdx, setShowIdx] = useState(0);
 
