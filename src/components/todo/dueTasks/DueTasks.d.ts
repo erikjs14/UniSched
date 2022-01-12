@@ -16,4 +16,5 @@ export interface DueTasksProps {
     excludeReminders?: boolean;
     onlyReminders?: boolean;
     headline?: string;
+    iterateReminders?: boolean;
 }

@@ -28,13 +28,14 @@ export default (props: MarkdownDialogProps) => {
             isShown={props.show}
             title={props.title}
             onCloseComplete={() => props.onClose()}
-            onConfirm={props.editModeDisabled ? undefined : (
-                (close) => {
-                    close();
+            onConfirm={(close) => {
+                close();
+                if (!props.editModeDisabled) { 
                     props.onRawMarkdownChange?.(markdown);
-                })
-            }
-            hasFooter={!props.editModeDisabled}
+                }
+            }}
+            hasCancel={props.editMode || false}
+            confirmLabel={props.editMode ? 'Confirm' : 'OK'}
         >
             <Pane
                 minHeight='50vh'

@@ -121,6 +121,7 @@ export default function() {
                 showTimeForTasks={userPrefersEnableshowTimeForTasks}
                 showTimeForStarredTasks={userPrefersEnableshowTimeForStarredTasks}
                 onlyReminders
+                iterateReminders
             />
 
         </div>

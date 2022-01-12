@@ -11,6 +11,7 @@ import AnimateHeight from 'react-animate-height';
 import { faSmileBeam, faStar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconButton, TextInput } from 'evergreen-ui';
+import IterateReminders from '../iterateReminders/IterateReminders';
 const {
     wrapper: s_wrapper,
     dayWrapper: s_dayWrapper,
@@ -243,61 +244,67 @@ export default React.memo(function(props: DueTasksProps): JSX.Element {
     });
     
     return (
-        <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
+        <>
 
-            {props.headline && (
-                <div className={s_headlineWrapper}>
-                    <h3>{props.headline}</h3>
-                </div>
+            {props.iterateReminders && (
+                <IterateReminders tasks={semTasks} subjects={props.subjects} />
             )}
+            <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
 
-            <div className={toCss(s_infoRow)}>
-                {containsStars &&
-                    <Fragment>
-                        <span className={toCss(s_amountStars)} >
-                            <FontAwesomeIcon icon={faStar} />
-                            { amountStars }
-                        </span>
-                        <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
-                    </Fragment>
-                }
-                { (semTasks && semTasks.length > 0) && (
-                    <div className={toCss(s_filter)}>
-                        <TextInput 
-                            value={filterText}
-                            onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFilterText(e.target.value)}
-                            placeholder='Search...'
-                            className={toCss(s_filterInput)}
-                            innerRef={filterInputRef as any}
-                        />
-                        <IconButton 
-                            icon='cross' 
-                            onClick={() => setFilterText('')}
-                            appearance='minimal'
-                            className={toCss(s_crossInput)}
-                        />
+                {props.headline && (
+                    <div className={s_headlineWrapper}>
+                        <h3>{props.headline}</h3>
                     </div>
                 )}
-            </div>
-            {todayView}
-            {allTasks}
-            { filterText?.length > 0 && filteredTasks.length < 1 && (
-                <div className={toCss(s_nofound)} >
-                    None found
+
+                <div className={toCss(s_infoRow)}>
+                    {containsStars &&
+                        <Fragment>
+                            <span className={toCss(s_amountStars)} >
+                                <FontAwesomeIcon icon={faStar} />
+                                { amountStars }
+                            </span>
+                            <span className={toCss(s_filterStar, (onlyStars ? s_enabled : ''))} onClick={() => setOnlyStars(prev => !prev)}>Only stars</span>
+                        </Fragment>
+                    }
+                    { (semTasks && semTasks.length > 0) && (
+                        <div className={toCss(s_filter)}>
+                            <TextInput 
+                                value={filterText}
+                                onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setFilterText(e.target.value)}
+                                placeholder='Search...'
+                                className={toCss(s_filterInput)}
+                                innerRef={filterInputRef as any}
+                            />
+                            <IconButton 
+                                icon='cross' 
+                                onClick={() => setFilterText('')}
+                                appearance='minimal'
+                                className={toCss(s_crossInput)}
+                            />
+                        </div>
+                    )}
                 </div>
-            )}
-            <div className={toCss(s_showMoreLessArea)} >
-                {(!onlyStars ? (showDays < filteredTasks.length - 1) : (showDays < amountStars) ) &&
-                    <span className={toCss(s_showMore)}  onClick={showMore}>
-                        Show More
-                    </span>
-                }
-                {showDays > minShowDayLimit &&
-                    <span className={toCss(s_showLess)}  onClick={showLess}>
-                        Show Less
-                    </span>
-                }
+                {todayView}
+                {allTasks}
+                { filterText?.length > 0 && filteredTasks.length < 1 && (
+                    <div className={toCss(s_nofound)} >
+                        None found
+                    </div>
+                )}
+                <div className={toCss(s_showMoreLessArea)} >
+                    {(!onlyStars ? (showDays < filteredTasks.length - 1) : (showDays < amountStars) ) &&
+                        <span className={toCss(s_showMore)}  onClick={showMore}>
+                            Show More
+                        </span>
+                    }
+                    {showDays > minShowDayLimit &&
+                        <span className={toCss(s_showLess)}  onClick={showLess}>
+                            Show Less
+                        </span>
+                    }
+                </div>
             </div>
-        </div>
+        </>
     );
 });
