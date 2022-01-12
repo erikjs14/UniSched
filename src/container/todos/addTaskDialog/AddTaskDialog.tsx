@@ -9,8 +9,8 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../../components/ui/input/Input';
 import { getTaskStartState } from '../../../config/settingsConfig';
 import Button from '../../../components/ui/button/Button';
-import { faStar as fasStar } from '@fortawesome/free-solid-svg-icons';
-import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
+import { faStar as fasStar, faBell as fasBell } from '@fortawesome/free-solid-svg-icons';
+import { faStar as farStar, faBell as farBell } from '@fortawesome/free-regular-svg-icons';
 import { getDateFromTimestamp, getDateFromSeconds, getTimestampFromDate, dateToHTMLString, HTMLStringToDate, getNDatesAsSecondsForInterval, formatDateOutput, getConfigDataFromTimestamps, sameDay, dateIn } from '../../../util/timeUtil';
 import { getEditedTimestamps, getWeekDay } from '../../../util/timeUtil';
 import { PREF_ID_DAY_STARTS_AT } from '../../../config/userPreferences';
@@ -43,6 +43,7 @@ const {
     space: s_space,
     spaceSelected: s_spaceSelected,
     nosubs: s_nosubs,
+    bell: s_bell,
 } = CSS;
 
 // !!! ALWAYS UPDATE
@@ -116,7 +117,9 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             setTaskConfig(prev => ({
                 ...prev,
                 type: newVal as string,
-            }))
+                reminder: (newVal as string).includes('remind') ? true : (taskConfig.type.includes('remind') ? false : prev.reminder),
+                star: (newVal as string).includes('star') ? true : (taskConfig.type.includes('star') ? false : prev.star),
+            }));
         } else if (key === 'firstDeadline' || key === 'lastDeadline' || key === 'interval') {
             const [newTimestamps, newTimestampsDone] = getEditedTimestamps(
                 {
@@ -138,6 +141,11 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                 ...prev,
                 star: newVal as boolean,
             }));
+        } else if (key === 'reminder') {
+            setTaskConfig(prev => ({
+                ...prev,
+                reminder: newVal as boolean,
+            }));
         } else if (key === 'additionalInfo') {
             setTaskConfig(prev => ({
                 ...prev,
@@ -146,7 +154,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     : null,
             }));
         }
-    }, [firstDeadline, interval, lastDeadline, taskConfig.timestamps, taskConfig.timestampsDone, taskConfig.tasksTickedAt]);
+    }, [taskConfig.type, taskConfig.timestamps, taskConfig.timestampsDone, taskConfig.tasksTickedAt, firstDeadline, lastDeadline, interval]);
 
     const onChangePageCnt = useCallback((amount: number, force: boolean = false) => {
         // check type input
@@ -187,6 +195,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                 ...taskConfig,
                 timestamps: [...taskConfig.timestamps],
                 timestampsDone: [...taskConfig.timestampsDone],
+                type: taskConfig.type.replace('reminder ', '').replace('remind ', '').replace('star ', ''),
             };
             if (pageCnt === 2 && interval === 'once') {
                 const spec = chrono.parse(taskConfig.type);
@@ -194,7 +203,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     const typeWithoutDate = taskConfig.type.replace(spec[0].text, '');
                     const date = chrono.parseDate(taskConfig.type);
 
-                    config.type = typeWithoutDate;
+                    config.type = typeWithoutDate.replace('reminder ', '').replace('remind ', '').replace('star ', '');
                     config.timestamps = [getTimestampFromDate(date)];
                     config.timestampsDone = [];
                     setTaskConfig(config);
@@ -369,6 +378,11 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     onChange={newType => changeHandler('type', newType)}
                     ref={typeInputRef}
                     markWhenEmpty={markTypeInput}
+                />
+                <FontAwesomeIcon 
+                    className={toCss(s_bell)}  
+                    icon={(taskConfig.reminder ? fasBell : farBell) as IconProp}
+                    onClick={() => changeHandler('reminder', !taskConfig.reminder)}
                 />
                 <FontAwesomeIcon 
                     className={toCss(s_star)}  

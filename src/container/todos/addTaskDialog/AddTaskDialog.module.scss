@@ -148,10 +148,22 @@
                         }
                     }
 
-                    .star {
+                    .star,
+                    .bell {
                         cursor: pointer;
                         font-size: 1.3em;
                         @include respond(small-phone) { margin-top: 3rem;}
+                    }
+
+                    .bell {
+                        @include respond(small-phone) { 
+                            margin-right: 1.5rem;
+                        }
+                    }
+                    .star {
+                        @include respond(small-phone) { 
+                            margin-left: 1.5rem;
+                        }
                     }
                 }
             }
