@@ -185,7 +185,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element | null {
         const dayInPast = tasksOneDay[0].dueAt.getTime() <= endOfDayMsAdapted;
         return (
             <AnimateHeight
-                key={tasksOneDay[0].dueAt.getTime()} 
+                key={tasksOneDay[0].taskId} 
                 height={dayContained ? 0 : 'auto'}
                 duration={400}
                 delay={1800}
@@ -254,7 +254,10 @@ export default React.memo(function(props: DueTasksProps): JSX.Element | null {
         <>
 
             {props.iterateReminders && (
-                <IterateReminders tasks={semTasks} subjects={props.subjects} />
+                <IterateReminders 
+                    tasks={semTasks} 
+                    subjects={props.subjects}
+                />
             )}
             <div className={toCss(s_wrapper, (props.small ? s_small : ''))}>
 

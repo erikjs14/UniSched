@@ -3,5 +3,5 @@ import { SubjectModel } from './../../../firebase/model';
 
 export interface IterateRemindersProps {
     tasks: TaskSemantic[][];
-    subjects: {[id: string]: SubjectModel}
+    subjects: {[id: string]: SubjectModel};
 }

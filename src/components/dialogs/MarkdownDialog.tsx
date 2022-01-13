@@ -5,21 +5,26 @@ import gfm from 'remark-gfm';
 import { Dialog, Textarea, Pane, Text, Button } from 'evergreen-ui';
 import CSS from './MarkdownDialog.module.scss';
 import { toCss } from '../../util/util';
+import Input from '../ui/input/Input';
 const { resetForMarkdown: s_resetForMarkdown } = CSS;
 
 interface MarkdownDialogProps {
     title: string;
     show: boolean;
     onClose(): void;
+    onCheck?(): void;
     rawMarkdown: string;
     onRawMarkdownChange?(val: string): void;
     editMode?: boolean;
     editModeDisabled?: boolean;
+    left?: string;
 }
 export default (props: MarkdownDialogProps) => {
 
     const [editMode, setEditMode] = useState(props.editMode);
     const [markdown, setMarkdown] = useState(props.rawMarkdown || '');
+
+    const [checked, setChecked] = useState(false);
 
     if (!props.show) return null;
 
@@ -35,54 +40,73 @@ export default (props: MarkdownDialogProps) => {
                 }
             }}
             hasCancel={props.editMode || false}
-            confirmLabel={props.editMode ? 'Confirm' : 'OK'}
+            confirmLabel={(props.editMode ? 'Confirm' : 'OK')}
         >
-            <Pane
-                minHeight='50vh'
-                display='flex'
-                flexDirection='column'
-                alignItems='stretch'
-                className={toCss(s_resetForMarkdown)}
-            >
-                {!props.editModeDisabled && (
-                    <Pane>
-                        <Button 
-                            marginLeft='auto'
-                            appearance='minimal'
-                            iconBefore={editMode ? 'eye-open' : 'edit'}
-                            onClick={() => setEditMode(prev => !prev)}
-                        >
-                            {editMode ? 'View' : 'Edit'}
-                        </Button>
-                    </Pane>
-                )}
+            {({close}) => (
                 <Pane
-                    flex='1'
-                    padding='1rem'
+                    minHeight='50vh'
                     display='flex'
-                    justifyContent='flex-end'
                     flexDirection='column'
+                    alignItems='stretch'
+                    className={toCss(s_resetForMarkdown)}
                 >
-                    { editMode && !props.editModeDisabled
-                        ? (
-                            <Textarea
-                                value={markdown}
-                                onChange={(e: any) => setMarkdown(e.target.value)}
-                                flex='1'
-                            />
-                        ) : (
-                            <Text flex='1'>
-                                <ReactMarkdown
-                                    plugins={[gfm]} 
-                                    children={markdown || '*The formatted markdown will appear here*'}
-                                />
-                            </Text>
-                        )}
                     {!props.editModeDisabled && (
-                        <Text fontSize='.8em'>You can use markdown in this text. <a target=':_blank' rel="noopener noreferrer" href="https://commonmark.org/help/">More info</a> (<a target='_blank' rel="noopener noreferrer" href='https://github.com/remarkjs/remark-gfm'>gfm</a> is also supported).</Text>
+                        <Pane>
+                            <Button 
+                                marginLeft='auto'
+                                appearance='minimal'
+                                iconBefore={editMode ? 'eye-open' : 'edit'}
+                                onClick={() => setEditMode(prev => !prev)}
+                            >
+                                {editMode ? 'View' : 'Edit'}
+                            </Button>
+                        </Pane>
                     )}
+                    <Pane
+                        flex='1'
+                        padding='1rem'
+                        display='flex'
+                        justifyContent='flex-end'
+                        flexDirection='column'
+                    >
+                        { editMode && !props.editModeDisabled
+                            ? (
+                                <Textarea
+                                    value={markdown}
+                                    onChange={(e: any) => setMarkdown(e.target.value)}
+                                    flex='1'
+                                />
+                            ) : (
+                                <Text flex='1'>
+                                    <ReactMarkdown
+                                        plugins={[gfm]} 
+                                        children={markdown || '*The formatted markdown will appear here*'}
+                                    />
+                                </Text>
+                            )}
+                        {!props.editModeDisabled && (
+                            <Text fontSize='.8em'>You can use markdown in this text. <a target=':_blank' rel="noopener noreferrer" href="https://commonmark.org/help/">More info</a> (<a target='_blank' rel="noopener noreferrer" href='https://github.com/remarkjs/remark-gfm'>gfm</a> is also supported).</Text>
+                        )}
+                        {props.onCheck && (
+                            <Input 
+                                elementType='checkbox' 
+                                value={checked} 
+                                onChange={newVal => {
+                                    setChecked(newVal as boolean);
+                                    if (newVal) {
+                                        setTimeout(() => {
+                                            props.onCheck?.();
+                                            close();
+                                        }, 1000);
+                                    }
+                                }} 
+                                label='Completed' 
+                                left={props.left || undefined}
+                            />
+                        )}
+                    </Pane>
                 </Pane>
-            </Pane>
+            )}
         </Dialog>
     );
 }

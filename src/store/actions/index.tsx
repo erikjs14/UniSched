@@ -31,6 +31,7 @@ export {
     dataSetError,
     setTasksLocally,
     checkTask,
+    checkTaskWithoutUpdate,
     uncheckTask,
     fetchExams,
     refreshExams,

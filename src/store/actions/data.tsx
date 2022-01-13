@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC } from './data.d';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC, CheckTaskWithoutUpdateAC } from './data.d';
 import { ExamModelWithId, EventModelWithId, TaskModel, TaskModelWithId } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
 import { SubjectModelWithId } from './../../firebase/model';
@@ -45,6 +45,20 @@ export const checkTask = (subjectId: string, taskId: string, timestampSeconds: n
     const ms = nowMs - s*1000;
     return {
         type: actionTypes.CHECK_TASK,
+        subjectId,
+        taskId,
+        timestampSeconds,
+        tickedAtSeconds: s,
+        tickedAtMilliseconds: ms,
+    };
+};
+
+export const checkTaskWithoutUpdate = (subjectId: string, taskId: string, timestampSeconds: number): CheckTaskWithoutUpdateAC => {
+    const nowMs = new Date().getTime();
+    const s = Math.floor(nowMs / 1000);
+    const ms = nowMs - s*1000;
+    return {
+        type: actionTypes.CHECK_TASK_WITHOUT_UPDATE,
         subjectId,
         taskId,
         timestampSeconds,

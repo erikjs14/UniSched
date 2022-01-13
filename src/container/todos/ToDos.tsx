@@ -110,7 +110,7 @@ export default function() {
 
             <DueTasks
                 headline='All Reminders'
-                key={selectedSpaceId || 123} // to re-mount every time the selected space changes --> do not keep dueTasks state (e.g. collapsed days)
+                key={(selectedSpaceId || 321) + 'abc'} // to re-mount every time the selected space changes --> do not keep dueTasks state (e.g. collapsed days)
                 dueTasks={filteredTasks}
                 subjects={subjectsToObject(filteredSubjects)}
                 onTaskChecked={checkTaskHandler}

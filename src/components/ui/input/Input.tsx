@@ -34,6 +34,7 @@ export interface InputProps<T> {
     minSize?: boolean;
     markWhenEmpty?: boolean;
     onClick?: Function;
+    left?: string;
 }
 
 export default React.forwardRef(function(props: InputProps<string|number|boolean>, ref: MutableRefObject<any> | ((instance: any) => void) | null): JSX.Element| null {
@@ -127,6 +128,7 @@ export default React.forwardRef(function(props: InputProps<string|number|boolean
                 <div className={toCss(s_checkWrapper)}>
                     <label
                         className={toCss(s_checkbox, (props.disabled ? s_disabled : ''))}
+                        style={{ left: props.left || undefined}}
                     >
                         <input
                             type='checkbox'

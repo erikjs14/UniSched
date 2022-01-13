@@ -83,6 +83,16 @@ export function* checkTask(action: CheckTaskAC) {
     } 
 }
 
+export function* checkTaskWithoutUpdate(action: CheckTaskAC) {
+    try {
+        const timestampToCheck = getTimestampFromSeconds(action.timestampSeconds);
+        const tickedAtTs = {seconds: action.tickedAtSeconds, nanoseconds: action.tickedAtMilliseconds*1000 + Math.round(Math.random()*1000)};
+        yield saveTaskChecked(action.subjectId, action.taskId, timestampToCheck, tickedAtTs);
+    } catch (error) {
+        yield put(actions.dataSetError('Failed checking the task', 'tasks'));
+    } 
+}
+
 export function* uncheckTask(action: UncheckTaskAC) {
     try {
         const oldTasks = yield select(state => state.data.tasks.data);
@@ -123,7 +133,7 @@ export function* addAndSaveNewTask(action: AddAndSaveNewTaskAC) {
     }
 }
 
-const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithId[], subjectId: string, taskId: string, timestampToCheck: Timestamp, tickedAt: Timestamp): TaskModelWithId[] => {
+export const getUpdatedTasksAfterCheck = (oldTasks: TaskModelWithId[], subjectId: string, taskId: string, timestampToCheck: Timestamp, tickedAt: Timestamp): TaskModelWithId[] => {
     const result = oldTasks.map(oldTask => {
         if (oldTask.subjectId !== subjectId || oldTask.id !== taskId) {
             return oldTask;

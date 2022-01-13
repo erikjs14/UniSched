@@ -1,9 +1,15 @@
 import { TaskModelWithIdAndSubjectId, SubjectModel } from './../../../firebase/model';
 
+interface TaskSlice { 
+    subjectId: string;
+    taskId: string;
+    timestampSeconds: number;
+}
 export interface DueTasksProps {
     dueTasks: TaskModelWithIdAndSubjectId[];  
     subjects: {[id: string]: SubjectModel};
     onTaskChecked(subjectId: string, taskId: string, timestampSeconds: number): void;
+    onTasksChecked?(tasks: Array<TaskSlice>): void;
     limitDaysInFuture?: number;
     small?: boolean;
     onlyStars?: boolean;
