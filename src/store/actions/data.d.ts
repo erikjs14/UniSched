@@ -44,3 +44,7 @@ export interface ForceRefreshAC extends BaseActionCreator {dataTypeId: DataTypeI
 export interface RemoveTaskLocallyAC extends BaseActionCreator {taskId: string}
 export interface RemoveExamLocallyAC extends BaseActionCreator {examId: string}
 export interface RemoveEventLocallyAC extends BaseActionCreator {eventId: string}
+
+export interface UpdateTaskAC extends BaseActionCreator { subjectId: string; taskId: string; newValues: Partial<TaskModel> };
+export interface UpdateTaskSuccessAC extends BaseActionCreator {};
+export interface UpdateTaskFailAC extends BaseActionCreator { error: string };

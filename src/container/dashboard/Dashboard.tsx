@@ -182,6 +182,7 @@ export default function(): JSX.Element {
                         forceShowAllTasksForXDays={3}
                         dayStartsAtHour={userPrefersDayStartsAt || 0}
                         small
+                        onTaskMarkdownChange={(subjectId, taskId, markdown) => dispatch(actions.updateTask(subjectId, taskId, {additionalInfo: {text: markdown}}))}
                     />
                 </div>
 

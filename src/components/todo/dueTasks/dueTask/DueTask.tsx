@@ -121,7 +121,12 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                                         <MarkdownDialog
                                             show={additionalTextDialogShown}
                                             title={'Additional Info for "'+props.taskSemantic.name+'"'}
-                                            onClose={() => setAdditionalTextDialogShown(false)}
+                                            onClose={(changed, md) => {
+                                                setAdditionalTextDialogShown(false)
+                                                if (changed) {
+                                                    props.onChangeMarkdown(md);
+                                                }
+                                            }}
                                             rawMarkdown={props.taskSemantic.additionalInfo?.text}
                                             editModeDisabled
                                         />

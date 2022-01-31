@@ -3,7 +3,7 @@ import React, { PropsWithChildren, useState, useMemo, useCallback, Fragment, use
 import CSS from './AddTaskDialog.module.scss';
 import { AddTaskDialogProps } from './AddTaskDialog.d';
 import { Dialog } from 'evergreen-ui';
-import { toCss, arrayToN, filterSubjectsForSpace } from '../../../util/util';
+import { toCss, arrayToN, filterSubjectsForSpace, updateMdOnEnter } from '../../../util/util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import Input from '../../../components/ui/input/Input';
@@ -150,7 +150,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             setTaskConfig(prev => ({
                 ...prev,
                 additionalInfo: (newVal as string).length > 0 
-                    ? { text: (newVal as string) }
+                    ? { text: updateMdOnEnter(prev.additionalInfo?.text, (newVal as string)) }
                     : null,
             }));
         }
@@ -239,7 +239,6 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     const lastDateOptions = useMemo(() => getNDatesAsSecondsForInterval(firstDeadline.seconds, interval, CONFIG__QUICK_ADD_FUTURE_END_OPTIONS), [firstDeadline.seconds, interval]);
 
     const onKeyDown = useCallback((event, closeDialog) => {
-        console.log('keydown')
         if (!keyMap[event.key]) { // dont handle multiple keydown events
             if (event.key === 'ArrowLeft') {
                 if (pageCnt !== 2 && pageCnt !== 6) 
@@ -256,7 +255,6 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                     onChangePageCnt(1);
                 }            
             } else if (event.key === 'ArrowDown') {
-                console.log('ArrowDown '+pageCnt)
                 if (pageCnt === 0 && spaces) {
                     const currentSpaceIdx = spaces.findIndex(s => s.id === spaceId);
                     const newIdx = (currentSpaceIdx + 1) % spaces.length;

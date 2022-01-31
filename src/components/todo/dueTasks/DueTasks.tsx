@@ -236,6 +236,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element | null {
                                         bell={task.reminder}
                                         moreInfo={task.additionalInfo?.text ? true : false}
                                         showExactTime={props.showTimeForTasks || (props.showTimeForStarredTasks && task.star)}
+                                        onChangeMarkdown={md => props.onTaskMarkdownChange(task.subjectId, task.taskId, md)}
                                     />
                                 : null 
                                 ))

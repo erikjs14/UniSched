@@ -98,6 +98,7 @@ export default function() {
                 showTimeForTasks={userPrefersEnableshowTimeForTasks}
                 showTimeForStarredTasks={userPrefersEnableshowTimeForStarredTasks}
                 excludeReminders={!remindersEnabled}
+                onTaskMarkdownChange={(subjectId, taskId, markdown) => dispatch(actions.updateTask(subjectId, taskId, {additionalInfo: {text: markdown}}))}
             />
 
             <CheckedTasks
@@ -123,6 +124,7 @@ export default function() {
                 showTimeForStarredTasks={userPrefersEnableshowTimeForStarredTasks}
                 onlyReminders
                 iterateReminders={userPrefersEnableReminderPopups}
+                onTaskMarkdownChange={(subjectId, taskId, markdown) => dispatch(actions.updateTask(subjectId, taskId, {additionalInfo: {text: markdown}}))}
             />
 
             <div style={{height: '8rem'}}></div>

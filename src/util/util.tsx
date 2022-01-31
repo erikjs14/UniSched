@@ -70,3 +70,61 @@ export const filterSubjectsForSpace = (subjects: SubjectModelWithId[], selectedS
 }
 
 export const getPseudoRandomIdByTime = () => new Date().getTime() + '-' + Math.floor(Math.random() * 1000000);
+
+export const getLines = (s: string, onlyLast: boolean): string[] => {
+    let i = s.indexOf('\n');
+    if (i === -1) {
+        return [s];
+    } else {
+        const out: string[] = [];
+        let lastIdx = -1;
+        while (i >= 0) {
+            out.push(s.substring(lastIdx+1, i));
+            lastIdx = i;
+            i = s.indexOf('\n', i + 1);
+        }
+        if (s.length > lastIdx + 1) {
+            out.push(s.substring(lastIdx+1));
+        }
+        if (onlyLast) {
+            return [out[out.length - 1]];
+        } else {
+            return out;
+        }
+    }
+}
+
+export const updateMdOnEnter = (prev: string | null | undefined, newText: string): string => {
+    if (!prev) {
+        return newText;
+    }
+    if (newText.length > prev.length && newText.endsWith('\n')) {
+        const lastLine = getLines(newText, true)[0];
+        if (lastLine.endsWith('- ')) {
+            return prev.substring(0, prev.length - 2);
+        } else if (lastLine.endsWith('- [ ] ') || lastLine.endsWith('- [x] ')) {
+            return prev.substring(0, prev.length - 6);
+        } else {
+            const matchEndNr = lastLine.match(/\d*\.[ ]$/);
+            if (matchEndNr && matchEndNr.length > 0) {
+                return prev.substring(0, prev.length - matchEndNr[0].length);
+            } else if (lastLine.startsWith('- [ ] ')) {
+                return newText + '- [ ] ';
+            } else if (lastLine.startsWith('- [x] ')) {
+                return newText + '- [x] ';
+            } else if (lastLine.startsWith('- ')) {
+                return newText + '- ';
+            } else {
+                const matchNr = lastLine.match(/^\d*\.[ ]/);
+                if (matchNr && matchNr.length > 0) {
+                    const dotIdx = lastLine.indexOf('.');
+                    const nr = parseInt(lastLine.substring(0, dotIdx));
+                    return newText + `${nr + 1}. `
+                }
+                return newText;
+            }
+        }
+    } else {
+        return newText;
+    }
+};

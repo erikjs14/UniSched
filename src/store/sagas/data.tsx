@@ -1,8 +1,8 @@
 import { put, all, select } from 'redux-saga/effects';
 import * as actions from '../actions';
 import { SubjectModelWithId, TaskModelWithId, Timestamp, ExamModelWithId, EventModelWithId } from '../../firebase/model';
-import { fetchTasks as fetchTasks_firestore, fetchExams as fetchExams_firestore, fetchEvents as fetchEvents_firestore, saveTaskUnchecked } from '../../firebase/firestore';
-import { CheckTaskAC, UncheckTaskAC, AddAndSaveNewTaskAC } from './../actions/data.d';
+import { fetchTasks as fetchTasks_firestore, fetchExams as fetchExams_firestore, fetchEvents as fetchEvents_firestore, saveTaskUnchecked, updateTask as updateTask_firestore } from '../../firebase/firestore';
+import { CheckTaskAC, UncheckTaskAC, AddAndSaveNewTaskAC, UpdateTaskAC } from './../actions/data.d';
 import { getTimestampFromSeconds, getCurrentTimestamp } from '../../util/timeUtil';
 import { saveTaskChecked, addTask } from './../../firebase/firestore';
 
@@ -130,6 +130,20 @@ export function* addAndSaveNewTask(action: AddAndSaveNewTaskAC) {
         action.reset?.();
     } catch (error) {
         yield put(actions.addAndSaveNewTaskFail(error.message || error));
+    }
+}
+
+export function* updateTask(action: UpdateTaskAC) {
+    try {
+        const oldTasks = (yield select(state => state.data.tasks.data)) as (TaskModelWithId[] | null);
+        if (oldTasks) {
+            yield updateTask_firestore(action.subjectId, action.taskId, action.newValues);
+            const updatedTasks = oldTasks.map(t => t.id === action.taskId ? {...t, ...action.newValues} : t);
+            yield put(actions.setTasksLocally(updatedTasks));
+        }
+        yield put(actions.updateTaskSuccess());
+    } catch (error) {
+        yield put(actions.updateTaskFail(error.message || error));
     }
 }
 

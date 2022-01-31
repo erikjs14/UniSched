@@ -12,4 +12,5 @@ export interface DueTaskProps {
     bell?: boolean;
     moreInfo?: boolean;
     showExactTime?: boolean;
+    onChangeMarkdown(newMd: string): void;
 }

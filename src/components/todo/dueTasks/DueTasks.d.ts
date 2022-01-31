@@ -10,6 +10,7 @@ export interface DueTasksProps {
     subjects: {[id: string]: SubjectModel};
     onTaskChecked(subjectId: string, taskId: string, timestampSeconds: number): void;
     onTasksChecked?(tasks: Array<TaskSlice>): void;
+    onTaskMarkdownChange(subjectId: string, taskId: string, markdown: string): void;
     limitDaysInFuture?: number;
     small?: boolean;
     onlyStars?: boolean;

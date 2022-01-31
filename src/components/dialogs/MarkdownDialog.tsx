@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+// @ts-ignore
+import { listItem as defaultListItem } from "react-markdown/lib/renderers";
 import gfm from 'remark-gfm';
 
 import { Dialog, Textarea, Pane, Text, Button } from 'evergreen-ui';
 import CSS from './MarkdownDialog.module.scss';
-import { toCss } from '../../util/util';
+import { toCss, updateMdOnEnter } from '../../util/util';
 import Input from '../ui/input/Input';
 const { resetForMarkdown: s_resetForMarkdown } = CSS;
 
 interface MarkdownDialogProps {
     title: string;
     show: boolean;
-    onClose(): void;
+    onClose(markdownChanged: boolean, markdown: string): void;
     onCheck?(): void;
     rawMarkdown: string;
     onRawMarkdownChange?(val: string): void;
@@ -19,12 +21,61 @@ interface MarkdownDialogProps {
     editModeDisabled?: boolean;
     left?: string;
 }
+
+const markdownChecked = "- [x]";
+const markdownUnchecked = "- [ ]";
+const WrapCheckBox = (props: any) => {
+    const { markdown, setMarkdown, node, checked, children } = props;
+    return (
+      <div
+        onClick={() => {
+          const lineIndex = node.start.line - 1;
+          const lines = markdown.split("\n");
+          const find = checked ? markdownChecked : markdownUnchecked;
+          const replace = checked ? markdownUnchecked : markdownChecked;
+          lines[lineIndex] = lines[lineIndex].replace(find, replace);
+          setMarkdown(lines.join("\n"));
+        }}
+        style={{ cursor: 'pointer'}}
+      >
+        {children}
+      </div>
+    );
+  };
+
 export default (props: MarkdownDialogProps) => {
 
     const [editMode, setEditMode] = useState(props.editMode);
     const [markdown, setMarkdown] = useState(props.rawMarkdown || '');
 
+    const [markdownChanged, setMarkdownChanged] = useState(false);
     const [checked, setChecked] = useState(false);
+
+    const onChangeMarkdown = (newText: string) => {
+        setMarkdown(prev => updateMdOnEnter(prev, newText))
+    }
+
+    const renderers = {
+        listItem: (props: any) => {
+          if (typeof props.checked === "boolean") {
+            const { checked, node } = props;
+            return (
+              <WrapCheckBox
+                markdown={markdown}
+                setMarkdown={(md: any) => {
+                    setMarkdownChanged(true);
+                    setMarkdown(md);
+                }}
+                checked={checked}
+                node={node.position}
+              >
+                {defaultListItem(props)}
+              </WrapCheckBox>
+            );
+          }
+          return defaultListItem(props);
+        }
+      };
 
     if (!props.show) return null;
 
@@ -32,7 +83,7 @@ export default (props: MarkdownDialogProps) => {
         <Dialog
             isShown={props.show}
             title={props.title}
-            onCloseComplete={() => props.onClose()}
+            onCloseComplete={() => props.onClose(markdownChanged, markdown)}
             onConfirm={(close) => {
                 close();
                 if (!props.editModeDisabled) { 
@@ -73,7 +124,7 @@ export default (props: MarkdownDialogProps) => {
                             ? (
                                 <Textarea
                                     value={markdown}
-                                    onChange={(e: any) => setMarkdown(e.target.value)}
+                                    onChange={(e: any) => onChangeMarkdown(e.target.value)}
                                     flex='1'
                                 />
                             ) : (
@@ -81,6 +132,7 @@ export default (props: MarkdownDialogProps) => {
                                     <ReactMarkdown
                                         plugins={[gfm]} 
                                         children={markdown || '*The formatted markdown will appear here*'}
+                                        renderers={renderers}
                                     />
                                 </Text>
                             )}

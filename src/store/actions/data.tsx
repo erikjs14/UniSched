@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC, CheckTaskWithoutUpdateAC } from './data.d';
+import { FetchTasksAC, FetchTasksFailAC, FetchTasksSuccessAC, RefreshTasksAC, CheckTaskAC, UncheckTaskAC, SetTasksLocallyAC, DataSetErrorAC, FetchExamsAC, FetchExamsSuccessAC, FetchExamsFailAC, FetchEventsAC, FetchEventsSuccessAC, FetchEventsFailAC, RefreshExamsAC, RefreshEventsAC, ForceRefreshAC, AddAndSaveNewTaskSuccessAC, AddAndSaveNewTaskAC, AddAndSaveNewTaskFailAC, RemoveTaskLocallyAC, RemoveEventLocallyAC, RemoveExamLocallyAC, CheckTaskWithoutUpdateAC, UpdateTaskAC, UpdateTaskSuccessAC, UpdateTaskFailAC } from './data.d';
 import { ExamModelWithId, EventModelWithId, TaskModel, TaskModelWithId } from '../../firebase/model';
 import { DataState } from './../reducers/data.d';
 import { SubjectModelWithId } from './../../firebase/model';
@@ -190,3 +190,25 @@ export const removeEventLocally = (eventId: string): RemoveEventLocallyAC => {
         eventId,
     };
 };
+
+export const updateTask = (subjectId: string, taskId: string, newValues: Partial<TaskModel>): UpdateTaskAC => {
+    return {
+        type: actionTypes.UPDATE_TASK,
+        subjectId,
+        taskId,
+        newValues,
+    }
+}
+
+export const updateTaskSuccess = (): UpdateTaskSuccessAC => {
+    return {
+        type: actionTypes.UPDATE_TASK_SUCCESS,
+    }
+}
+
+export const updateTaskFail = (error: string): UpdateTaskFailAC => {
+    return {
+        type: actionTypes.UPDATE_TASK_SUCCESS,
+        error
+    }
+}

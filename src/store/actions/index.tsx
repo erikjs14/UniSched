@@ -45,6 +45,9 @@ export {
     addAndSaveNewTask,
     addAndSaveNewTaskSuccess,
     addAndSaveNewTaskFail,
+    updateTask,
+    updateTaskSuccess,
+    updateTaskFail,
 } from './data';
 export {
     setScrollContainerRef,
