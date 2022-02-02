@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 // @ts-ignore
 import { listItem as defaultListItem } from "react-markdown/lib/renderers";

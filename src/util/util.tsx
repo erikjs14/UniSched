@@ -167,7 +167,7 @@ export const updateMdOnEnter = (prev: string | null | undefined, newText: string
     if (!prev || newText.length <= prev.length) {
         return updateNumberLists(newText, afterDiffIdx);
     }
-    const [diff, diffStartIdx, lastLineIdx] = getDiffAndIdx(prev, newText, afterDiffIdx);
+    const [diff,, lastLineIdx] = getDiffAndIdx(prev, newText, afterDiffIdx);
 
     if (diff.endsWith('\n')) {
         // debugger;
