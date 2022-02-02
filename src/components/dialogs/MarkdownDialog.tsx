@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 // @ts-ignore
 import { listItem as defaultListItem } from "react-markdown/lib/renderers";
@@ -51,8 +51,12 @@ export default (props: MarkdownDialogProps) => {
     const [markdownChanged, setMarkdownChanged] = useState(false);
     const [checked, setChecked] = useState(false);
 
-    const onChangeMarkdown = (newText: string) => {
-        setMarkdown(prev => updateMdOnEnter(prev, newText))
+    const onChangeMarkdown = (newText: string, selectionStart: number, target: any) => {
+        setMarkdown(prev => {
+            const [updated, caretIdx] = updateMdOnEnter(prev, newText, selectionStart)
+            window.requestAnimationFrame(() => target.setSelectionRange(caretIdx, caretIdx))
+            return updated;
+        })
     }
 
     const renderers = {
@@ -124,7 +128,7 @@ export default (props: MarkdownDialogProps) => {
                             ? (
                                 <Textarea
                                     value={markdown}
-                                    onChange={(e: any) => onChangeMarkdown(e.target.value)}
+                                    onChange={(e: any) => onChangeMarkdown(e.target.value, e.target.selectionStart, e.target)}
                                     flex='1'
                                 />
                             ) : (

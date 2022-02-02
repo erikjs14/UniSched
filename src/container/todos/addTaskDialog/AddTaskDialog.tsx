@@ -149,9 +149,7 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
         } else if (key === 'additionalInfo') {
             setTaskConfig(prev => ({
                 ...prev,
-                additionalInfo: (newVal as string).length > 0 
-                    ? { text: updateMdOnEnter(prev.additionalInfo?.text, (newVal as string)) }
-                    : null,
+                additionalInfo: { text: newVal },
             }));
         }
     }, [taskConfig.type, taskConfig.timestamps, taskConfig.timestampsDone, taskConfig.tasksTickedAt, firstDeadline, lastDeadline, interval]);
@@ -465,7 +463,13 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
                 label='Add Info'
                 elementType='text-area'
                 value={taskConfig.additionalInfo?.text || ''}
-                onChange={newText => changeHandler('additionalInfo', newText)}
+                onChange={() => {}}
+                onNativeChange={event => {
+                    const [updated, caretIdx] = updateMdOnEnter(taskConfig.additionalInfo?.text || '', event.target.value, event.target.selectionStart)
+                    changeHandler('additionalInfo', updated && updated.length > 0 ? updated : null)
+                    const target = event.target;
+                    window.requestAnimationFrame(() => target.setSelectionRange(caretIdx, caretIdx))
+                }}
                 addClass={toCss(s_addTextField)}
             />
             { error && <span className={toCss(s_error)}>{error}</span> }

@@ -22,6 +22,7 @@ export interface InputProps<T> {
     elementType: 'input' |'input-transparent' | 'text-area' | 'select-visual' | 'checkbox' | 'simple-checkbox' | 'number';
     value: T;
     onChange(val: T): void;
+    onNativeChange?(event: any): void;
     label: string;
     elementConfig?: object;
     width?: number;
@@ -96,7 +97,10 @@ export default React.forwardRef(function(props: InputProps<string|number|boolean
                         ref={ref}
                         placeholder=''
                         value={props.value as string}
-                        onChange={event => props.onChange(event.target.value)}
+                        onChange={event => {
+                            props.onChange(event.target.value)
+                            props.onNativeChange?.(event);
+                        }}
                         className={toCss(s_textarea)} 
                     />
                 </div>

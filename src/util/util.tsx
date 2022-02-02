@@ -94,37 +94,110 @@ export const getLines = (s: string, onlyLast: boolean): string[] => {
     }
 }
 
-export const updateMdOnEnter = (prev: string | null | undefined, newText: string): string => {
-    if (!prev) {
-        return newText;
+// expects a before and after string with *one* keystroke difference
+// export const getDiffAndIdx = (before: string, after: string): [string, number, number] => {
+//     if (before.length === 0) {
+//         return [after, 0, 0];
+//     } else if (before.length >= after.length) {
+//         return ['', -1, -1];
+//     } else {
+//         let curLineIdx = 0;
+//         for (let i = 0; i < before.length; i++) {
+//             const curChar = before.charAt(i);
+//             const newChar = after.charAt(i);
+//             if (curChar !== newChar) {
+//                 return [after.substring(i, i + (after.length - before.length)), i, curLineIdx];
+//             }
+//             if (curChar === '\n') {
+//                 curLineIdx++;
+//             }
+//         }
+//         return [after.substring(before.length), before.length, curLineIdx];
+//     }
+// }
+
+export const getDiffAndIdx = (before: string, after: string, endChangeIdx: number): [string, number, number] => {
+    if (before.length === 0) {
+        return [after, 0, 0];
+    } else if (before.length >= after.length) {
+        return ['', -1, -1];
+    } else {
+        const startChangeIdx = endChangeIdx - (after.length - before.length);
+        const lineChangedIdx = after.split('').reduce((prev, cur, idx) => idx >= startChangeIdx ? prev : cur === '\n' ? prev + 1: prev, 0);
+        return [after.substring(startChangeIdx, endChangeIdx), startChangeIdx, lineChangedIdx];
     }
-    if (newText.length > prev.length && newText.endsWith('\n')) {
-        const lastLine = getLines(newText, true)[0];
-        if (lastLine.endsWith('- ')) {
-            return prev.substring(0, prev.length - 2);
-        } else if (lastLine.endsWith('- [ ] ') || lastLine.endsWith('- [x] ')) {
-            return prev.substring(0, prev.length - 6);
-        } else {
-            const matchEndNr = lastLine.match(/\d*\.[ ]$/);
-            if (matchEndNr && matchEndNr.length > 0) {
-                return prev.substring(0, prev.length - matchEndNr[0].length);
-            } else if (lastLine.startsWith('- [ ] ')) {
-                return newText + '- [ ] ';
-            } else if (lastLine.startsWith('- [x] ')) {
-                return newText + '- [x] ';
-            } else if (lastLine.startsWith('- ')) {
-                return newText + '- ';
-            } else {
-                const matchNr = lastLine.match(/^\d*\.[ ]/);
-                if (matchNr && matchNr.length > 0) {
-                    const dotIdx = lastLine.indexOf('.');
-                    const nr = parseInt(lastLine.substring(0, dotIdx));
-                    return newText + `${nr + 1}. `
+}
+
+export const getMatchStart = (line: string): {matches: boolean, dotIdx: number | null, nr: number | null, length: number | null} => {
+    const matchNr = line.match(/^\d*\.[ ]/);
+    if (matchNr && matchNr.length > 0) {
+        const dotIdx = line.indexOf('.');
+        const nr = parseInt(line.substring(0, dotIdx));
+        const length = matchNr[0].length;
+        return {matches: true, dotIdx, nr, length};
+    } else {
+        return {matches: false, dotIdx: null, nr: null, length: null};
+    }
+}
+
+export const updateNumberLists = (input: string, caretPriorIdx: number): [string, number] => {
+    const lines = getLines(input, false);
+    // let newCaretIdx = caretPriorIdx;
+    for (let i = 0; i < lines.length; i++) {
+        // const startLineIdx = lines.filter((_, idx) => idx < i).reduce((prev, cur) => prev + cur.length, 0);
+        const updatedMatch = getMatchStart(lines[i]);
+        if (updatedMatch.matches && updatedMatch.length) {
+            let prevMatch;
+            if (i > 0) {
+                prevMatch = getMatchStart(lines[i - 1]);
+            }
+            if (prevMatch?.matches && prevMatch?.nr) {
+                if (updatedMatch.nr !== prevMatch.nr + 1) {
+                    lines[i] = `${prevMatch.nr + 1}. ` + lines[i].substring(updatedMatch.length)
                 }
-                return newText;
+            } else {
+                lines[i] = `1. ` + lines[i].substring(updatedMatch.length);
+            }
+        }
+    }
+    return [lines.join('\n'), caretPriorIdx]; // implementation todo: update caret index
+}
+
+export const updateMdOnEnter = (prev: string | null | undefined, newText: string, afterDiffIdx: number): [string, number | null] => { // return updated string and updated cursor position
+    if (!prev || newText.length <= prev.length) {
+        return updateNumberLists(newText, afterDiffIdx);
+    }
+    const [diff, diffStartIdx, lastLineIdx] = getDiffAndIdx(prev, newText, afterDiffIdx);
+
+    if (diff.endsWith('\n')) {
+        // debugger;
+        const lines = getLines(newText, false);
+        const lastLine = lines[lastLineIdx];
+        console.log({lastLine})
+        if (lastLine.length === 2 && lastLine.endsWith('- ')) {
+            return [newText.substring(0, afterDiffIdx - 3) + newText.substring(afterDiffIdx), afterDiffIdx - 3];
+        } else if (lastLine.length === 6 && (lastLine.endsWith('- [ ] ') || lastLine.endsWith('- [x] '))) {
+            return [newText.substring(0, afterDiffIdx - 7) + newText.substring(afterDiffIdx), afterDiffIdx - 7];
+        } else {
+            const matchEndNr = lastLine.match(/^\d*\.[ ]$/);
+            if (matchEndNr && matchEndNr.length > 0) {
+                return updateNumberLists(newText.substring(0, afterDiffIdx - matchEndNr[0].length - 1) + newText.substring(afterDiffIdx), afterDiffIdx - matchEndNr[0].length - 1);
+            } else if (lastLine.startsWith('- [ ] ')) {
+                return [newText.substring(0, afterDiffIdx) + '- [ ] ' + newText.substring(afterDiffIdx), afterDiffIdx + 6];
+            } else if (lastLine.startsWith('- [x] ')) {
+                return [newText.substring(0, afterDiffIdx) + '- [x] ' + newText.substring(afterDiffIdx), afterDiffIdx + 6];
+            } else if (lastLine.startsWith('- ')) {
+                return [newText.substring(0, afterDiffIdx) + '- ' + newText.substring(afterDiffIdx), afterDiffIdx + 2];
+            } else {
+                const {matches, dotIdx, nr} = getMatchStart(lastLine);
+                if (matches && dotIdx && nr) {
+                    const updated = newText.substring(0, afterDiffIdx) + `${nr + 1}. ` + newText.substring(afterDiffIdx);
+                    return updateNumberLists(updated, afterDiffIdx + `${nr + 1}. `.length);
+                }
+                return [newText, afterDiffIdx];
             }
         }
     } else {
-        return newText;
+        return updateNumberLists(newText, afterDiffIdx);
     }
 };
