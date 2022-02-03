@@ -55,7 +55,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "publish": "publish.bat"
+    "publish": "git checkout production && git merge master && git checkout master && git push --all"
   },
   "eslintConfig": {
     "extends": "react-app"
