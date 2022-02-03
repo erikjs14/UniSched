@@ -143,24 +143,38 @@ export const getMatchStart = (line: string): {matches: boolean, dotIdx: number |
 export const updateNumberLists = (input: string, caretPriorIdx: number): [string, number] => {
     const lines = getLines(input, false);
     // let newCaretIdx = caretPriorIdx;
+    let levels: {[level: number]: number} = {};
     for (let i = 0; i < lines.length; i++) {
         // const startLineIdx = lines.filter((_, idx) => idx < i).reduce((prev, cur) => prev + cur.length, 0);
-        const updatedMatch = getMatchStart(lines[i]);
+        const updatedMatch = getMatchStart(lines[i].trimStart());
+        const whitespaceStart = lines[i].substring(0, lines[i].length - lines[i].trimStart().length);
+        const curLevel = whitespaceStart.length;
         if (updatedMatch.matches && updatedMatch.length) {
-            let prevMatch;
-            if (i > 0) {
-                prevMatch = getMatchStart(lines[i - 1]);
-            }
-            if (prevMatch?.matches && prevMatch?.nr) {
-                if (updatedMatch.nr !== prevMatch.nr + 1) {
-                    lines[i] = `${prevMatch.nr + 1}. ` + lines[i].substring(updatedMatch.length)
+            // let prevMatch;
+            // if (i > 0) {
+            //     prevMatch = getMatchStart(lines[i - 1]);
+            // }
+            // if (prevMatch?.matches && prevMatch?.nr) {
+            //     if (updatedMatch.nr !== prevMatch.nr + 1) {
+            //         lines[i] = `${prevMatch.nr + 1}. ` + lines[i].substring(updatedMatch.length)
+            //     }
+            // } else {
+            //     lines[i] = `1. ` + lines[i].substring(updatedMatch.length);
+            // }
+            if (levels[curLevel] > 0) {
+                if (updatedMatch.nr !== levels[curLevel] + 1) {
+                    lines[i] = whitespaceStart + `${levels[curLevel] + 1}. ` + lines[i].substring(updatedMatch.length + curLevel);
                 }
+                levels[curLevel]++;
             } else {
-                lines[i] = `1. ` + lines[i].substring(updatedMatch.length);
+                lines[i] = whitespaceStart + `1. ` + lines[i].substring(updatedMatch.length + curLevel);
+                levels[curLevel] = 1;
             }
+        } else {
+            levels[curLevel] = 0;
         }
     }
-    return [lines.join('\n'), caretPriorIdx]; // implementation todo: update caret index
+    return [lines.join('\n') + '\n', caretPriorIdx]; // implementation todo: update caret index
 }
 
 export const updateMdOnEnter = (prev: string | null | undefined, newText: string, afterDiffIdx: number): [string, number | null] => { // return updated string and updated cursor position
@@ -172,27 +186,27 @@ export const updateMdOnEnter = (prev: string | null | undefined, newText: string
     if (diff.endsWith('\n')) {
         // debugger;
         const lines = getLines(newText, false);
-        const lastLine = lines[lastLineIdx];
-        console.log({lastLine})
+        const lastLine = lines[lastLineIdx].trimStart();
+        const whitespaceBeginning = lines[lastLineIdx].substring(0, lines[lastLineIdx].length - lastLine.length)
         if (lastLine.length === 2 && lastLine.endsWith('- ')) {
-            return [newText.substring(0, afterDiffIdx - 3) + newText.substring(afterDiffIdx), afterDiffIdx - 3];
+            return [newText.substring(0, afterDiffIdx - 3 - whitespaceBeginning.length) + newText.substring(afterDiffIdx), afterDiffIdx - 3 - whitespaceBeginning.length];
         } else if (lastLine.length === 6 && (lastLine.endsWith('- [ ] ') || lastLine.endsWith('- [x] '))) {
-            return [newText.substring(0, afterDiffIdx - 7) + newText.substring(afterDiffIdx), afterDiffIdx - 7];
+            return [newText.substring(0, afterDiffIdx - 7 - whitespaceBeginning.length) + newText.substring(afterDiffIdx), afterDiffIdx - 7 - whitespaceBeginning.length];
         } else {
             const matchEndNr = lastLine.match(/^\d*\.[ ]$/);
             if (matchEndNr && matchEndNr.length > 0) {
-                return updateNumberLists(newText.substring(0, afterDiffIdx - matchEndNr[0].length - 1) + newText.substring(afterDiffIdx), afterDiffIdx - matchEndNr[0].length - 1);
+                return updateNumberLists(newText.substring(0, afterDiffIdx - matchEndNr[0].length - 1 - whitespaceBeginning.length) + newText.substring(afterDiffIdx), afterDiffIdx - matchEndNr[0].length - 1 - whitespaceBeginning.length);
             } else if (lastLine.startsWith('- [ ] ')) {
-                return [newText.substring(0, afterDiffIdx) + '- [ ] ' + newText.substring(afterDiffIdx), afterDiffIdx + 6];
+                return [newText.substring(0, afterDiffIdx) + whitespaceBeginning + '- [ ] ' + newText.substring(afterDiffIdx), afterDiffIdx + 6 + whitespaceBeginning.length];
             } else if (lastLine.startsWith('- [x] ')) {
-                return [newText.substring(0, afterDiffIdx) + '- [x] ' + newText.substring(afterDiffIdx), afterDiffIdx + 6];
+                return [newText.substring(0, afterDiffIdx) + whitespaceBeginning + '- [x] ' + newText.substring(afterDiffIdx), afterDiffIdx + 6 + whitespaceBeginning.length];
             } else if (lastLine.startsWith('- ')) {
-                return [newText.substring(0, afterDiffIdx) + '- ' + newText.substring(afterDiffIdx), afterDiffIdx + 2];
+                return [newText.substring(0, afterDiffIdx) + whitespaceBeginning + '- ' + newText.substring(afterDiffIdx), afterDiffIdx + 2 + whitespaceBeginning.length];
             } else {
                 const {matches, dotIdx, nr} = getMatchStart(lastLine);
                 if (matches && dotIdx && nr) {
-                    const updated = newText.substring(0, afterDiffIdx) + `${nr + 1}. ` + newText.substring(afterDiffIdx);
-                    return updateNumberLists(updated, afterDiffIdx + `${nr + 1}. `.length);
+                    const updated = newText.substring(0, afterDiffIdx) + whitespaceBeginning + `${nr + 1}. ` + newText.substring(afterDiffIdx);
+                    return updateNumberLists(updated, afterDiffIdx + `${nr + 1}. `.length + whitespaceBeginning.length);
                 }
                 return [newText, afterDiffIdx];
             }
