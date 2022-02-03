@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment, useCallback } from 'react';
 
 import CSS from './DueTask.module.scss';
 import { DueTaskProps } from './DueTask.d';
-import { toCss } from './../../../../util/util';
+import { getChecklistStateAsStringFromMarkdown, toCss } from './../../../../util/util';
 import Input from '../../../ui/input/Input';
 import { findColorConfig } from './../../../../config/colorChoices';
 import AnimateHeight from 'react-animate-height';
@@ -85,6 +85,11 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                     {props.star && <Fragment><FontAwesomeIcon icon={faStar} /> &nbsp;</Fragment>}
                     {props.bell && <Fragment><FontAwesomeIcon icon={faBell} /> &nbsp;</Fragment>}
                     {props.taskSemantic.name}
+                    {props.taskSemantic.additionalInfo?.text && (
+                        <small>
+                            {getChecklistStateAsStringFromMarkdown(props.taskSemantic.additionalInfo.text)}
+                        </small>
+                    )}
                 </span>
 
                 {!props.small &&

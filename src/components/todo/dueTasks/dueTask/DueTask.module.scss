@@ -53,9 +53,17 @@
         text-transform: uppercase;
         line-height: 1.5em;
         font-weight: bold;
+        display: flex;
+        align-items: center;
 
         @include respond(tab-port) {
             font-size: 1.15em;
+        }
+
+        small {
+            font-size: .7em;
+            margin-left: 1rem;
+            opacity: .8;
         }
     }
 

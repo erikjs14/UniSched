@@ -201,3 +201,20 @@ export const updateMdOnEnter = (prev: string | null | undefined, newText: string
         return updateNumberLists(newText, afterDiffIdx);
     }
 };
+
+export const getChecklistStateAsStringFromMarkdown = (md: string): string | null => {
+    const lines = md.split('\n');
+    const checklist: [number, number] = [0, 0];
+    for (let line of lines) {
+        if (line.startsWith('- [ ] ')) {
+            checklist[1]++;
+        } else if (line.startsWith('- [x] ')) {
+            checklist[0]++;
+            checklist[1]++;
+        }
+    }
+    if (checklist[1] === 0) {
+        return null;
+    }
+    return `(${checklist[0]}/${checklist[1]})`;
+}
