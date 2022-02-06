@@ -67,7 +67,10 @@ export default (props: MarkdownDialogProps) => {
             return (
               <WrapCheckBox
                 markdown={markdown}
-                setMarkdown={setMarkdown}
+                setMarkdown={(md: any) => {
+                    setMarkdown(md);
+                    setMarkdownChanged(true);
+                }}
                 checked={checked}
                 node={node.position}
               >
