@@ -54,107 +54,109 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
     }, [props.taskSemantic.dueAt]);
 
     return (
-        <AnimateHeight
-            duration={800}
-            height={props.fadeOut ? 0 : 'auto'}
-            delay={1500}
-            animateOpacity={true}
-        >
-            <div
-                className={toCss(s_wrapper, (props.fadeOut ? s_fadeOut : ''), (props.small ? s_small : ''))}
-                style={props.backgroundColor 
-                    ? {
-                        backgroundColor: findColorConfig(props.backgroundColor).value,
-                        color: findColorConfig(props.backgroundColor).textColor,
-                    } 
-                    : undefined
-                }
+        <>
+            <AnimateHeight
+                duration={800}
+                height={props.fadeOut ? 0 : 'auto'}
+                delay={1500}
+                animateOpacity={true}
             >
-                {props.bell && <FontAwesomeIcon className={s_bell} icon={faBell} />}
-                
-                <div className={toCss(s_checkWrapper)}>
-                    <Input
-                        elementType='checkbox'
-                        label={props.taskSemantic.name}
-                        value={props.fadeOut || false}
-                        onChange={() => props.onCheck()}
-                    />
-                </div>
-
-                <span 
-                    className={toCss(s_titleTask)}
-                    onDoubleClick={!props.small ? () => setAdditionalTextDialogShown(true) : undefined}
+                <div
+                    className={toCss(s_wrapper, (props.fadeOut ? s_fadeOut : ''), (props.small ? s_small : ''))}
+                    style={props.backgroundColor 
+                        ? {
+                            backgroundColor: findColorConfig(props.backgroundColor).value,
+                            color: findColorConfig(props.backgroundColor).textColor,
+                        } 
+                        : undefined
+                    }
                 >
-                    {props.star && <Fragment><FontAwesomeIcon icon={faStar} /> &nbsp;</Fragment>}
-                    {props.bell && <Fragment><FontAwesomeIcon icon={faBell} /> &nbsp;</Fragment>}
-                    {props.taskSemantic.name}
-                    {props.taskSemantic.additionalInfo?.text && (
-                        <small
-                            onClick={!props.small ? () => setAdditionalTextDialogShown(true) : undefined}
-                            style={{ cursor: 'pointer' }}
-                        >
-                            {getChecklistStateAsStringFromMarkdown(props.taskSemantic.additionalInfo.text)}
-                        </small>
-                    )}
-                </span>
+                    {props.bell && <FontAwesomeIcon className={s_bell} icon={faBell} />}
+                    
+                    <div className={toCss(s_checkWrapper)}>
+                        <Input
+                            elementType='checkbox'
+                            label={props.taskSemantic.name}
+                            value={props.fadeOut || false}
+                            onChange={() => props.onCheck()}
+                        />
+                    </div>
 
-                {!props.small &&
-                    <Fragment>
-                        <span className={toCss(s_titleSub)}>
-                            {props.subjectDisplayName}
-                        </span>
-
-                        <span className={toCss(s_dueAt)}>
-                            {props.showExactTime                                
-                                ? formatTimeOutput(props.taskSemantic.dueAt)
-                                : props.taskSemantic.dueString
-                            }
-                        </span>
-
-                        <div className={toCss(s_options)} >
-                            <span
-                                className={toCss(s_change)} 
-                                onClick={() => history.push(`/subjects/${props.taskSemantic.subjectId}?unctid=${props.taskSemantic.taskId}`)}
+                    <span 
+                        className={toCss(s_titleTask)}
+                        onDoubleClick={!props.small ? () => setAdditionalTextDialogShown(true) : undefined}
+                    >
+                        {props.star && <Fragment><FontAwesomeIcon icon={faStar} /> &nbsp;</Fragment>}
+                        {props.bell && <Fragment><FontAwesomeIcon icon={faBell} /> &nbsp;</Fragment>}
+                        {props.taskSemantic.name}
+                        {props.taskSemantic.additionalInfo?.text && (
+                            <small
+                                onClick={!props.small ? () => setAdditionalTextDialogShown(true) : undefined}
+                                style={{ cursor: 'pointer' }}
                             >
-                                <FontAwesomeIcon icon={faPen} />
+                                {getChecklistStateAsStringFromMarkdown(props.taskSemantic.additionalInfo.text)}
+                            </small>
+                        )}
+                    </span>
+
+                    {!props.small &&
+                        <Fragment>
+                            <span className={toCss(s_titleSub)}>
+                                {props.subjectDisplayName}
                             </span>
 
-                            {props.taskSemantic.additionalInfo?.text && (
-                                <Fragment>
-                                    <span 
-                                        className={toCss(s_additionalText)}
-                                        onClick={() => setAdditionalTextDialogShown(true)}
-                                    >
-                                        <FontAwesomeIcon icon={faInfoCircle} />
-                                    </span>
-
-                                    { additionalTextDialogShown && (
-                                        <MarkdownDialog
-                                            show={additionalTextDialogShown}
-                                            title={'Additional Info for "'+props.taskSemantic.name+'"'}
-                                            onClose={(changed, md) => {
-                                                setAdditionalTextDialogShown(false)
-                                                if (changed) {
-                                                    props.onChangeMarkdown(md);
-                                                }
-                                            }}
-                                            rawMarkdown={props.taskSemantic.additionalInfo?.text}
-                                            // editModeDisabled
-                                        />
-                                    )}
-                                </Fragment>
-                            )}
-
-                            <span 
-                                className={toCss(s_moreInfo)}
-                                onClick={() => showTaskMetaInfo()}
-                            >
-                                <FontAwesomeIcon icon={faClock} />
+                            <span className={toCss(s_dueAt)}>
+                                {props.showExactTime                                
+                                    ? formatTimeOutput(props.taskSemantic.dueAt)
+                                    : props.taskSemantic.dueString
+                                }
                             </span>
-                        </div>
-                    </Fragment>
-                }
-            </div>
-        </AnimateHeight>
+
+                            <div className={toCss(s_options)} >
+                                <span
+                                    className={toCss(s_change)} 
+                                    onClick={() => history.push(`/subjects/${props.taskSemantic.subjectId}?unctid=${props.taskSemantic.taskId}`)}
+                                >
+                                    <FontAwesomeIcon icon={faPen} />
+                                </span>
+
+                                {props.taskSemantic.additionalInfo?.text && (
+                                    <Fragment>
+                                        <span 
+                                            className={toCss(s_additionalText)}
+                                            onClick={() => setAdditionalTextDialogShown(true)}
+                                        >
+                                            <FontAwesomeIcon icon={faInfoCircle} />
+                                        </span>
+                                    </Fragment>
+                                )}
+
+                                <span 
+                                    className={toCss(s_moreInfo)}
+                                    onClick={() => showTaskMetaInfo()}
+                                >
+                                    <FontAwesomeIcon icon={faClock} />
+                                </span>
+                            </div>
+                        </Fragment>
+                    }
+                </div>
+            </AnimateHeight>
+
+            { additionalTextDialogShown && (
+                <MarkdownDialog
+                    show={additionalTextDialogShown}
+                    title={'Additional Info for "'+props.taskSemantic.name+'"'}
+                    onClose={(changed, md) => {
+                        setAdditionalTextDialogShown(false)
+                        if (changed) {
+                            props.onChangeMarkdown(md);
+                        }
+                    }}
+                    rawMarkdown={props.taskSemantic.additionalInfo?.text || ''}
+                    editMode={props.taskSemantic.additionalInfo?.text ? false : true}
+                />
+            )}
+        </>
     );
 });
