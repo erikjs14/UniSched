@@ -55,6 +55,7 @@ export default (props: MarkdownDialogProps) => {
         setMarkdown(prev => {
             const [updated, caretIdx] = updateMdOnEnter(prev, newText, selectionStart)
             window.requestAnimationFrame(() => target.setSelectionRange(caretIdx, caretIdx))
+            setMarkdownChanged(true)
             return updated;
         })
     }
@@ -66,10 +67,7 @@ export default (props: MarkdownDialogProps) => {
             return (
               <WrapCheckBox
                 markdown={markdown}
-                setMarkdown={(md: any) => {
-                    setMarkdownChanged(true);
-                    setMarkdown(md);
-                }}
+                setMarkdown={setMarkdown}
                 checked={checked}
                 node={node.position}
               >
@@ -132,7 +130,10 @@ export default (props: MarkdownDialogProps) => {
                                     flex='1'
                                 />
                             ) : (
-                                <Text flex='1'>
+                                <Text 
+                                    flex='1'
+                                    onDoubleClick={() => setEditMode(prev => !prev)}
+                                >
                                     <ReactMarkdown
                                         plugins={[gfm]} 
                                         children={markdown || '*The formatted markdown will appear here*'}

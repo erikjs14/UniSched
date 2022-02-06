@@ -133,7 +133,7 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                                                 }
                                             }}
                                             rawMarkdown={props.taskSemantic.additionalInfo?.text}
-                                            editModeDisabled
+                                            // editModeDisabled
                                         />
                                     )}
                                 </Fragment>
