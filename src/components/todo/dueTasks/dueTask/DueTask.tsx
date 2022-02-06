@@ -81,12 +81,18 @@ export default React.memo(function(props: DueTaskProps): JSX.Element {
                     />
                 </div>
 
-                <span className={toCss(s_titleTask)}>
+                <span 
+                    className={toCss(s_titleTask)}
+                    onDoubleClick={!props.small ? () => setAdditionalTextDialogShown(true) : undefined}
+                >
                     {props.star && <Fragment><FontAwesomeIcon icon={faStar} /> &nbsp;</Fragment>}
                     {props.bell && <Fragment><FontAwesomeIcon icon={faBell} /> &nbsp;</Fragment>}
                     {props.taskSemantic.name}
                     {props.taskSemantic.additionalInfo?.text && (
-                        <small>
+                        <small
+                            onClick={!props.small ? () => setAdditionalTextDialogShown(true) : undefined}
+                            style={{ cursor: 'pointer' }}
+                        >
                             {getChecklistStateAsStringFromMarkdown(props.taskSemantic.additionalInfo.text)}
                         </small>
                     )}
