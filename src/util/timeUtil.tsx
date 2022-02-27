@@ -333,22 +333,22 @@ export const getIntervalTypeFromSeconds = (secs: number, refTimestamp?: Timestam
         case WEEK_IN_SEC: return 'weekly';
         case BIWEEK_IN_SEC: return 'biweekly';
         case MAX_MONTH_IN_SEC: return 'monthly';
-        default: 
-            if (refTimestamp) {
-                const startSecs = refTimestamp.seconds;
-                const endSecs = startSecs + secs;
-                const startDate = getDateFromSeconds(startSecs);
-                const endDate = getDateFromSeconds(endSecs);
-                if (
-                    (startDate.getDate() === endDate.getDate() && differenceInMonths(endDate, startDate) === 1)
-                    ||
-                    (startDate.getDate() > getDaysInMonth(endDate) && getDaysInMonth(endDate) === endDate.getDate())
-                )
-                    return 'monthly';
-                else
-                    throw new Error('Malformed timestamps.');
-            } else
-                throw new Error('No reference timestmap provided.');
+        default: return 'monthly';
+            // if (refTimestamp) {
+            //     const startSecs = refTimestamp.seconds;
+            //     const endSecs = startSecs + secs;
+            //     const startDate = getDateFromSeconds(startSecs);
+            //     const endDate = getDateFromSeconds(endSecs);
+            //     if (
+            //         (startDate.getDate() === endDate.getDate() && differenceInMonths(endDate, startDate) === 1)
+            //         ||
+            //         (startDate.getDate() > getDaysInMonth(endDate) && getDaysInMonth(endDate) === endDate.getDate())
+            //     )
+            //         return 'monthly';
+            //     else
+            //         throw new Error('Malformed timestamps.');
+            // } else
+            //     throw new Error('No reference timestmap provided.');
     }
 }
 
