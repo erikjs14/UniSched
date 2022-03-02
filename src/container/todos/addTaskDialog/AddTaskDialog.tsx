@@ -73,8 +73,25 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
     const [addEnabled, setAddEnabled] = useState(false);
     const [markTypeInput, setMarkTypeInput] = useState(false);
 
-    const [spaceId, setSpaceId] = useState(spaces && spaces.length === 1 ? spaces[0] : null);
+    const [spaceId, setSpaceId] = useState(spaces && spaces.length === 1 ? spaces[0].id : null);
+    useEffect(() => {
+        // if dialog becomes visible + on page 0 + first time on page 0 + spaces available
+        if (props.isShown && pageCnt === 0 && !spaceId && spaces && spaces.length > 0) {
+            setSpaceId(spaces[0].id)
+        }
+    }, [pageCnt, props.isShown, spaceId, spaces])
+
+    const filteredSubs = useMemo(() => filterSubjectsForSpace(subjects || [], spaceId), [spaceId, subjects]);
+    const subRefs = useMemo((): Array<RefObject<any>> | undefined => {
+        return filteredSubs?.map(s => React.createRef());
+    }, [filteredSubs]);
+    
     const [subjectId, setSubjectId] = useState<string|null>(null);
+    useEffect(() => {
+        if (props.isShown && pageCnt === 1 && spaceId && !subjectId && filteredSubs && filteredSubs.length > 0) {
+            setSubjectId(filteredSubs[0].id);
+        }
+    }, [filteredSubs, pageCnt, props.isShown, spaceId, subjectId])
     const [taskConfig, setTaskConfig] = useState(
         getTaskStartState()
     );
@@ -212,11 +229,6 @@ export default function(props: PropsWithChildren<AddTaskDialogProps>): JSX.Eleme
             dispatch(addAndSaveNewTask(config, subjectId, closeDialog, reset));
         }
     }, [dispatch, interval, pageCnt, reset, subjectId, taskConfig]);
-
-    const filteredSubs = useMemo(() => filterSubjectsForSpace(subjects || [], spaceId), [spaceId, subjects]);
-    const subRefs = useMemo((): Array<RefObject<any>> | undefined => {
-        return filteredSubs?.map(s => React.createRef());
-    }, [filteredSubs]);
 
     const userPrefersDayStartsAtHour = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_DAY_STARTS_AT] as (number|undefined));
 
