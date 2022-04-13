@@ -44,6 +44,25 @@ const WrapCheckBox = (props: any) => {
     );
   };
 
+export const getMdRenderers = (markdown: string, setMarkdown: (md: any) => void) => ({
+    listItem: (props: any) => {
+      if (typeof props.checked === "boolean") {
+        const { checked, node } = props;
+        return (
+          <WrapCheckBox
+            markdown={markdown}
+            setMarkdown={setMarkdown}
+            checked={checked}
+            node={node.position}
+          >
+            {defaultListItem(props)}
+          </WrapCheckBox>
+        );
+      }
+      return defaultListItem(props);
+    }
+  });
+
 export default (props: MarkdownDialogProps) => {
 
     const [editMode, setEditMode] = useState(props.editMode);
@@ -60,28 +79,6 @@ export default (props: MarkdownDialogProps) => {
             return updated;
         })
     }
-
-    const renderers = {
-        listItem: (props: any) => {
-          if (typeof props.checked === "boolean") {
-            const { checked, node } = props;
-            return (
-              <WrapCheckBox
-                markdown={markdown}
-                setMarkdown={(md: any) => {
-                    setMarkdown(md);
-                    setMarkdownChanged(true);
-                }}
-                checked={checked}
-                node={node.position}
-              >
-                {defaultListItem(props)}
-              </WrapCheckBox>
-            );
-          }
-          return defaultListItem(props);
-        }
-      };
 
     if (!props.show) return null;
 
@@ -141,7 +138,10 @@ export default (props: MarkdownDialogProps) => {
                                     <ReactMarkdown
                                         plugins={[gfm]} 
                                         children={markdown || '*The formatted markdown will appear here*'}
-                                        renderers={renderers}
+                                        renderers={getMdRenderers(markdown, (md) => {
+                                            setMarkdown(md);
+                                            setMarkdownChanged(true);
+                                        })}
                                     />
                                 </Text>
                             )}

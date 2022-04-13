@@ -6,6 +6,7 @@ import { getUpdatedTasksAfterCheck } from '../../../store/sagas/data';
 import { dateToHTMLString, endOf, getSecondsFromDate, getTimestampFromDate } from '../../../util/timeUtil';
 import MarkdownDialog from '../../dialogs/MarkdownDialog';
 import {IterateRemindersProps} from './IterateReminders.d';
+import * as actions from '../../../store/actions';
 
 const updatePos = (oldPos: number) => {
     console.log('update')
@@ -40,7 +41,16 @@ export default React.memo(function(props: IterateRemindersProps): JSX.Element {
             key={reminder.taskId}
             show={idx === state.idx}
             title={`Subject: ${props.subjects[reminder.subjectId].name}`}
-            onClose={() => setState(prev => ({...prev, idx: prev.idx + 1, pos: updatePos(prev.pos)}))}
+            onClose={(changed, md) => {
+                setState(prev => ({...prev, idx: prev.idx + 1, pos: updatePos(prev.pos)}));
+                if (changed) {
+                    dispatch(actions.updateTask(
+                        reminder.subjectId,
+                        reminder.taskId,
+                        {additionalInfo: {text: md.split('---  \n\n').slice(1).join('---  \n\n')}}
+                    ))
+                }
+            }}
             rawMarkdown={`## ${reminder.name.toUpperCase()} \n\n Due on: **${dateToHTMLString(new Date(reminder.dueAt))}**  \n${reminder.dueString} \n\n ---  \n\n` + reminder.additionalInfo?.text || ''}
             editModeDisabled
             onCheck={() => {

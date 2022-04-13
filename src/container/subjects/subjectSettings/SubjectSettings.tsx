@@ -32,7 +32,7 @@ import { getTimestampFromDate } from '../../../util/timeUtil';
 import '../../../style/override.scss';
 import 'react-datepicker/dist/react-datepicker.css';
 import { RootState } from '../../..';
-import MarkdownDialog from '../../../components/dialogs/MarkdownDialog';
+import MarkdownDialog, { getMdRenderers } from '../../../components/dialogs/MarkdownDialog';
 import mdCSS from '../../../components/dialogs/MarkdownDialog.module.scss' ;
 import { GroupItem, NO_GROUP_ASSIGNMENT_VAL, PREF_ID_ARCHIVES } from '../../../config/userPreferences';
 const { resetForMarkdown: s_resetForMarkdown } = mdCSS;
@@ -469,6 +469,7 @@ export default React.memo(function(props: SubjectSettingsProps): JSX.Element {
                                                     <ReactMarkdown
                                                         plugins={[gfm]} 
                                                         children={state.subject?.additionalInfo || '*The formatted markdown will appear here*'}
+                                                        renderers={getMdRenderers(state.subject.additionalInfo, newText => dispatch(changeAdditionalInfo(newText)))}
                                                     />
                                                 </Text>
                                             </Pane>
