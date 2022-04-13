@@ -28,7 +28,8 @@ const WrapCheckBox = (props: any) => {
     const { markdown, setMarkdown, node, checked, children } = props;
     return (
       <div
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           const lineIndex = node.start.line - 1;
           const lines = markdown.split("\n");
           const find = checked ? markdownChecked : markdownUnchecked;
