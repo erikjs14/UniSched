@@ -187,7 +187,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                 )}
             </div>
 
-            { userPrefersEnableTaskNotifications &&
+            {/* { userPrefersEnableTaskNotifications &&
                 <div className={toCss(s_row)}>
                     <span>Notifications</span>
                     <Tooltip content='Enter text to specify the amount of time prior to the event(s), when you want a notification to be sent. Use numbers (not as text) and units. You can also comma-seperate them to combine them. E.g. "2 hours, 15 minutes".'>
@@ -234,7 +234,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
                         </div>
                     </div>
                 </div>
-            }
+            } */}
 
         </SettingsCard>
     );

@@ -8,7 +8,8 @@ export interface BasePreferenceConfig {
     constraint?: {
         id: string;
         value: PreferenceConfig['default'];
-    }
+    };
+    disabled?: boolean;
 }
 
 export interface BooleanPreferenceConfig extends BasePreferenceConfig {
@@ -195,6 +196,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
       description: 'Push a notification to the user before every event',
       default: {},
       uponActivation: 'activateNotifications',
+      disabled: true,
     },
     {
       id: PREF_ID_MINUTES_BEFORE_EVENT_NOTIFICATION,
@@ -208,6 +210,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EVENT,
         value: true
       },
+      disabled: true,
     },
     {
       id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM,
@@ -216,6 +219,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
       description: 'Push a notification to the user before every exam',
       default: {},
       uponActivation: 'activateNotifications',
+      disabled: true,
     },
     {
       id: PREF_ID_HOURS_BEFORE_EXAM_NOTIFICATION,
@@ -229,6 +233,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         id: PREF_ID_SHOW_REMINDER_NOTIFICATION_BEFORE_EXAM,
         value: true
       },
+      disabled: true,
     },
     {
         id: PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS,
@@ -237,6 +242,7 @@ export const PREFERENCES_CONFIG: PreferenceConfig[] = [
         description: 'If enabled, notifications for tasks can be configured.',
         default: {},
         uponActivation: 'activateNotifications',
+        disabled: true,
     },
     {
         id: PREF_ID_ENABLE_REMINDER_POPUPS,

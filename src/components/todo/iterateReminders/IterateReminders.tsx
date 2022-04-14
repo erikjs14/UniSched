@@ -9,7 +9,6 @@ import {IterateRemindersProps} from './IterateReminders.d';
 import * as actions from '../../../store/actions';
 
 const updatePos = (oldPos: number) => {
-    console.log('update')
     if (oldPos > 0.45)
         return Math.random() * 0.45;
     else 

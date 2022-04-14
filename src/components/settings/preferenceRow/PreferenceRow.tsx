@@ -43,6 +43,7 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                             setShowNotificationDialog(prev => ({...prev, show: true}));
                         }
                     }}
+                    disabled={!!props.config.disabled}
                 />
             );
             break;
@@ -70,6 +71,7 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                             );
                         }
                     }}
+                    disabled={!!props.config.disabled}
                 />
             );
             break;
@@ -84,6 +86,7 @@ export default function(props: PreferenceRowProps): JSX.Element | null {
                     step={props.config.step ?? undefined}
                     value={props.value}
                     onChange={e => props.onChange(parseInt(e.target.value))}
+                    disabled={!!props.config.disabled}
                 />
             );
             break;
