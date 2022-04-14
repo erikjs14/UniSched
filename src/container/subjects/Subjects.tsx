@@ -54,7 +54,7 @@ export default function(): JSX.Element {
         content = (
             <div className={toCss(s_wrapper)}>
                 <span className={toCss(s_noElementsText)}>
-                    It looks as if you haven't saved any subjects yet. <br />
+                    It seems as if you haven't saved any subjects yet. <br />
                     Do it now!
                 </span>
                 <FloatingButton onClick={() => history.push('/subjects/new')}><FontAwesomeIcon icon={faPlus} /></FloatingButton>
