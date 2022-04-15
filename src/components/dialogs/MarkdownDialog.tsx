@@ -80,7 +80,14 @@ export default (props: MarkdownDialogProps) => {
         })
     }
 
-    const bigWidth = useMemo(() => markdown?.split('\n').some(line => line.length > 60), [markdown])
+    const dialogWidth = useMemo(() => {
+        const maxLineLength = markdown?.split('\n').reduce<number>((prev, cur) => cur.length > prev ? cur.length : prev, 0);
+        if (maxLineLength > 60) {
+            return `min(95vw, ${560 + (maxLineLength - 60) * 5}px)`;
+        } else {
+            return undefined;
+        }
+    }, [markdown])
 
     if (!props.show) return null;
 
@@ -97,7 +104,7 @@ export default (props: MarkdownDialogProps) => {
             }}
             hasCancel={props.editMode || false}
             confirmLabel={(props.editMode ? 'Confirm' : 'OK')}
-            width={bigWidth ? 'min(95vw, 700px)' : undefined}
+            width={!editMode ? dialogWidth : undefined}
         >
             {({close}) => (
                 <Pane
