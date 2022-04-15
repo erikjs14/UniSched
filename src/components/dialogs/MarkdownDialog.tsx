@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 // @ts-ignore
 import { listItem as defaultListItem } from "react-markdown/lib/renderers";
@@ -80,6 +80,8 @@ export default (props: MarkdownDialogProps) => {
         })
     }
 
+    const bigWidth = useMemo(() => markdown?.split('\n').some(line => line.length > 60), [markdown])
+
     if (!props.show) return null;
 
     return (
@@ -95,6 +97,7 @@ export default (props: MarkdownDialogProps) => {
             }}
             hasCancel={props.editMode || false}
             confirmLabel={(props.editMode ? 'Confirm' : 'OK')}
+            width={bigWidth ? 'min(95vw, 700px)' : undefined}
         >
             {({close}) => (
                 <Pane
