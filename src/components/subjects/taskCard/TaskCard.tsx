@@ -4,39 +4,31 @@ import DateTimePicker from 'react-datepicker';
 import CSS from '../settingsCard/SettingsCard.module.scss';
 import SettingsCard from '../settingsCard/SettingsCard';
 import { TaskModel, IntervalOptions, Timestamp } from '../../../firebase/model';
-import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo, allTasksChecked, naturalToTimePeriod, periodToNatural } from './../../../util/timeUtil';
+import { TaskConfig, getEditedTimestamps, getFilterForInterval, sameDay, getDateFromTimestamp, getTimestampFromDate, getDateFromSeconds, getConfigDataFromTimestamps, setTimeTo, allTasksChecked } from './../../../util/timeUtil';
 import { DATETIMEPICKER_DEFAULT_PROPS } from './../../../config/timeConfig';
 import { toCss } from './../../../util/util';
 import { CustomDateInputUI } from './../customDateInputUI/CustomDateInputUI';
 import { SubjectDataCardProps } from '../settingsCard/SettingsCard.d';
 import Input from '../../ui/input/Input';
-import { toaster, Button, Tooltip, InfoSignIcon, IconButton } from 'evergreen-ui';
+import { toaster, Button, Tooltip, InfoSignIcon } from 'evergreen-ui';
 import ExclusionsDialog from '../exclusionsDialog/ExclusionsDialog';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../..';
-import { PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS } from './../../../config/userPreferences';
 import MarkdownDialog from '../../dialogs/MarkdownDialog';
 const {
     row: s_row,
     intervalOptions: s_intervalOptions,
     infoIcon: s_infoIcon,
-    notificationsTextInput: s_notificationsTextInput,
-    addNotificationsArea: s_addNotificationsArea,
-    notRow: s_notRow,
-    notRowNots: s_notRowNots,
-    not: s_not,
 } = CSS;
 
 export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
     
-    const [notificationsText, setNotificationsText] = useState('');
+    // const [notificationsText, setNotificationsText] = useState('');
 
     const [inputTouched, setInputTouched] = useState(false);
     const [exclDialogShown, setExclDialogShown] = useState(false);
     const [infoDialogShown, setInfoDialogShown] = useState(false);
 
     const { onChange } = props;
-    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, tasksTickedAt: oldTasksTickedAt, star, reminder, additionalInfo, exclusions, notifications } = props.data;
+    const { timestamps: oldTimestamps, timestampsDone: oldTimestampsDone, tasksTickedAt: oldTasksTickedAt, star, reminder, additionalInfo, exclusions } = props.data;
     const changeHandler = useCallback((config: TaskConfig) => {
         const [timestamps, timestampsDone, tasksTickedAt] = getEditedTimestamps(config, oldTimestamps, oldTimestampsDone, oldTasksTickedAt);
         onChange('timestamps', timestamps);
@@ -63,7 +55,7 @@ export default function(props: SubjectDataCardProps<TaskModel>): JSX.Element {
         }
     }, []);
 
-    const userPrefersEnableTaskNotifications = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS] as (boolean|undefined));
+    // const userPrefersEnableTaskNotifications = useSelector((state: RootState) => state.user.preferences?.[PREF_ID_ENABLE_BEFORE_TASK_NOTIFICATIONS] as (boolean|undefined));
 
     return (
         <SettingsCard
