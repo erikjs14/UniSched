@@ -185,7 +185,7 @@ export default React.memo(function(props: DueTasksProps): JSX.Element | null {
         const dayInPast = tasksOneDay[0].dueAt.getTime() <= endOfDayMsAdapted;
         return (
             <AnimateHeight
-                key={tasksOneDay[0].taskId} 
+                key={tasksOneDay[0].taskId + tasksOneDay[0].dueString} 
                 height={dayContained ? 0 : 'auto'}
                 duration={400}
                 delay={1800}
